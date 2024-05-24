@@ -1,6 +1,6 @@
 MONGO_URL=
 PORT=8080
-JWT_SECRET=cjdvjndjn20ie9uf8yeufekklpm=kiwknvkdni
+JWT_SECRET=
 EMAIL_USER=
 EMAIL_PASS=
 WARDEN_EMAIL=
