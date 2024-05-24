@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import nodemailer from 'nodemailer' ;
 
 export const registerUser = async (req, res) => {
 
@@ -50,14 +51,38 @@ export const registerUser = async (req, res) => {
     user.password = await bcrypt.hash(password, 10);
 
     const token = jwt.sign({ email }, process.env.JWT_SECRET);
+    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '7d' });
     // user.verificationToken = verificationToken;
     await user.save();
+
+     // Send verification email
+     const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER, // Your email address
+        pass: process.env.EMAIL_PASS, // Your email password
+      },
+    });
+
+    const userMailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Account Verification',
+      text: `Click on the following link to verify your account: ${process.env.BASE_URL}/verify-email?token=${verificationToken}`,
+    };
+
+    transporter.sendMail(userMailOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log('Email sent: ' + info.response) ;
+    });
 
     return res
       .status(200)
       .json({
         message:
-          "Registration successful, check your email for verification link!", 
+          "Registration successful!, check your email for verification link!", 
           access_token: token
       });
   } catch (error) {
@@ -65,6 +90,7 @@ export const registerUser = async (req, res) => {
     return res.status(500).json({ message: "Error in SignUp controller,!" }) ;
   }
 };
+
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -81,11 +107,11 @@ export const loginUser = async (req, res) => {
         message: "Invalid credentials!",
       });
     }
-    // if (!user.isVerified || !user.isWardenVerified) {
-    //   return res.status(403).json({
-    //     message: "User not fully verified!",
-    //   });
-    // }
+    if (!user.isVerified || !user.isWardenVerified) {
+      return res.status(403).json({
+        message: "User not fully verified!",
+      });
+    }
 
     // const payload = {
     //   user: {
@@ -93,7 +119,7 @@ export const loginUser = async (req, res) => {
     //   },
     // };
     user.password = undefined;
-    const token = jwt.sign({sub:email}, process.env.JWT_SECRET) ;
+    const token = jwt.sign({email}, process.env.JWT_SECRET) ;
       return res.cookie('access_token',token).status(200).json({
         message: "Login successful!",
         user

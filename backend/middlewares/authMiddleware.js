@@ -10,9 +10,9 @@ export const authMiddleWare = (req, res, next) => {
     try{
         const decoded=jwt.verify(token,process.env.JWT_SECRET) ;
         console.log(decoded) ;
-        req.user= decoded.sub ;
+        req.user= decoded.email ;
         next() ;
     }catch(error){
-
+        console.log(error.message) ;
     }
 }
