@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken' ;
 
-export const authMiddleWare = (req, res, next) =>{
-    const token = req.header('Authorization') ;
+export const authMiddleWare = (req, res, next) => {
+    const token = req.cookies.access_token ;
     if(!token){
         return res.status(400).json({
             message:'No Token, Authorization denied!',
@@ -10,7 +10,7 @@ export const authMiddleWare = (req, res, next) =>{
     try{
         const decoded=jwt.verify(token,process.env.JWT_SECRET) ;
         console.log(decoded) ;
-        // req.user= decoded.sub ;
+        req.user= decoded.sub ;
         next() ;
     }catch(error){
 

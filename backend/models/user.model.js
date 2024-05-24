@@ -8,8 +8,8 @@ const userSchema= new mongoose.Schema({
     password:{
         type:String,
     },
-    enrollMentNumber : {
-        type:Number,
+    enrollmentNumber : {
+        type:String,
         required:true,
     },
     name:{
@@ -17,13 +17,14 @@ const userSchema= new mongoose.Schema({
         required:true,
     },
     registrationNumber:{
-        type:Number,
+        type:String,
         required:true,
     },
     role:{
         type:String,
+        // required: true,
         enum:['student', 'warden'], 
-        default:['student'],
+        default:'student',
     },
     isVerified:{
         type:Boolean,
@@ -33,9 +34,9 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         default:false,
     },
-    verificationToken:{
-        type:String,
-    },
+    // verificationToken:{
+    //     type:String,
+    // },
 
 },{timestamps:true}) ;
 

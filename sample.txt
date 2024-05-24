@@ -1,4 +1,4 @@
-MONGO_URL=mongodb+srv://mess-Portal:messPortal123@cluster0.kjk3qnx.mongodb.net/mess-complaint?retryWrites=true&w=majority&appName=Cluster0
+MONGO_URL=
 PORT=8080
 JWT_SECRET=cjdvjndjn20ie9uf8yeufekklpm=kiwknvkdni
 EMAIL_USER=

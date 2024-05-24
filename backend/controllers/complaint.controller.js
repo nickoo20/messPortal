@@ -1,4 +1,4 @@
-import Complaint from "../models/complaint.model";
+import Complaint from "../models/complaint.model.js" ; 
 
 // Create a new complaint and assign it to a warden
 export const createComplaint = async(req, res) => {
@@ -76,3 +76,6 @@ export const resolveComplaint = async(req, res) => {
     }
 }
 
+export const escalateComplaint = async(req, res) => {
+
+}
