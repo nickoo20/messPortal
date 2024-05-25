@@ -79,11 +79,16 @@ export const registerUser = async (req, res) => {
     });
 
     return res
+    .cookie('initial_token',token, {
+      httpOnly: true,
+      sameSite : "strict",
+      secure : process.env.NODE_ENV === "development",
+    }) 
       .status(200)
       .json({
         message:
           "Registration successful!, check your email for verification link!", 
-          access_token: token
+          initial_token: token
       });
   } catch (error) {
     console.log(`, ${error.message}!`);
@@ -132,4 +137,9 @@ export const loginUser = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {};
+export const logout = async (req, res) => {
+  res.clearCookie('access_token') ;
+  res.status(200).json({
+    message: 'User logged out successfully!',
+  }) ;
+}

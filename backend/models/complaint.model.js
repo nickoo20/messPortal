@@ -13,7 +13,7 @@ const complaintSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["pending", "resolved", "escalated"],
-      default: ["pending"],
+      default: "pending",
     },
     comments: [
       {
@@ -29,13 +29,13 @@ const complaintSchema = new mongoose.Schema(
     upvotes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     downvotes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     createdAt: {
@@ -43,10 +43,6 @@ const complaintSchema = new mongoose.Schema(
       default: Date.now,
     },
     createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    handledBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
