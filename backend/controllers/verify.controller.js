@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 export const verifyEmail = async (req, res) => {
   try {
-    const { token } = req.query;
+    const {token} = req.query;
     let userEmail;
     if (!token) {
       return res.status(400).json({ message: "Token is required" });
@@ -47,7 +47,14 @@ export const verifyEmail = async (req, res) => {
       console.log("Email sent: " + info.response);
     });
 
+    res.clearCookie("initial_token");
+
     return res
+      .cookie("initial_token1", verificationToken, {
+        httpOnly:true,
+        sameSite : "strict",
+        // secure : process.env.NODE_ENV !== "development",
+      })
       .status(200)
       .json({
         message: "Email verification successful. Awaiting warden verification.",
@@ -61,6 +68,7 @@ export const verifyEmail = async (req, res) => {
 export const verifyWarden = async (req, res) => {
   try {
     const { token } = req.query;
+    // const token = req.cookies.initial_token1;
 
     if (!token) {
       return res.status(400).json({ message: "Token is required" });
@@ -81,7 +89,20 @@ export const verifyWarden = async (req, res) => {
     user.isWardenVerified = true;
     await user.save();
 
-    return res.status(200).json({ message: "Warden verification successful" });
+    const verificationToken = jwt.sign(
+      { email: user.email },
+      process.env.JWT_SECRET
+    );
+
+    res.clearCookie("initial_token1");
+    return res
+      .cookie("access_token", verificationToken,{
+        httpOnly:true,
+        sameSite : "strict",
+        // secure : process.env.NODE_ENV !== "development",
+      }) 
+      .status(200)
+      .json({ message: "Warden verification successful",access_token:verificationToken });
   } catch (error) {
     console.log(`Error in warden verification, ${error.message}`);
     return res.status(500).json({ error: "Error in warden verification" });
