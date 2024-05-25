@@ -3,14 +3,17 @@ import Complaint from "../models/complaint.model.js" ;
 // Create a new complaint and assign it to a warden
 export const createComplaint = async(req, res) => {
     try{
+// ADD IMAGE ALSO FEATURE!
         const {title, description} = req.body ;
+        const user = req.user ;
+        const whoCreated = user ;
+        // console.log('User: ', req.user) ;
+        // console.log(createdBy) ;
         const newComplaint = new Complaint({
             title,
             description,
-            createdBy:  req.user.id,
-            handledBy:  req.wardenId,   // Assigned warden
+            createdBy:whoCreated,
         }) ;
-
         await newComplaint.save() ;
         return res.status(201).json(newComplaint) ;
     }catch(err){
@@ -22,17 +25,25 @@ export const createComplaint = async(req, res) => {
 }
 
 // Comment on a complaint
-export const commentController = async(req, res) => { 
+export const commentOnComplaint = async(req, res) => { 
     try{
-        const complaint = await Complaint.findById(req.params.id);
+        const {text} = req.body; 
+        const { complaintId } = req.params ;
+        // const userId = req.user._id ;
+        if (!text) {
+            return res.status(400).json({
+              error: "Text is required!",
+            });
+        }
+
+        const complaint = await Complaint.findById(complaintId) ;
 
         if (!complaint) {
             return res.status(404).json({ message: 'Complaint not found' });
         }
 
-        const {text} = req.body ;
         const comment = {
-            user: req.user.id, 
+            user: req.user._id, 
             text
         } ; 
         complaint.comments.push(comment); 
@@ -46,6 +57,16 @@ export const commentController = async(req, res) => {
         }) ; 
     }
 }
+
+// Delete a complaint
+export const deleteComplaint = async(req,res) => {
+    try{
+
+    }catch(error){
+
+    }
+}
+
 
 // Resolve or escalate a complaint (warden only) 
 

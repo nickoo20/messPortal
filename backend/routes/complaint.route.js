@@ -1,26 +1,29 @@
 import express from 'express' ;
 import { authMiddleWare } from '../middlewares/authMiddleware.js' ;
-import { createComplaint, commentController,resolveComplaint, escalateComplaint} from '../controllers/complaint.controller.js';
-import { downVote, upVote } from '../controllers/vote.controller.js';
-import {assignorCreateWarden} from '../middlewares/wardenMiddleware.js';
+import { createComplaint, commentOnComplaint, deleteComplaint, resolveComplaint, escalateComplaint} from '../controllers/complaint.controller.js';
+import { downvoteComplaint, upvoteComplaint } from '../controllers/vote.controller.js';
+
 
 const router = express.Router() ;
 
 // Create a complaint and assign it to a warden
-router.post('/',authMiddleWare, assignorCreateWarden, createComplaint) ;
+router.post('/',authMiddleWare, createComplaint) ;
 
 // Vote for a complaint
-router.post('/:id/upvote',authMiddleWare, upVote) ;
-router.post('/:id/downvote',authMiddleWare, downVote) ;
+router.post('/upvote/:complaintId', authMiddleWare, upvoteComplaint) ;
+router.post('/downvote/:complaintId', authMiddleWare, downvoteComplaint) ;
 
 // Comment on a complaint
-router.post('/:id/coment',authMiddleWare, commentController) ;
+router.post('/comment/:complaintId',authMiddleWare, commentOnComplaint) ;
+
+// Delete a complaint
+router.delete("/:complaintId", authMiddleWare, deleteComplaint) ;
 
 // Route to escalate a complaint
-router.put("/:id/escalate", authMiddleWare, escalateComplaint);
+router.put("/escalate/:complaintId", authMiddleWare, escalateComplaint) ;
 
 // Resolve a complaint
-router.put('/:id/resolve',authMiddleWare, resolveComplaint) ; 
+router.put('/resolve/:complaintId',authMiddleWare, resolveComplaint) ; 
 
 
 export default router ; 

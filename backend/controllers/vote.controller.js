@@ -1,56 +1,94 @@
-import Complaint from "../models/complaint.model.js" ;
+import Complaint from "../models/complaint.model.js";
 
 // Upvote a complaint
-export const upVote = async(req, res) => {
-    try{
-        const complaint = await Complaint.findById(req.params.id) ;
-        if (!complaint) {
-            return res.status(404).json({ message: 'Complaint not found' });
-        }
-        // Remove from downvotes if exists
-        complaint.downvotes = complaint.downvotes.filter(user => user.toString() !== req.user.id) ;
-
-        // Add to upvote if not already present!
-        if(!complaint.upvotes.includes(req.user.id)){
-            complaint.upvotes.push(req.user.id) ;
-        }
-        else{
-            return res.status(400).json({ message: 'You have already upvoted this complaint' });
-        }
-
-        await complaint.save() ;
-        return res.status(200).json(complaint) ;
-    }catch(err){
-        console.log(`Error in upvote Controller, ${err.message}`) ;
-        return res.status(500).json({
-            error:"Internal Server Error!",
-        }) ;
+export const upvoteComplaint = async (req, res) => {
+  try {
+    const { complaintId } = req.params;
+    const complaint = await Complaint.findById(complaintId);
+    const userId = req.user._id;
+    console.log(userId);
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
     }
-}
+    // upvote
+    const userUpvoted = complaint.upvotes?.includes(userId);
+    console.log(userUpvoted);
+    if (userUpvoted) {
+      await Complaint.updateOne(
+        { _id: complaintId },
+        { $pull: { upvotes: userId } }
+      );
+      console.log(complaint.upvotes) ;
+      const updatedVotes = complaint.upvotes.filter((id) => (
+        id.toString() !== userId.toString()
+      ));
+      return res.status(200).json({
+        message: "Upvote removed!",
+        updatedVotes,
+      });
+    } else {
+       await Complaint.findByIdAndUpdate({_id:userId},{$pull:{
+        downvotes:userId,
+       }}) ;
+      complaint.upvotes.push(userId);
+      await complaint.save();
+      const updatedVotes = complaint.upvotes;
+      return res.status(200).json({
+        message: "Upvoted successfully",
+        updatedVotes,
+      });
+    }
+  } catch (err) {
+    console.log(`Error in upvote Controller, ${err.message}`);
+    return res.status(500).json({
+      error: "Internal Server Error!",
+    });
+  }
+};
 
 // Downvote a complaint
-export const downVote = async(req, res) => { 
-    try{
-        const complaint = await Complaint.findById(req.params.id);
-        if (!complaint) {
-            return res.status(404).json({ message: 'Complaint not found' });
-        }
-         // Remove from upvotes if exists
-        complaint.upvotes = complaint.upvotes.filter(user => user.toString() !== req.user.id) ;
+export const downvoteComplaint = async (req, res) => {
+    try {
+        const { complaintId } = req.params ;
+        const complaint = await Complaint.findById(complaintId) ;
+        const userId = req.user._id ;
+        console.log(userId) ;
 
-         // Add to downvotes if not already present
-        if (!complaint.downvotes.includes(req.user.id)) {
-            complaint.downvotes.push(req.user.id) ;
-        } else {
-            return res.status(400).json({ message: 'You have already downvoted this complaint' }) ;
+        if (!complaint) {
+          return res.status(404).json({ message: "Complaint not found" });
         }
-    
-        await complaint.save() ;
-        return res.status(200).json(complaint) ;
-    }catch(err){
-        console.error(error.message);
+        // upvote
+        const userDownvoted = complaint.downvotes?.includes(userId) ;
+        console.log(userDownvoted) ;
+        if (userDownvoted) {
+          await Complaint.updateOne(
+            { _id: complaintId },
+            { $pull: { downvotes: userId } }
+          ) ;
+          console.log(complaint.downvotes) ;
+          const updatedVotes = complaint.downvotes.filter((id) => (
+            id.toString() !== userId.toString()
+          ));
+          return res.status(200).json({
+            message: "Downvote removed!",
+            updatedVotes,
+          });
+        } else {
+            await Complaint.findByIdAndUpdate({_id:complaintId},{ $pull:{
+                upvotes:userId,
+            }}) ;
+          complaint.downvotes.push(userId);
+          await complaint.save();
+          const updatedVotes = complaint.downvotes ; 
+          return res.status(200).json({
+            message: "Downvoted successfully",
+            updatedVotes,
+          });
+        }
+      } catch (err) {
+        console.log(`Error in upvote Controller, ${err.message}`);
         return res.status(500).json({
-            error :  'Server Error',
-        }) ; 
-    }
-}
+          error: "Internal Server Error!",
+        });
+      }
+};
