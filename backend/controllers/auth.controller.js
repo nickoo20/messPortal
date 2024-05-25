@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import nodemailer from 'nodemailer' ;
 
 export const registerUser = async (req, res) => {
-
   try {
     const { email, password, enrollmentNumber, name, registrationNumber } = req.body ;
     const emailRegex = /^[a-z]+_[0-9]{4}[a-z]{4}[0-9]{3}@nitsri\.ac\.in$/ ;

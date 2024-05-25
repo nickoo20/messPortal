@@ -67,6 +67,10 @@ export const deleteComplaint = async(req,res) => {
     }
 }
 
+export const getMyComplaints = async(req, res) =>{ 
+    
+}
+
 
 // Resolve or escalate a complaint (warden only) 
 

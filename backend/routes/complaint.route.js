@@ -6,6 +6,8 @@ import { downvoteComplaint, upvoteComplaint } from '../controllers/vote.controll
 
 const router = express.Router() ;
 
+router.get('/')
+
 // Create a complaint and assign it to a warden
 router.post('/',authMiddleWare, createComplaint) ;
 
