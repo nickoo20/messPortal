@@ -1,15 +1,17 @@
 import express from 'express' ;
 import { authMiddleWare } from '../middlewares/authMiddleware.js' ;
-import { createComplaint, commentOnComplaint, deleteComplaint, resolveComplaint, escalateComplaint} from '../controllers/complaint.controller.js';
+import { createComplaint, commentOnComplaint, deleteComplaint, resolveComplaint, escalateComplaint, getMyComplaints, getAllComplaints} from '../controllers/complaint.controller.js';
 import { downvoteComplaint, upvoteComplaint } from '../controllers/vote.controller.js';
 
 
 const router = express.Router() ;
 
-router.get('/')
 
 // Create a complaint and assign it to a warden
-router.post('/',authMiddleWare, createComplaint) ;
+router.post('/create',authMiddleWare, createComplaint) ;
+
+router.get('/my', authMiddleWare, getMyComplaints) ;
+router.get('/all', authMiddleWare, getAllComplaints) ;
 
 // Vote for a complaint
 router.post('/upvote/:complaintId', authMiddleWare, upvoteComplaint) ;
