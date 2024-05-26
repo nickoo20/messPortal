@@ -1,4 +1,5 @@
 import Complaint from "../models/complaint.model.js" ; 
+import {sendEmail} from '../utils/emailConfig.js' ;
 
 // Create a new complaint and assign it to a warden
 export const createComplaint = async(req, res) => {
@@ -126,7 +127,29 @@ export const getAllComplaints = async(req, res) => {
 // Resolve a Complaint
 export const resolveComplaint = async(req, res) => {
     try{
+        const {complaintId} = req.params; 
+        const complaint = await Complaint.findById(complaintId) ;
+        const user = req.user ;
+
+        if (!complaint) {
+            return res.status(404).json({ message: 'Complaint not found' });
+        }
         
+        if(!user){
+            return res.status(404).json({
+                message:'User not found!',
+            }) ;
+        }
+
+         // Check if the user is a warden
+        if (req.user.role !== 'warden') {
+            return res.status(403).json({ message: 'You are not authorized to resolve complaints' });
+        }
+
+        complaint.status = 'resolved';
+        await complaint.save();
+
+    return res.status(200).json({ message: 'Complaint resolved successfully', complaint });        
 
     }catch(err){
         console.log(`Error in Resolve Complaint Controller!, ${err.message}`) ; 
@@ -137,5 +160,58 @@ export const resolveComplaint = async(req, res) => {
 }
 
 export const escalateComplaint = async(req, res) => {
+    try{
+        const { complaintId } = req.params;
+        const { comment } = req.body;
+        const user = req.user ;
+        if(!user){
+            return res.status(404).json({
+                message:'User not found!',
+            }) ;
+        }
 
+        // Check if the user is a warden
+        if(user.role !== 'warden') {
+            return res.status(403).json({ message: 'You are not authorized to escalate complaints' });
+        }
+
+        const complaint = await Complaint.findById(complaintId);
+        if (!complaint) {
+          return res.status(404).json({ message: 'Complaint not found' });
+        }
+        complaint.status = 'escalated';
+        await complaint.save();
+
+        // Send email to DSW
+        const emailSubject = `Escalated Complaint: ${complaint.title}`;
+        const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e2e2; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #f8f8f8; padding: 20px; text-align: center; border-bottom: 1px solid #e2e2e2;">
+          <h2 style="color: #4CAF50;">Escalated Complaint</h2>
+          <p style="font-size: 16px; color: #777;">Please address the following complaint urgently</p>
+        </div>
+        <div style="padding: 20px;">
+          <p style="font-size: 16px; color: #333;"><strong>Complaint ID:</strong> ${complaint._id}</p>
+          <p style="font-size: 16px; color: #333;"><strong>Title:</strong> ${complaint.title}</p>
+          <p style="font-size: 16px; color: #333;"><strong>Description:</strong> ${complaint.description}</p>
+          <p style="font-size: 16px; color: #333;"><strong>Warden Comment:</strong> ${comment}</p>
+        </div>
+        <div style="padding: 20px; background-color: #f8f8f8; border-top: 1px solid #e2e2e2;">
+          <p style="font-size: 16px; color: #333;">Thank you for your attention to this matter.</p>
+          <p style="font-size: 16px; color: #333; margin: 0;">Best regards,</p>
+          <p style="font-size: 16px; color: #333; margin: 0;"><strong>${user.name}</strong></p>
+          <p style="font-size: 16px; color: #333; margin: 0;">Warden</p>
+        </div>
+      </div>
+    `;
+  
+
+        await sendEmail(emailSubject, emailHtml); 
+
+        return res.status(200).json({ message: 'Complaint escalated and email sent to DSW', complaint });
+
+    }catch(err){
+        console.log(`Error in escalate Complaint Controller!, ${err.message}`);
+        return res.status(500).json({ error: 'Internal Server Error!' });
+    }
 }

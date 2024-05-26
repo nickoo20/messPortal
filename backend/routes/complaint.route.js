@@ -23,11 +23,12 @@ router.post('/comment/:complaintId',authMiddleWare, commentOnComplaint) ;
 // Delete a complaint
 router.delete("/:complaintId", authMiddleWare, deleteComplaint) ;
 
+// Resolve a complaint
+router.put('/resolve/:complaintId',authMiddleWare, resolveComplaint) ; 
+
 // Route to escalate a complaint
 router.put("/escalate/:complaintId", authMiddleWare, escalateComplaint) ;
 
-// Resolve a complaint
-router.put('/resolve/:complaintId',authMiddleWare, resolveComplaint) ; 
 
 
 export default router ; 
