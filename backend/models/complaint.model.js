@@ -15,6 +15,10 @@ const complaintSchema = new mongoose.Schema(
       enum: ["pending", "resolved", "escalated"],
       default: "pending",
     },
+    img:{
+      type:String,
+      default: "",
+    },
     comments: [
       {
         user: {
