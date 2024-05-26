@@ -112,12 +112,7 @@ export const loginUser = async (req, res) => {
         message: "User not fully verified!",
       });
     }
-
-    // const payload = {
-    //   user: {
-    //     id: user.id,
-    //   },
-    // };
+    
     user.password = undefined;
     const token = jwt.sign({email}, process.env.JWT_SECRET) ;
       return res.cookie('access_token',token).status(200).json({

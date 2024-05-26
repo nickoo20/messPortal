@@ -1,6 +1,6 @@
 import Complaint from "../models/complaint.model.js" ; 
 
-// Create a new complaint and assign it to a warden
+// Create a new complaint and assign it to a warden 
 export const createComplaint = async(req, res) => {
     try{
         const {title, description} = req.body ;

@@ -56,7 +56,7 @@ export const verifyEmail = async (req, res) => {
     console.log(`Error: ${error.message}`);
     return res.status(500).json({ error: "Error in email verification" });
   }
-};
+} ;
 
 export const verifyWarden = async (req, res) => {
   try {
@@ -86,4 +86,5 @@ export const verifyWarden = async (req, res) => {
     console.log(`Error in warden verification, ${error.message}`);
     return res.status(500).json({ error: "Error in warden verification" });
   }
-};
+} ;
+
