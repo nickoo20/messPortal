@@ -1,13 +1,23 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css';
-import {BrowserRouter} from 'react-router-dom' ;  
-
+//import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import { BrowserRouter as Router } from "react-router-dom";
+import { ColorModeScript, ChakraProvider, theme } from "@chakra-ui/react";
+import { AuthProvider } from "./context/userContext";
+//import ColorModeSwitcher from "./ColorModeSwitcher"
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <BrowserRouter>
+  // <React.StrictMode>
+  //   <App />
+  // </React.StrictMode>,
+  <AuthProvider>
+  <Router>
+    {/* <ColorModeScript /> */}
+    <ChakraProvider disableGlobalStyle>
+      {/* <ColorModeSwitcher /> */}
       <App />
-    </BrowserRouter>
-  </React.StrictMode>,
+    </ChakraProvider>
+  </Router>
+</AuthProvider>
 )

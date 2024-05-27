@@ -3,6 +3,7 @@ import { connectToMongoose } from './db/connectToMongoose.js' ;
 import dotenv from "dotenv" ;
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.route.js' ;
+
 import complaintRoutes from './routes/complaint.route.js' ;
 import cors from 'cors' ;
 import { v2 as cloudinary } from "cloudinary";
@@ -15,6 +16,10 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
   });
 
+//import verificationRoutes from './routes/verification.route.js' ;
+// import complaintRoutes from './routes/complaint.route.js';
+// import cors from "cors";
+import studentRepresentativeRoutes from './routes/studentRepresentative.route.js'
 dotenv.config() ;
 const app= express() ;
 const PORT = 8080 || process.env.PORT ;
@@ -29,6 +34,22 @@ app.use(express.json()) ;
 app.use("/api/auth", authRoutes) ; 
 app.use("/api/complaints", complaintRoutes) ;
 // app.use('/api', verificationRoutes) ;
+
+
+//app.use(cors());
+//app.use(express.json()) ;
+
+//app.use(express.urlencoded({ extended: true }));
+//app.use(cookieParser());
+//app.use("/api/auth", authRoutes) ; 
+//app.use('/api', verificationRoutes);
+//app.use('/api/',complaintRoutes);
+app.use('/api/mr/',studentRepresentativeRoutes);
+app.get("/", (req, res) => {
+    res.send({
+      message: "welcome to mess portal app",
+    });
+  });
 
 app.listen(PORT, () => {
     console.log(`Server running on localhost:${PORT}`) ;

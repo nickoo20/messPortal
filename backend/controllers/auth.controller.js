@@ -2,6 +2,14 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import nodemailer from 'nodemailer' ;
+import {adminModel as Admin} from "../models/admin.model.js";
+import Errorhandler from "../error/errorClass.js";
+import {verificationbyuserforadmin,generateToken} from "../middlewares/AdminReg.js";
+import { comparePassword, hashPassword } from "../helper/auth.js";
+// import { verificationByStudent } from "../utils/verification.js";
+import { validationResult } from "express-validator";
+//import {sendVerificationEmail,sendWardenVerificationEmail} from '../utils/mailer.js' ;
+import AsyncErrorHandler from "../error/CatchAsyncError.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -142,3 +150,102 @@ export const logout = async (req, res) => {
     message: 'User logged out successfully!',
   }) ;
 }
+export const RegisterAdmin=async(req,res)=>{
+  const { name, email, password, HostelID, HostelName } = req.body;
+if(!name)
+  return next(new Errorhandler("Please Enter your Name", 400));
+
+if (!email) {
+  return next(new Errorhandler("Please Enter your Email", 400));
+}
+if (!password) {
+  return next(new Errorhandler("Please Enter your Password", 400));
+}
+if (!HostelID) {
+  return next(new Errorhandler("Please Enter your HostelID", 400));
+}
+if (!HostelName) {
+  return next(new Errorhandler("Please Enter your HostelName", 400));
+}
+
+const admin = await Admin.findOne({ email });
+
+if (admin) {
+  return res.status(400).json({
+    success: false,
+    message: "Admin Already exist",
+  });
+}
+
+const hashedPassword = await hashPassword(password);
+
+const newAdmin = await Admin.create({
+  name,
+  email,
+  password: hashedPassword,
+  HostelID,
+  HostelName,
+});
+// const token = await jwt.sign({ _id: newAdmin._id }, process.env.JWT_SECRET, {
+//   expiresIn: "7d",
+// });
+const token=generateToken({email:email})
+await verificationbyuserforadmin(req,res,email,token);
+
+  //await verificationbyadmin(req,res,adminemail,newUser,token)
+
+//res.status(201).json({ message: ' Verification email sent.' });
+const options = {
+  expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+};
+// res.cookie("jwtoken", token, options).status(200).json({
+//   success: true,
+//   message: "New Admin Registered Successfully!",
+//   token,
+//   newAdmin,
+// });
+res.status(201).json({ message: ' Verification email sent.' });
+}
+export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(401).json({
+      success: false,
+      message: "Enter all fields",
+    });
+  }
+
+  const user = await Admin.findOne({ email });
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: "User Not found!",
+    });
+  }
+  if(user.verified==false)
+  {
+    return next(new Errorhandler("you are not verified yet", 400));
+  }
+  const isMatch = await comparePassword(password, user.password);
+  const token = await jwt.sign({ _id: user._id }, 'your_secret_key', {
+    expiresIn: "7d",
+  });
+
+  const options = {
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  };
+  if (isMatch) {
+    res.cookie("token", token, options).status(200).json({
+      success: true,
+      message: "Login Successfull! Redirecting",
+      token,
+      user,
+    });
+  } else {
+    return res.status(401).json({
+      success: false,
+      message: "Incorrect Password",
+    });
+  }
+});
