@@ -1,0 +1,42 @@
+import  jwt from "jsonwebtoken";
+import * as nodemailer from 'nodemailer';
+
+import {adminModel as User } from "../models/admin.model.js";
+//import { verificationbyadmin } from "../middleware/userReg.js";
+const emailverificationbyuserforadmin=async(req,res)=>{
+    try {
+        //console.log("hii")
+        const adminemail="richashrivastava3591@gmail.com"
+        const token = req.query.token;
+    
+        if (!token) {
+          return res.status(400).json({ message: 'Token is required' });
+        }
+    
+        // Verify JWT token
+        const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+        const userEmail = decoded.email;
+        //const { name, email, HostelID, HostelName } = req.body;
+         const newuser=User.findOne({userEmail})
+        // console.log(newuser.name)
+        // console.log(newuser.email)
+        //await verificationbyadmin(req,res,adminemail,newuser,token)
+        //console.log(newuser.name)
+        //res.redirect('http://localhost:3000/confirmation')
+        try{
+            //console.log("starting")
+            
+          await User.findOneAndUpdate({ email: userEmail }, { verified: true });
+          
+          //console.log("suzz")
+          }
+          catch(error){
+            console.log(error)
+          }
+          //res.render("http://localhost:5173/login-admin")
+          res.send({message:"verification done"})
+    } catch (error) {
+        console.log(error)
+    }
+}
+export {emailverificationbyuserforadmin};

@@ -158,6 +158,44 @@ export const resolveComplaint = async(req, res) => {
         }) ;  
     }
 }
+export const getAllComplaintsAdmin=async(req,res)=>{
+         try{
+        const comp = await Complaint.find({});
+        res.status(200).json({
+          success: true,
+          message: "Fetched Successfully!",
+          comp,
+        });
+    }catch(err){
+        console.log(err);
+    }
+      
+}
+export const patchComplaint=async(req,res)=>{
+    const { id } = req.params;
+  const { status } = req.body;
+  // Check if the status is one of the allowed values
+  const allowedStatuses = ['pending', 'resolved', 'escalated'];
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({ message: 'Invalid status value' });
+  }
+
+  try {
+    const complaint = await Complaint.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true, runValidators: true }
+    );
+
+    if (!complaint) {
+      return res.status(404).json({ message: 'Complaint not found' });
+    }
+
+    res.status(200).json({ message: 'Complaint status updated successfully', complaint });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+}
 
 export const escalateComplaint = async(req, res) => {
     try{
@@ -204,8 +242,6 @@ export const escalateComplaint = async(req, res) => {
         </div>
       </div>
     `;
-  
-
         await sendEmail(emailSubject, emailHtml); 
 
         return res.status(200).json({ message: 'Complaint escalated and email sent to DSW', complaint });

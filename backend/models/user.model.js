@@ -34,9 +34,10 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         default:false,
     },
-    // verificationToken:{
-    //     type:String,
-    // },
+    isStudentRepresentative:{
+        type:Boolean,
+        default:false,
+    }
 
 },{timestamps:true}) ;
 
