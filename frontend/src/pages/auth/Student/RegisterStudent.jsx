@@ -1,11 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link,useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
+import toast from "react-hot-toast";
 // import {toast} from 'react-hot-toast' ;
 
-const RegisterPage = () => {
+const RegisterStudent = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -36,14 +37,18 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-
-       
-    
-  } catch (error) {
-    console.error("Error in signup :", error.message) ;
-    // Add error handling logic here
-  }
-   
+      const res = await axios.post("http://localhost:8080/api/auth/register-student", formData);
+      console.log("Response:", res) ;
+      if (res?.data?.success) {
+        // Navigate to login page or show a success message
+        toast.success(res.data.message) ;
+        navigate("/login-student");
+      }
+    } catch (error) {
+      toast.error(error.data.message) ;
+      console.error("Error in signup:", error.response ? error.response.data : error.message);
+      // Add error handling logic here, e.g., show an error message to the user
+    }
   };
 
   return (
@@ -97,7 +102,7 @@ const RegisterPage = () => {
                 className="border p-2 w-full rounded-xl focus:outline-none"
               />
               <input
-                type="text"
+                type="Number"
                 name="registrationNumber"
                 value={formData.registrationNumber}
                 onChange={handleChange}
@@ -148,4 +153,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage; 
+export default RegisterStudent ; 

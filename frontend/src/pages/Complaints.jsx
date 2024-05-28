@@ -1,21 +1,39 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Complaints = () => {
-  const [complaints] = useState([]);
+  const [userComplaints, setUserComplaints] = useState([]);
+  const [allComplaints, setAllComplaints] = useState([]);
 
   useEffect(() => {
-    // Fetch complaints data from API
-    // setComplaints(response.data);
+    const fetchComplaints = async () => {
+      try {
+        const userRes = await axios.get('http://localhost:8080/api/complaints/my') ;
+        const allRes = await axios.get('http://localhost:8080/api/complaints/all') ;
+        console.log(userRes);
+        console.log(allRes);
+        setUserComplaints(userRes.data);
+        setAllComplaints(allRes.data);
+      } catch (error) {
+        console.error('Error fetching complaints:', error.message);
+      }
+    };
+
+    fetchComplaints();
   }, []);
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Complaints</h2>
+    <div className="p-4 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold mb-4">Your Complaints</h2>
       <ul>
-        {complaints.map((complaint) => (
-          <li key={complaint.id} className="mb-2 p-2 border rounded-lg">
-            {complaint.title}
-          </li>
+        {userComplaints.map(complaint => (
+          <li key={complaint._id}>{complaint.description}</li>
+        ))}
+      </ul>
+      <h2 className="text-2xl font-bold mt-4 mb-4">All Complaints</h2>
+      <ul>
+        {allComplaints.map(complaint => (
+          <li key={complaint._id}>{complaint.description}</li>
         ))}
       </ul>
     </div>

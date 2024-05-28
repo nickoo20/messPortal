@@ -1,14 +1,17 @@
 import { useState } from "react" ;
 import axios from "axios" ;
-import { Link } from "react-router-dom";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import { Link, useNavigate } from "react-router-dom";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
+import { useAuth } from "../../../../context/userContext";
 
-const RegisterPage = () => {
+const LoginStudent= () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   }) ;
+  const navigate=useNavigate();
+  const [auth,setAuth] = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target ;
@@ -18,23 +21,32 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/users", formData); // Assuming your backend API endpoint is '/api/users'
-      console.log(res.data);
+        const res= await axios.post("http://localhost:8080/api/auth/login-student",formData) ;
+      console.log(res) ; 
+      if(res?.data?.success){
+        setAuth({
+          ...auth,
+          user: res?.data?.user,
+          token: res?.data?.token,
+        }) ;
+        localStorage.setItem("auth", JSON.stringify(res.data));
+        navigate('/student/dashboard') ;
+      }
       // Add success message or redirection logic here
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error:", error.message);
       // Add error handling logic here
     }
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-r from-gray-300 to-gray-600 min-h-screen">
+    <div className="flex flex-col  bg-gradient-to-r from-gray-300 to-gray-600 min-h-screen">
             <Header/>
     <div className="flex justify-center items-center grow flex-1">
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
         <h2 className="text-xl font-semibold mb-4 text-blue-700 font-montserrat">Login now <span className="text-red-700"> (Hostellers only*)</span></h2>
       <div className="flex flex-col items-center justify-center gap-2">
-        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2 items-center justify-center">
+        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-2 items-center justify-center" encType='multipart/form-data'>
           <input
             type="email"
             name="email"
@@ -69,4 +81,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage ;
+export default LoginStudent ;

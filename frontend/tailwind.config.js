@@ -12,6 +12,8 @@ export default {
         poetsen:["Poetsen One", "sans-serif"],
         montserrat:["Montserrat", "sans-serif"],
         roboto:["Roboto Mono", 'monospace'],
+        jakarta:["Plus Jakarta Sans", 'sans-serif'],
+        inter:["Inter", 'sans-serif'],
       }
     },
   },
