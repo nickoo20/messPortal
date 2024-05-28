@@ -7,7 +7,8 @@ import authRoutes from './routes/auth.route.js' ;
 import complaintRoutes from './routes/complaint.route.js' ;
 import cors from 'cors' ;
 import { v2 as cloudinary } from "cloudinary";
-
+import billRoutes from "./routes/bills.route.js";
+import leaveRoutes from "./routes/leave.route.js";
 // import complaintRoutes from './routes/complaint.route.js' ;
 // import verificationRoutes from './routes/verification.route.js' ;
 cloudinary.config({
@@ -34,8 +35,8 @@ app.use(express.json()) ;
 app.use("/api/auth", authRoutes) ; 
 app.use("/api/complaints", complaintRoutes) ;
 // app.use('/api', verificationRoutes) ;
-
-
+app.use("/api/bills",billRoutes);
+app.use("/api/mark-leave",leaveRoutes);
 //app.use(cors());
 //app.use(express.json()) ;
 
