@@ -27,7 +27,7 @@ router.delete("/:complaintId", authMiddleWare, deleteComplaint) ;
 router.put('/resolve/:complaintId',authMiddleWare, resolveComplaint) ; 
 
 // Route to escalate a complaint
-router.put("/escalate/:complaintId", authMiddleWare, escalateComplaint) ;
+router.put("/escalate/:complaintId", authMiddleWare,escalateComplaint) ;
 
 //router.put('/:id/resolve',authMiddleWare, resolveComplaint) ; 
 router.get("/",getAllComplaintsAdmin);

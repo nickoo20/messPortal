@@ -1,0 +1,101 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
+const MarkLeave = () => {
+  
+  const data={registrationNumber:0,
+     startDate:"",
+     endDate:"",
+     //leaveDays:0
+};
+  const [inputdata,setinputdata]=useState(data)
+  const [auth, setAuth] = useAuth();
+  const handledata=(e)=>{
+      setinputdata({...inputdata,[e.target.name]:e.target.value})
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        console.log(inputdata)
+      const response = await axios.post('http://localhost:8080/api/mark-leave', inputdata).then((response)=>{
+        console.log(response);
+      });
+      //setMessage(response.inputdata.message);
+      console.log("sent");
+    } catch (error) {
+      //setMessage(error.response.);
+      console.log("error in axios")
+    }
+  };
+  if (!auth.user) {
+    return (
+      <>
+        <h1>Please Login first!!</h1>
+      </>
+    );
+  }
+  if (auth?.user?.role !== 1) {
+    return <h1>You do not have permission to this page...</h1>;
+  }
+  return (
+    <div className="container">
+      <h1>Mark Leave</h1>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="studentId">Student ID</label>
+          <input
+            type="number"
+            className="form-control"
+            id="registrationNumber"
+            name="registrationNumber"
+            value={inputdata.registrationNumber}
+            onChange={handledata}
+          />
+        </div>
+        <div>
+            <div className='form-group'>
+                <label htmlFor="startdate">Start date</label>
+                <input
+                type="date"
+                className="form-control"
+                id="startDate"
+                name="startDate"
+                value={inputdata.startDate}
+                onChange={handledata}
+                />
+
+            </div>
+            <div className='form-group'>
+                <label htmlFor="startdate">End date</label>
+                <input
+                type="date"
+                className="form-control"
+                id="endDate"
+                name="endDate"
+                value={inputdata.endDate}
+                onChange={handledata}
+                />
+
+            </div>
+        </div>
+        {/* <div className="form-group">
+          <label htmlFor="leaveDays">Number of Leave Days</label>
+          <input
+            type="number"
+            className="form-control"
+            id="leaveDays"
+            value={inputdata.leaveDays}
+            name="leaveDays"
+            onChange={handledata}
+          />
+        </div> */}
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
+      </form>
+      {/* {message && <p className="mt-3">{message}</p>} */}
+    </div>
+  );
+};
+
+export default MarkLeave;

@@ -17,7 +17,7 @@ const userSchema= new mongoose.Schema({
         required:true,
     },
     registrationNumber:{
-        type:String,
+        type:Number,
         required:true,
     },
     role:{

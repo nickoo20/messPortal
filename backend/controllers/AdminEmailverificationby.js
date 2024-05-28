@@ -34,7 +34,7 @@ const emailverificationbyuserforadmin=async(req,res)=>{
             console.log(error)
           }
           //res.render("http://localhost:5173/login-admin")
-          res.send({message:"verification done"})
+          return res.status(200).json({message:"verification done"})
     } catch (error) {
         console.log(error)
     }

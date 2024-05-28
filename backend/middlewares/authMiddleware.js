@@ -14,6 +14,7 @@ const getUserByEmail = async(email) => {
 }
 export const authMiddleWare = async(req, res, next) => {
     const token = req.cookies?.access_token ;
+    console.log(token);
     if(!token){
         return res.status(400).json({
             message:'No Token, Authorization denied!',
