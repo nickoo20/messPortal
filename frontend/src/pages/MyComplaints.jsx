@@ -1,60 +1,53 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Complaint from "../components/Complaint";
-import { useAuth } from "../../context/userContext";
-import {toast} from 'react-hot-toast'; 
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
+import { useAuth } from '../../context/userContext';
 
 const MyComplaints = () => {
-  const [complaints, setComplaints] = useState([]);
-  const [auth, setAuth] = useAuth() ;
-  const navigate=useNavigate() ;
+    const [complaints, setComplaints] = useState([]);
+    const [error, setError] = useState(null);
+    const [auth, setAuth] = useAuth() ; 
+    const id = auth?.user?._id ;
+    console.log('access_token: ',localStorage.getItem('access_token')) ;
+    useEffect(() => {
+        const fetchComplaints = async () => {
+            if (!id) {
+                setError('No ID provided');
+                return;
+            }
 
-  const user = auth?.user ;
+            try {
+              console.log(`Fetching complaints for ID: ${id}`);
+                const response = await axios.get(`http://localhost:8080/api/complaints/${id}`,{
+                  withCredentials:true,
+                });
+                 // Debugging: Log the response
+                 console.log('API Response:', response.data);
+                setComplaints(response?.data) ;
+            } catch (err) {
+                    // Debugging: Log the error
+                    console.error('Error fetching complaints:', err);
+                    setError('Error fetching complaints: ' + err.message);
+            }
+        };
 
-  if(!user){
-      navigate('/login-student'); 
-  } 
-  useEffect(() => {
-    const fetchMyComplaints = async () => {
-      try {
-        const res = await axios.get(`/api/complaints/${user?._id}`,{
-          withCredentials:true,
-          
-        }) ;
-        console.log(res) ;
-        // setComplaints(res); // Assuming res.data is an array of complaints
-        if(!res.ok){
-          toast.error(res?.data?.message);
-          return;
-        }
-        // const data=res.json(); 
-      } catch (err) {
-        toast.error(err.message) ;
-        console.error("Error fetching complaints:", err.message);
-      }
-    };
-    fetchMyComplaints();
-  });
+        fetchComplaints() ;
+    }, [id]);
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 ">
-        <h1 className="text-2xl font-bold mb-6 text-red-800">My Complaints</h1>
-        {/* {complaints.length > 0 ? (
-          // complaints.map((complaint) => (
-          //   <>z
-          //     <div className="flex flex-col gap-5 ">
-          //       <Complaint complaint={complaint}/>
-          //     </div>
-          //   </>
-          // ))
-        ) : (
-          <p className="text-gray-600 text-lg">No complaints found.</p>
-        )} */}
-      </div>
-    </div>
-  );
+    if (error) {
+        return <div>{error}</div>;
+    }
+
+    return (
+        <div>
+            <h1>My Complaints</h1>
+            <ul>
+                {complaints.map(complaint => (
+                    <li key={complaint._id}>{complaint.description}</li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default MyComplaints;

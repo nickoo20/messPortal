@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import { useAuth } from "../../../../context/userContext";
+import toast from "react-hot-toast";
 
 const LoginStudent= () => {
   const [formData, setFormData] = useState({
@@ -21,7 +22,9 @@ const LoginStudent= () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const res= await axios.post("http://localhost:8080/api/auth/login-student",formData) ;
+        const res= await axios.post("http://localhost:8080/api/auth/login-student",formData,{
+          withCredentials:true,
+        }) ;
       console.log(res) ; 
       if(res?.data?.success){
         setAuth({
@@ -29,6 +32,8 @@ const LoginStudent= () => {
           user: res?.data?.user,
           token: res?.data?.token,
         }) ;
+        toast.success(res?.data?.message) ;
+        console.log('Login',res) ;
         localStorage.setItem("auth", JSON.stringify(res.data));
         navigate('/student/dashboard') ;
       }

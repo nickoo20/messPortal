@@ -13,7 +13,6 @@ const Header = () => {
       user: null,
       token: "",
     });
-
     localStorage.removeItem("auth");
     navigate("/");
   };

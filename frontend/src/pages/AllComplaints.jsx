@@ -12,6 +12,7 @@ const AllComplaints = () => {
     const fetchAllComplaints = async () => {
       try {
         const res = await axios.get("http://localhost:8080/api/complaints/all");
+        console.log(res) ;
         setComplaints(res.data); // Assuming res.data is an array of complaints
       } catch (err) {
         console.error("Error fetching complaints:", err.message);

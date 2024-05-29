@@ -1,15 +1,18 @@
 // src/components/Sidebar.js
 import { NavLink } from 'react-router-dom';
 import { FaUser, FaClipboardList, FaFileInvoiceDollar, FaUtensils } from 'react-icons/fa';
+import { useAuth } from '../../context/userContext';
 
 const Sidebar = () => {
+  const [auth,setAuth] = useAuth() ;
+  const id= auth?.user?._id;
   return (
     <div className="w-64 min-h-screen flex flex-col p-4">
       <div className='flex-1 bg-white rounded-lg p-4'>
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 font-jakarta">Dashboard</h2>
       <ul className="space-y-4">
         <li>
-          <NavLink to="my-complaints" className={({ isActive }) => isActive ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200" : "flex items-center text-blue-700 border-b-2 hover:text-blue-900 transition-colors duration-200"}>
+          <NavLink to={`my-complaints/${id}`} className={({ isActive }) => isActive ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200" : "flex items-center text-blue-700 border-b-2 hover:text-blue-900 transition-colors duration-200"}>
             <FaUser className="mr-2" />
             <span className='font-inter'>My Complaints</span>
           </NavLink>
