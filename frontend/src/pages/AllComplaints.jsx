@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import Complaint from "../components/Complaint";
-import { useAuth } from "../../context/userContext";
 
 const AllComplaints = () => {
   const [complaints, setComplaints] = useState([]);
-  const [auth, setAuth] = useAuth() ;
-
 
   useEffect(() => {
     const fetchAllComplaints = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/complaints/all");
+        const res = await axios.get("http://localhost:8080/api/complaints/all",{
+          withCredentials:true,
+        });
         console.log(res) ;
         setComplaints(res.data); // Assuming res.data is an array of complaints
       } catch (err) {

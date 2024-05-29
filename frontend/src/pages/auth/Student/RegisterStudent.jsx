@@ -33,21 +33,20 @@ const RegisterStudent = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post("http://localhost:8080/api/auth/register-student", formData,{
         withCredentials:true,
       });
-      console.log("Response:", res) ;
+      console.log(res) ;
       if (res?.data?.success) {
         // Navigate to login page or show a success message
-        toast.success(res.data.message) ;
-        navigate("/login-student");
+        toast.success(res?.data.message) ;
+        // navigate("/login-student");
       }
     } catch (error) {
-      toast.error(error.data.message) ;
+      toast.error(error.message) ;
       console.error("Error in signup:", error.response ? error.response.data : error.message);
       // Add error handling logic here, e.g., show an error message to the user
     }

@@ -3,14 +3,10 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/userContext" ;
 
 const StudentPage = () => {
-  const[auth, setAuth] = useAuth() ;
   const navigate=useNavigate() ;
-  if(!auth.user){
-    navigate('/login-student') ;
-  }
+ 
   return (
     <div className="flex flex-col bg-gradient-to-r from-gray-100 to-gray-300 min-h-screen">
       <Header />

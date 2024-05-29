@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import axios from 'axios';
-import { useAuth } from '../../context/userContext';
 import { toast } from 'react-hot-toast';
 import { AiFillLike,AiFillDislike } from "react-icons/ai";
 
@@ -11,13 +10,14 @@ const Complaint = ({ complaint }) => {
   const [comments, setComments] = useState(complaint.comments);
   const [upvotes, setUpvotes] = useState(complaint.upvotes);
   const [downvotes, setDownvotes] = useState(complaint.downvotes);
-  const [auth] = useAuth();
 
   const formattedDate = format(new Date(complaint.createdAt), 'PPpp');
 
   const handleUpvote = async () => {
     try {
-      const res = await axios.post(`http://localhost:8080/api/complaints/upvote/${complaint._id}`);
+      const res = await axios.post(`http://localhost:8080/api/complaints/upvote/${complaint._id}`,{
+        withCredentials:true,
+      });
       // console.log(res?.data) ;
       setUpvotes(res?.data?.upvotes);
     } catch (err) {
@@ -27,7 +27,9 @@ const Complaint = ({ complaint }) => {
 
   const handleDownvote = async () => {
     try {
-      const res = await axios.post(`http://localhost:8080/api/complaints/downvote/${complaint._id}`);
+      const res = await axios.post(`http://localhost:8080/api/complaints/downvote/${complaint._id}`,{
+        withCredentials:true,
+      });
       setDownvotes(res?.data?.downvotes);
     } catch (err) {
       toast.error("Error downvoting complaint");
@@ -37,7 +39,9 @@ const Complaint = ({ complaint }) => {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`http://localhost:8080/api/complaints/${complaint._id}/comments`, { text: commentText });
+      const res = await axios.post(`http://localhost:8080/api/complaints/${complaint._id}/comments`, { text: commentText },{
+        withCredentials:true,
+      });
       setComments(res.data.comments);
       setCommentText('');
     } catch (err) {
@@ -73,7 +77,7 @@ const Complaint = ({ complaint }) => {
             <p className="text-sm text-gray-600">By {comment.createdBy.name} at {format(new Date(comment.createdAt), 'PPpp')}</p>
           </div>
         ))}
-        {auth.user && (
+        { (
           <form onSubmit={handleCommentSubmit} className="mt-4">
             <textarea
               value={commentText}

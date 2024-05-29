@@ -1,11 +1,11 @@
 // src/components/Sidebar.js
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { FaUser, FaClipboardList, FaFileInvoiceDollar, FaUtensils } from 'react-icons/fa';
-import { useAuth } from '../../context/userContext';
 
 const Sidebar = () => {
-  const [auth,setAuth] = useAuth() ;
-  const id= auth?.user?._id;
+  // const [auth,setAuth] = useAuth() ;
+  // const id= auth?.user?._id;
+  const {id} = useParams() ;
   return (
     <div className="w-64 min-h-screen flex flex-col p-4">
       <div className='flex-1 bg-white rounded-lg p-4'>

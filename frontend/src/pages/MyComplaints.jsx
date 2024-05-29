@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { useAuth } from '../../context/userContext';
+import { useSelector } from 'react-redux';
 
 const MyComplaints = () => {
+    const {currentUser} = useSelector(state=>state.user) ;
     const [complaints, setComplaints] = useState([]);
     const [error, setError] = useState(null);
-    const [auth, setAuth] = useAuth() ; 
-    const id = auth?.user?._id ;
-    console.log('access_token: ',localStorage.getItem('access_token')) ;
+    // const id=useParams();
+
     useEffect(() => {
         const fetchComplaints = async () => {
-            if (!id) {
-                setError('No ID provided');
-                return;
-            }
+            // if (!id) {
+            //     setError('No ID provided');
+            //     return;
+            // }
 
             try {
-              console.log(`Fetching complaints for ID: ${id}`);
-                const response = await axios.get(`http://localhost:8080/api/complaints/${id}`,{
+            //   console.log(`Fetching complaints for ID: ${id}`);
+                const response = await axios.get(`http://localhost:8080/api/complaints/${currentUser._id}`,{
                   withCredentials:true,
                 });
                  // Debugging: Log the response
@@ -32,7 +32,7 @@ const MyComplaints = () => {
         };
 
         fetchComplaints() ;
-    }, [id]);
+    }, [currentUser._id]) ;
 
     if (error) {
         return <div>{error}</div>;

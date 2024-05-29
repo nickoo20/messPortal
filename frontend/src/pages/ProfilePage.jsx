@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { useAuth } from '../../context/userContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const ProfilePage = () => {
-  const [auth, setAuth] = useAuth();
   const [profile, setProfile] = useState({
     name: '',
     email: '',
@@ -14,14 +12,10 @@ const ProfilePage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  useEffect(() => {
-    if (auth?.user) {
-      setProfile({
-        name: auth.user.name,
-        email: auth.user.email,
-      });
-    }
-  }, [auth]);
+  // useEffect(() => {
+    
+  // }
+  // }, []);
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);

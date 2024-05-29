@@ -1,20 +1,32 @@
 import { Link, useNavigate } from "react-router-dom";
 import { NitPhoto } from "../assets/NitSrinagar_photo";
-import { useAuth } from "../../context/userContext";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { useDispatch, useSelector } from "react-redux";
+import axios from 'axios' ;
+import {SignOutUserStart, deleteUserFailure,deleteUserSuccess, signOutUserStart} from '../redux/user/userSlice'; 
+import toast from "react-hot-toast";
 
 const Header = () => {
-  const [auth, setAuth] = useAuth();
+  const {currentUser} = useSelector(state=>state.user) ; 
   const navigate=useNavigate() ;
-  const handleClick = (e) => {
-    e.preventDefault();
-    setAuth({
-      ...auth,
-      user: null,
-      token: "",
-    });
-    localStorage.removeItem("auth");
-    navigate("/");
+  const dispatch=useDispatch() ;
+
+  const handleLogout = async(e) => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await axios.post('http://localhost:8080/api/auth/logout',{
+        withCredentials:true,
+      });
+      if (res?.data.success === false) {
+        dispatch(deleteUserFailure(res?.data.message));
+        return;
+      }
+      toast.success(res?.data.message) ;
+      dispatch(deleteUserSuccess(res?.data)); 
+      navigate('/login-student') ;
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message)) ;
+    }
   };
 
   return (
@@ -43,22 +55,22 @@ const Header = () => {
               </ul>
               <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className=" m-1 text-[#003C43] font-semibold">
-        {auth?.user ? <GiHamburgerMenu size={24}/> : 'Register/Login'}
-      </div>
+          </div>
+        {/* { <GiHamburgerMenu size={24}/> : 'Register/Login'
       <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-        {auth?.user ? (
+        {(
           <>
             <li><Link to="profile">Profile</Link></li>
-            <li><a href="#" onClick={handleClick}>Logout</a></li>
+            <li><a href="#" onClick={handleLogout}>Logout</a></li>
           </>
         ) : (
           <>
-            <li><Link to="/register-student">For Students</Link></li>
-            <li><Link to="/register-warden">For Wardens</Link></li>
-            <li><Link to="/register-accountant">For Accountants</Link></li>
+            <li><Link to="/login-student">For Students</Link></li>
+            <li><Link to="/login-warden">For Wardens</Link></li>
+            <li><Link to="/login-accountant">For Accountants</Link></li>
           </>
         )}
-      </ul>
+      </ul> */}
               </div>
             </div>
           </div>
