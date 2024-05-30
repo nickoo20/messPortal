@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Complaint from '../components/Complaint';
 
 const MyComplaints = () => {
     const {currentUser} = useSelector(state=>state.user) ;
@@ -11,14 +11,9 @@ const MyComplaints = () => {
 
     useEffect(() => {
         const fetchComplaints = async () => {
-            // if (!id) {
-            //     setError('No ID provided');
-            //     return;
-            // }
-
             try {
             //   console.log(`Fetching complaints for ID: ${id}`);
-                const response = await axios.get(`http://localhost:8080/api/complaints/${currentUser._id}`,{
+                const response = await axios.get(`http://localhost:8080/api/complaints/my/${currentUser._id}`,{
                   withCredentials:true,
                 });
                  // Debugging: Log the response
@@ -30,7 +25,6 @@ const MyComplaints = () => {
                     setError('Error fetching complaints: ' + err.message);
             }
         };
-
         fetchComplaints() ;
     }, [currentUser._id]) ;
 
@@ -40,12 +34,18 @@ const MyComplaints = () => {
 
     return (
         <div>
-            <h1>My Complaints</h1>
-            <ul>
-                {complaints.map(complaint => (
-                    <li key={complaint._id}>{complaint.description}</li>
-                ))}
-            </ul>
+            <h1 className="text-2xl font-bold mb-6 text-red-800 font-jakarta">My Complaints</h1>
+            {complaints.length > 0 ? (
+          complaints.map((complaint) => (
+            <>
+            <div className=''>
+            <Complaint key={complaint._id} complaint={complaint}/>
+            </div>
+            </>
+          ))
+        ) : (
+          <p className="text-gray-600 text-lg">No complaints found.</p>
+        )}
         </div>
     );
 };
