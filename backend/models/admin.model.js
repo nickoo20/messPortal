@@ -22,14 +22,14 @@ const AdminSchema = new mongoose.Schema(
       required: true,
       minLength: 6,
     },
-    HostelID: {
-      type: Number,
-      required: true,
-    },
-    HostelName: {
-      type: String,
-      required: true,
-    },
+    // HostelID: {
+    //   type: Number,
+    //   required: true,
+    // },
+    // HostelName: {
+    //   type: String,
+    //   required: true,
+    // },
     verified: {
       type: Boolean,
       default: false

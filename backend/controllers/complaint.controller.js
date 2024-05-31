@@ -161,10 +161,14 @@ export const resolveComplaint = async(req, res) => {
 export const getAllComplaintsAdmin=async(req,res)=>{
          try{
         const comp = await Complaint.find({});
+        const comp1=comp.filter((c)=>{
+            return c.status==='pending'||c.status==='escalated'
+        });
+        //console.log(comp1);
         res.status(200).json({
           success: true,
           message: "Fetched Successfully!",
-          comp,
+          comp1,
         });
     }catch(err){
         console.log(err);
