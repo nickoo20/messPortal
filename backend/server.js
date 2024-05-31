@@ -24,7 +24,10 @@ import studentRepresentativeRoutes from './routes/studentRepresentative.route.js
 dotenv.config() ;
 const app= express() ;
 const PORT = 8080 || process.env.PORT ;
-
+// const corsOptions = {
+//   origin: 'http://localhost:3000',
+//   credentials: true, // Allow credentials (cookies, authorization headers, TLS client certificates)
+// };
 app.use(cookieParser());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
