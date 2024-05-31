@@ -35,17 +35,18 @@ const MyComplaints = () => {
     return (
         <div>
             <h1 className="text-2xl font-bold mb-6 text-red-800 font-jakarta">My Complaints</h1>
+            <div className='grid grid-cols-1 md:grid-cols-2 mx-auto gap-3'>
+
             {complaints.length > 0 ? (
-          complaints.map((complaint) => (
-            <>
-            <div className=''>
+              complaints.map((complaint) => (
+                <>
             <Complaint key={complaint._id} complaint={complaint}/>
-            </div>
             </>
           ))
         ) : (
           <p className="text-gray-600 text-lg">No complaints found.</p>
         )}
+        </div>
         </div>
     );
 };
