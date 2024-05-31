@@ -1,3 +1,5 @@
+
+import daisyui from 'daisyui'
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -5,8 +7,18 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily:{
+        poetsen:["Poetsen One", "sans-serif"],
+        montserrat:["Montserrat", "sans-serif"],
+        roboto:["Roboto Mono", 'monospace'],
+        jakarta:["Plus Jakarta Sans", 'sans-serif'],
+        inter:["Inter", 'sans-serif'],
+      }
+    },
   },
-  plugins: [],
+  plugins: [
+    daisyui
+  ],
 }
 

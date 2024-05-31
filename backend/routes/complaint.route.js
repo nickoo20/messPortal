@@ -10,8 +10,8 @@ const router = express.Router() ;
 // Create a complaint and assign it to a warden
 router.post('/create',authMiddleWare, createComplaint) ;
 
-router.get('/my', authMiddleWare, getMyComplaints) ;
-router.get('/all', authMiddleWare, getAllComplaints) ;
+router.get('/my/:id',authMiddleWare, getMyComplaints) ;
+router.get('/all', authMiddleWare,getAllComplaints) ;
 
 // Vote for a complaint
 router.post('/upvote/:complaintId', authMiddleWare, upvoteComplaint) ;
@@ -21,7 +21,7 @@ router.post('/downvote/:complaintId', authMiddleWare, downvoteComplaint) ;
 router.post('/comment/:complaintId',authMiddleWare, commentOnComplaint) ;
 
 // Delete a complaint
-router.delete("/:complaintId", authMiddleWare, deleteComplaint) ;
+router.delete("/delete/:complaintId", authMiddleWare, deleteComplaint) ;
 
 // Resolve a complaint
 router.put('/resolve/:complaintId',authMiddleWare, resolveComplaint) ; 
