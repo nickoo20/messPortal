@@ -39,14 +39,15 @@ const emailverificationbyuserforadmin=async(req,res)=>{
             { email: userEmail },
             process.env.JWT_SECRET
           );
-          res.clearCookie("token");
-          return res.cookie("access_token", verificationToken,{
+          console.log(res.cookie);
+          //res.clearCookie("token");
+           res.cookie("access_token", verificationToken,{
         httpOnly:true,
         sameSite : "strict",
         // secure : process.env.NODE_ENV !== "development",
-      }) 
-      .status(200)
-      .json({ message: "Warden verification successful",access_token:verificationToken });
+      }).status(200).json({ message: "Warden verification successful",access_token:verificationToken });
+      //console.log(res.cookie.access_token)
+     
     } catch (error) {
         console.log(error)
     }

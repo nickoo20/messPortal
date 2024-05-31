@@ -146,7 +146,7 @@ export const loginUser = async (req, res) => {
 
 export const logout = async (req, res) => {
   try{
-    //console.log(res)
+    console.log(res)
   res.clearCookie('access_token') ;
   res.status(200).json({
     message: 'User logged out successfully!',
@@ -241,8 +241,9 @@ export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
   const options = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   };
+  const token1 = jwt.sign({email}, process.env.JWT_SECRET) ;
   if (isMatch) {
-    res.status(200).json({
+    res.cookie('access_token',token1).status(200).json({
       success: true,
       message: "Login Successfull! Redirecting",
       token,

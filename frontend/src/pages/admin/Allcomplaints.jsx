@@ -12,7 +12,7 @@ const App = () => {
     const fetchComplaints = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/complaints');
-        console.log(response);
+        //console.log(response);
         setComplaints(response.data.comp1);
         
       } catch (error) {
@@ -46,6 +46,7 @@ const App = () => {
 
   const handleSendClick = async (complaintId) => {
     try {
+      console.log(complaintId)
       await axios.put(`http://localhost:8080/api/complaints/escalate/${complaintId}`, {
         
         comment: comment

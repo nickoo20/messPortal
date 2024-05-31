@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken' ;
-import User from '../models/user.model.js' ;
+import {adminModel as User} from '../models/admin.model.js' ;
 
 const getUserByEmail = async(email) => {
     try {
@@ -12,7 +12,7 @@ const getUserByEmail = async(email) => {
         }) ;
     }
 }
-export const authMiddleWare = async(req, res, next) => {
+export const AdminauthMiddleWare = async(req, res, next) => {
     console.log("in the middleware");
     
     console.log(req)
