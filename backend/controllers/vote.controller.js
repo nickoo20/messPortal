@@ -10,6 +10,7 @@ export const upvoteComplaint = async (req, res) => {
     if (!complaint) {
       return res.status(404).json({ message: "Complaint not found" });
     }
+    // let upvote=complaint.upvotes;
     // upvote
     const userUpvoted = complaint.upvotes?.includes(userId);
     console.log(userUpvoted);
@@ -22,10 +23,7 @@ export const upvoteComplaint = async (req, res) => {
       const updatedVotes = complaint.upvotes.filter((id) => (
         id.toString() !== userId.toString()
       ));
-      return res.status(200).json({
-        message: "Upvote removed!",
-        updatedVotes,
-      });
+      return res.status(200).json(updatedVotes);
     } else {
        await Complaint.findByIdAndUpdate({_id:userId},{$pull:{
         downvotes:userId,
@@ -34,9 +32,9 @@ export const upvoteComplaint = async (req, res) => {
       await complaint.save();
       const updatedVotes = complaint.upvotes;
       return res.status(200).json({
-        message: "Upvoted successfully",
         updatedVotes,
-      });
+        message:'Upvoted successfully!',
+    }) ;
     }
   } catch (err) {
     console.log(`Error in upvote Controller, ${err.message}`);

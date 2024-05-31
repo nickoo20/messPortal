@@ -36,7 +36,7 @@ export const verifyEmail = async (req, res) => {
       from: process.env.EMAIL_USER,
       to: process.env.WARDEN_EMAIL,
       subject: "Warden Verification Required",
-      text: `A new user has registered and requires your verification. Click on the following link to verify the user: 
+      text: `A new user with Enrollment Number: ${user.enrollmentNumber.toUpperCase()} has registered and requires your verification. Click on the following link to verify the user: 
       ${process.env.BASE_URL}/verify-warden?token=${verificationToken}`,
     };
 
@@ -77,7 +77,7 @@ export const verifyWarden = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // Decode the token to get user details
     console.log("decoded Warden: ", decoded);
     const user = await User.findOne({ email: decoded.userEmail }); // Find user by decoded email
-
+    console.log(user) ;
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
@@ -85,7 +85,6 @@ export const verifyWarden = async (req, res) => {
     if (!user.isVerified) {
       return res.status(400).json({ message: "User email not verified yet" });
     }
-
     user.isWardenVerified = true;
     await user.save();
 
@@ -93,6 +92,29 @@ export const verifyWarden = async (req, res) => {
       { email: user.email },
       process.env.JWT_SECRET
     );
+      // Send confirmation email to user (Confirmation email)
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+  
+      const userMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "Verification Successful",
+        text: `Dear ${user.name},\n\nYour account has been successfully verified by the warden. You can now log in to the mess portal.\n\nBest regards,\nMess Portal Team`,
+      };
+  
+      transporter.sendMail(userMailOptions, (error, info) => {
+        if (error) {
+          console.log("Error sending confirmation email:", error.message);
+        } else {
+          console.log("Confirmation email sent: " + info.response);
+        }
+      });
 
     res.clearCookie("initial_token1");
     return res
@@ -102,7 +124,7 @@ export const verifyWarden = async (req, res) => {
         // secure : process.env.NODE_ENV !== "development",
       }) 
       .status(200)
-      .json({ message: "Warden verification successful",access_token:verificationToken });
+      .json({ message: `Warden verification successful for ${user.enrollmentNumber.toUpperCase()}`,access_token:verificationToken });
   } catch (error) {
     console.log(`Error in warden verification, ${error.message}`);
     return res.status(500).json({ error: "Error in warden verification" });

@@ -1,162 +1,186 @@
-import Complaint from "../models/complaint.model.js" ; 
-import {sendEmail} from '../utils/emailConfig.js' ;
+import Complaint from "../models/complaint.model.js";
+// import User from "../models/user.model.js";
+import { sendEmail } from "../utils/emailConfig.js";
+// import {errorHandler} from '../utils/error.js' ;
 
 // Create a new complaint and assign it to a warden
-export const createComplaint = async(req, res) => {
-    try{
-// ADD IMAGE ALSO FEATURE!
-        const {title, description} = req.body ;
-        const user = req.user ;
-        const whoCreated = user ;
-        // console.log('User: ', req.user) ;
-        // console.log(createdBy) ;
-        const newComplaint = new Complaint({
-            title,
-            description,
-            createdBy:whoCreated,
-        }) ;
-        await newComplaint.save() ;
-        return res.status(201).json(newComplaint) ;
-    }catch(err){
-        console.log(`Error in complaint Controller!, ${err.message}`) ; 
-        return res.status(500).json({
-            error: 'Internal Server Error!',
-        }) ;  
-    }
-}
+export const createComplaint = async (req, res) => {
+  try {
+    // ADD IMAGE ALSO FEATURE!
+    const { title, description } = req.body;
+    const user = req.user;
+    const whoCreated = user;
+    // console.log('User: ', req.user) ;
+    // console.log(createdBy) ;
+    const newComplaint = new Complaint({
+      title,
+      description,
+      createdBy: whoCreated,
+    });
+    await newComplaint.save();
+    return res.status(201).json(newComplaint);
+  } catch (err) {
+    console.log(`Error in complaint Controller!, ${err.message}`);
+    return res.status(500).json({
+      error: "Internal Server Error!",
+    });
+  }
+};
 
 // Comment on a complaint
-export const commentOnComplaint = async(req, res) => { 
-    try{
-        const {text} = req.body; 
-        const { complaintId } = req.params ;
-        // const userId = req.user._id ;
-        if (!text) {
-            return res.status(400).json({
-              error: "Text is required!",
-            });
-        }
-
-        const complaint = await Complaint.findById(complaintId) ;
-
-        if (!complaint) {
-            return res.status(404).json({ message: 'Complaint not found' });
-        }
-
-        const comment = {
-            user: req.user._id, 
-            text
-        } ; 
-        complaint.comments.push(comment); 
-        await complaint.save() ;
-        return res.status(200).json(complaint) ;
-
-    }catch(err){
-        console.log(`Error in comment Controller!, ${err.message}`) ; 
-        return res.status(500).json({
-            error: 'Internal Server Error!',
-        }) ; 
+export const commentOnComplaint = async (req, res) => {
+  try {
+    const { text } = req.body;
+    const { complaintId } = req.params;
+    // const userId = req.user._id ;
+    if (!text) {
+      return res.status(400).json({
+        error: "Text is required!",
+      });
     }
-}
+
+    const complaint = await Complaint.findById(complaintId).populate({
+      path:"comments.user",
+      select: "name email"
+    });
+
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
+
+    const comment = {
+      user: req.user._id,
+      text,
+    };
+    complaint.comments.push(comment);
+    await complaint.save();
+    return res.status(200).json(complaint) ;
+  } catch (err) {
+    console.log(`Error in comment Controller!, ${err.message}`);
+    return res.status(500).json({
+      error: "Internal Server Error!",
+    });
+  }
+};
 
 // Delete a complaint
-export const deleteComplaint = async(req, res) => {
-    try{
-        const {complaintId} = req.params ;
-        const user = req.user ;
-        if(!user){
-            return res.status(404).json({
-                message:'User not found!',
-            }) ;
-        }
-        const complaint = await Complaint.findById(complaintId) ;
-        if (!complaint) {
-            return res.status(404).json({
-              error: "Complaint not found!",
-            });
-        } 
-        console.log(req.user._id) ;
-        console.log(complaint.createdBy) ;
-        if(req?.user._id.toString() !== complaint?.createdBy.toString()){
-            return res.status(400).json({
-                error: "You can only delete your own complaint.",
-              });
-        }
-        await Complaint.findByIdAndDelete(complaintId) ;
-        return res.status(200).json({
-            message: "Complaint deleted successfully!",
-          });
-
-    }catch(err){
-        console.log(`Error in delete Complaint Controller!, ${err.message}`) ; 
-        return res.status(500).json({
-            error: 'Internal Server Error!',
-        }) ; 
+export const deleteComplaint = async (req, res) => {
+  try {
+    const { complaintId } = req.params;
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
     }
-}
-
+    const complaint = await Complaint.findById(complaintId);
+    if (!complaint) {
+      return res.status(404).json({
+        error: "Complaint not found!",
+      });
+    }
+    console.log(req.user._id);
+    console.log(complaint.createdBy);
+    if (req?.user._id.toString() !== complaint?.createdBy.toString()) {
+      return res.status(400).json({
+        error: "You can only delete your own complaint.",
+      });
+    }
+    await Complaint.findByIdAndDelete(complaintId);
+    return res.status(200).json({
+      message: "Complaint deleted successfully!",
+    });
+  } catch (err) {
+    console.log(`Error in delete Complaint Controller!, ${err.message}`);
+    return res.status(500).json({
+      error: "Internal Server Error!",
+    });
+  }
+};
 // Get My Complaints
-export const getMyComplaints = async(req, res) =>{ 
-    try{
-        const user = req.user ; 
-        const myComplaints = await Complaint.find({createdBy: user})  ;
-        return res.status(200).json(myComplaints) ;
-    }catch(err){
-        console.log(`Error in Get My Complaint Controller!, ${err.message}`) ; 
-        return res.status(500).json({
-            error: 'Internal Server Error!',
-        }) ; 
-    }
+export const getMyComplaints = async (req, res,next) => {
+console.log(req.user) ;
+console.log(req.params.id) ;
+if (req.user._id.toString() != req.params.id) {
+  return res.status(500).json('You can only view your own complaints!') ;
+}
+  try {
+    const complaint = await Complaint.find({ createdBy: req.params.id }).populate({
+      path: "createdBy",
+      select: "name email",
+    });
+    res.status(200).json(complaint);
+  } catch (error) {
+    next(error) ;
+  }
 }
 
 // Get All complaints
-export const getAllComplaints = async(req, res) => {
-    try{
-        const allComplaints = await Complaint.find({status:'pending'}); 
-        return res.status(200).json(allComplaints) ; 
-    }catch(err){
-        console.log(`Error in get All Complaint Controller!, ${err.message}`) ; 
-        return res.status(500).json({
-            error: 'Internal Server Error!',
-        }) ; 
-    }
-}
+export const getAllComplaints = async (req, res) => {
+  try {
+    const comp = await Complaint.find({})
+    .sort({ createdAt: -1 })
+    .populate({
+      path: "createdBy",
+      select: "name email",
+    }).populate({
+      path: "comments.user",
+      select:"name email",
+    });
+    const comp1 = comp.filter((c) => {
+      return c.status === "pending" || c.status === "escalated";
+    });
+    // console.log(comp1);
+    res.status(200).json({
+      success: true,
+      comp1,
+      message: "Fetched Successfully!",
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json("Error in All complaints controller ", err.message);
+  }
+};
 
-// Resolve or escalate a complaint (warden only) 
-
+// Resolve or escalate a complaint (warden only)
 // Resolve a Complaint
-export const resolveComplaint = async(req, res) => {
-    try{
-        const {complaintId} = req.params; 
-        const complaint = await Complaint.findById(complaintId) ;
-        const user = req.user ;
+export const resolveComplaint = async (req, res) => {
+  try {
+    const { complaintId } = req.params;
+    const complaint = await Complaint.findById(complaintId);
+    const user = req.user;
 
-        if (!complaint) {
-            return res.status(404).json({ message: 'Complaint not found' });
-        }
-        
-        if(!user){
-            return res.status(404).json({
-                message:'User not found!',
-            }) ;
-        }
-
-         // Check if the user is a warden
-        if (req.user.role !== 'warden') {
-            return res.status(403).json({ message: 'You are not authorized to resolve complaints' });
-        }
-
-        complaint.status = 'resolved';
-        await complaint.save();
-
-    return res.status(200).json({ message: 'Complaint resolved successfully', complaint });        
-
-    }catch(err){
-        console.log(`Error in Resolve Complaint Controller!, ${err.message}`) ; 
-        return res.status(500).json({
-            error: 'Internal Server Error!',
-        }) ;  
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
     }
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+
+    // Check if the user is a warden
+    if (req.user.role !== "warden") {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to resolve complaints" });
+    }
+
+    complaint.status = "resolved";
+    await complaint.save();
+
+    return res
+      .status(200)
+      .json({ message: "Complaint resolved successfully", complaint });
+  } catch (err) {
+    console.log(`Error in Resolve Complaint Controller!, ${err.message}`);
+    return res.status(500).json({
+      error: "Internal Server Error!",
+    });
+  
+  }
 }
 export const getAllComplaintsAdmin=async(req,res)=>{
          try{
@@ -197,32 +221,36 @@ export const patchComplaint=async(req,res)=>{
   }
 }
 
-export const escalateComplaint = async(req, res) => {
-    try{
-        const { complaintId } = req.params;
-        const { comment } = req.body;
-        const user = req.user ;
-        if(!user){
-            return res.status(404).json({
-                message:'User not found!',
-            }) ;
-        }
+    
 
-        // Check if the user is a warden
-        if(user.role !== 'warden') {
-            return res.status(403).json({ message: 'You are not authorized to escalate complaints' });
-        }
+export const escalateComplaint = async (req, res) => {
+  try {
+    const { complaintId } = req.params;
+    const { comment } = req.body;
+    const user = req.user;
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
 
-        const complaint = await Complaint.findById(complaintId);
-        if (!complaint) {
-          return res.status(404).json({ message: 'Complaint not found' });
-        }
-        complaint.status = 'escalated';
-        await complaint.save();
+    // Check if the user is a warden
+    if (user.role !== "warden") {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to escalate complaints" });
+    }
 
-        // Send email to DSW
-        const emailSubject = `Escalated Complaint: ${complaint.title}`;
-        const emailHtml = `
+    const complaint = await Complaint.findById(complaintId);
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
+    complaint.status = "escalated";
+    await complaint.save();
+
+    // Send email to DSW
+    const emailSubject = `Escalated Complaint: ${complaint.title}`;
+    const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e2e2; border-radius: 8px; overflow: hidden;">
         <div style="background-color: #f8f8f8; padding: 20px; text-align: center; border-bottom: 1px solid #e2e2e2;">
           <h2 style="color: #4CAF50;">Escalated Complaint</h2>
@@ -242,12 +270,15 @@ export const escalateComplaint = async(req, res) => {
         </div>
       </div>
     `;
-        await sendEmail(emailSubject, emailHtml); 
 
-        return res.status(200).json({ message: 'Complaint escalated and email sent to DSW', complaint });
+    await sendEmail(emailSubject, emailHtml);
 
-    }catch(err){
-        console.log(`Error in escalate Complaint Controller!, ${err.message}`);
-        return res.status(500).json({ error: 'Internal Server Error!' });
-    }
-}
+    return res.status(200).json({
+      message: "Complaint escalated and email sent to DSW",
+      complaint,
+    });
+  } catch (err) {
+    console.log(`Error in escalate Complaint Controller!, ${err.message}`);
+    return res.status(500).json({ error: "Internal Server Error!" });
+  }
+};

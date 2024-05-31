@@ -1,20 +1,25 @@
 import express from 'express' ;
-import { registerUser,loginUser } from '../controllers/auth.controller.js' ; 
+import { registerUser,loginUser, logout } from '../controllers/auth.controller.js' ; 
 import { verifyEmail, verifyWarden } from '../controllers/verify.controller.js';
 import { logout,RegisterAdmin } from '../controllers/auth.controller.js' ; 
 import { emailverificationbyuserforadmin } from "../controllers/AdminEmailverificationby.js";
 import { LoginAdmin } from '../controllers/auth.controller.js';
 const router = express.Router() ;
 
-router.post("/register", registerUser) ;
+router.post("/register-student", registerUser) ;
 router.get('/verify-email', verifyEmail);
 router.get('/verify-warden', verifyWarden);
 
-router.post("/login", loginUser) ;
-router.post("/logout", logout) ;
+//router.post("/login", loginUser) ;
+//router.post("/logout", logout) ;
 router.post("/register-admin", RegisterAdmin);
 router.get('/verify/user',emailverificationbyuserforadmin);
 router.post('/login-admin',LoginAdmin);
+router.post("/login-student", loginUser) ;
+router.post('/logout-student',logout) ;
+
+
+
 
 
 
