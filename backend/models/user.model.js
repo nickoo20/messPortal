@@ -17,14 +17,18 @@ const userSchema= new mongoose.Schema({
         required:true,
     },
     registrationNumber:{
-        type:String,
+        type:Number,
         required:true,
     },
     role:{
         type:String,
         // required: true,
-        enum:['student', 'warden'], 
+        enum:['student', 'warden','accountant'], 
         default:'student',
+    },
+    hosteller:{
+        type:Boolean,
+        required:false,
     },
     isVerified:{
         type:Boolean,
@@ -34,10 +38,10 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         default:false,
     },
-    // verificationToken:{
-    //     type:String,
-    // },
-
+    studentRep:{
+        type:Boolean,
+        default:false,
+    },
 },{timestamps:true}) ;
 
 const User = mongoose.model("User", userSchema) ;
