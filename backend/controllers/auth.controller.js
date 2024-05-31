@@ -1,38 +1,58 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import nodemailer from 'nodemailer' ;
+import nodemailer from "nodemailer";
 
 export const registerUser = async (req, res) => {
   try {
-    const { email, password, enrollmentNumber, name, registrationNumber } = req.body ;
-    const emailRegex = /^[a-z]+_[0-9]{4}[a-z]{4}[0-9]{3}@nitsri\.ac\.in$/ ;
-    if(!emailRegex.test(email)){
-        return res.status(400).json({
-            error: "Invalid email format!",
-        }) ;
+    const {
+      email,
+      password,
+      enrollmentNumber,
+      name,
+      registrationNumber,
+      hosteller,
+    } = req.body;
+    const emailRegex = /^[a-z]+_[0-9]{4}[a-z]{4}[0-9]{3}@nitsri\.ac\.in$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        error: "Invalid email format!",
+      });
     }
-    let user = await User.findOne({ email }) ;
+    let user = await User.findOne({ email });
 
     if (user) {
       return res.status(400).json({ message: "User already exists!" });
     }
     // Check if password is strong
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    if (!hosteller) {
+      return res.status(404).json({
+        message: "Non-hosteller students cannot register!",
+      });
+    }
+    const passwordRegex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
     if (!passwordRegex.test(password)) {
-      return res.status(400).json({ message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character!" });
+      return res
+        .status(400)
+        .json({
+          message:
+            "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character!",
+        });
     }
 
-     // Check if enrollment number is unique
-     const existingEnrollmentNumber = await User.findOne({ enrollmentNumber });
-     if (existingEnrollmentNumber) {
-       return res.status(400).json({
-         error: "Enrollment number already exists!",
-       });
-     }
+    // Check if enrollment number is unique
+    const existingEnrollmentNumber = await User.findOne({ enrollmentNumber });
+    if (existingEnrollmentNumber) {
+      return res.status(400).json({
+        error: "Enrollment number already exists!",
+      });
+    }
 
-     // Check if registration number is unique
-    const existingRegistrationNumber = await User.findOne({ registrationNumber }); 
+    // Check if registration number is unique
+    const existingRegistrationNumber = await User.findOne({
+      registrationNumber,
+    });
     if (existingRegistrationNumber) {
       return res.status(400).json({
         error: "Registration number already exists!",
@@ -40,23 +60,25 @@ export const registerUser = async (req, res) => {
     }
 
     // Create new user
-    user = new User({ 
-      email, 
+    user = new User({
+      email,
       password,
       enrollmentNumber,
       name,
-      registrationNumber
-   });
+      registrationNumber,
+    });
     user.password = await bcrypt.hash(password, 10);
 
     const token = jwt.sign({ email }, process.env.JWT_SECRET);
-    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
     // user.verificationToken = verificationToken;
     await user.save();
 
-     // Send verification email
-     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+    // Send verification email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
       auth: {
         user: process.env.EMAIL_USER, // Your email address
         pass: process.env.EMAIL_PASS, // Your email password
@@ -66,7 +88,7 @@ export const registerUser = async (req, res) => {
     const userMailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: 'Account Verification',
+      subject: "Account Verification",
       text: `Click on the following link to verify your account: ${process.env.BASE_URL}/verify-email?token=${verificationToken}`,
     };
 
@@ -74,27 +96,27 @@ export const registerUser = async (req, res) => {
       if (error) {
         return console.log(error);
       }
-      console.log('Email sent: ' + info.response) ;
+      // toast.success("Go to your email!")
+      console.log("Email sent: " + info.response);
     });
-
     return res
-    .cookie('initial_token',token, {
-      httpOnly: true,
-      sameSite : "strict",
-      secure : process.env.NODE_ENV === "development",
-    }) 
+      .cookie("initial_token", token, {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "development",
+      })
       .status(200)
       .json({
         message:
-          "Registration successful!, check your email for verification link!", 
-          initial_token: token
+          "Registration successful!, check your email for verification link!",
+        initial_token: token,
+        success:true,
       });
   } catch (error) {
     console.log(`, ${error.message}!`);
-    return res.status(500).json({ message: "Error in SignUp controller,!" }) ;
+    return res.status(500).json({ message: "Error in SignUp controller,!" });
   }
 };
-
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -111,23 +133,24 @@ export const loginUser = async (req, res) => {
         message: "Invalid credentials!",
       });
     }
-    if (!user.isVerified || !user.isWardenVerified) {
+    if (!user.isWardenVerified) {
       return res.status(403).json({
-        message: "User not fully verified!",
+        message: "User not verified by warden!",
       });
     }
 
-    // const payload = {
-    //   user: {
-    //     id: user.id,
-    //   },
-    // };
     user.password = undefined;
-    const token = jwt.sign({email}, process.env.JWT_SECRET) ;
-      return res.cookie('access_token',token).status(200).json({
+    const token = jwt.sign({ email }, process.env.JWT_SECRET);
+    return res
+      .cookie("access_token", token, { httpOnly: true })
+      .status(200)
+      .json({
+        token,
+        success: true,
         message: "Login successful!",
-        user
-  }) ;
+        user,
+        
+      });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -137,8 +160,13 @@ export const loginUser = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie('access_token') ;
-  res.status(200).json({
-    message: 'User logged out successfully!',
-  }) ;
-}
+  try {
+    res.clearCookie('access_token');
+    res.status(200).json({
+      success:true,
+      message:'User has been logged out!'
+  });
+  } catch (error) {
+    next(error);
+  }
+};
