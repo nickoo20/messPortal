@@ -64,7 +64,7 @@ const LoginStudent = () => {
           <div className="flex flex-col items-center justify-center gap-2">
             <form
               onSubmit={handleSubmit}
-              className="w-full flex flex-col gap-2 items-center justify-center"
+              className="w-full flex flex-col gap-2 items-center justify-center font-jakarta"
               encType="multipart/form-data"
             >
               <input
@@ -74,7 +74,7 @@ const LoginStudent = () => {
                 onChange={handleChange}
                 placeholder="Enter your Email"
                 required
-                className="border p-2 w-full rounded-xl focus:outline-none"
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
               <input
                 type="password"
@@ -83,7 +83,7 @@ const LoginStudent = () => {
                 onChange={handleChange}
                 placeholder="Enter your Password"
                 required
-                className="border p-2 w-full rounded-xl focus:outline-none"
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
               <button
                 type="submit"

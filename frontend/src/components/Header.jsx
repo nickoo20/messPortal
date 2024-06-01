@@ -34,11 +34,14 @@ const Header = () => {
     <div>
       <header className="bg-[#F6F5F2] shadow-md pt-2 w-full">
         <div className="flex items-center justify-between px-4 py-2 sm:pl-12 gap-3 mr-4">
-          <Link to="/" className="flex items-center">
-            <NitPhoto />
-            <h1 className="text-sm xl:text-xl flex border-none rounded-full p-2 tracking-wide font-inter">
-              MESS PORTAL - NIT SRINAGAR
+          <Link to="/" className="flex gap-2 items-center">
+            <div className="hidden sm:block border-2 rounded-full"><NitPhoto/></div>
+            <div className="flex flex-col items-center ">
+            <h1 className="text-sm sm:text-xl font-poetsen flex border-none rounded-full tracking-wide mb-0 ">
+              MESS PORTAL
             </h1>
+            <div className="text-sm font-bold text-blue-500">(NIT Srinagar)</div>
+            </div>
           </Link>
           <div className="">
             <div className="flex justify-end items-center gap-2">
@@ -55,10 +58,10 @@ const Header = () => {
                 </Link>
               </ul>
               <div className="dropdown dropdown-end">
-                <div tabIndex={0} role="button" className="m-1 text-[#003C43] font-semibold">
+                <div tabIndex={0} role="button" className="m-1 text-[#003C43] font-semibold text-sm sm:text-md">
                   {currentUser?._id ? <GiHamburgerMenu size={24} /> : 'Register/Login'}
                 </div>
-                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box md:w-52 w-28">
                   {currentUser?._id ? (
                     <>
                       <li><Link to="profile">Profile</Link></li>
