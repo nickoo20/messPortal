@@ -27,6 +27,11 @@ const AdminLanding = () => {
               <h3 className="text-xl font-bold text-gray-700">See Menu</h3>
             </div>
           </Link>
+          <Link to="/manage-mr" className="card">
+            <div className="bg-white shadow-lg rounded-lg p-6 text-center transform transition-transform duration-200 hover:scale-105">
+              <h3 className="text-xl font-bold text-gray-700">Manange MR</h3>
+            </div>
+          </Link>
         </div>
         
         {/* <Switch>

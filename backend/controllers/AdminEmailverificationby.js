@@ -43,7 +43,8 @@ const emailverificationbyuserforadmin=async(req,res)=>{
           //res.clearCookie("token");
            res.cookie("access_token", verificationToken,{
         httpOnly:true,
-        sameSite : "strict",
+        sameSite : "None",
+        secure:false
         // secure : process.env.NODE_ENV !== "development",
       }).status(200).json({ message: "Warden verification successful",access_token:verificationToken });
       //console.log(res.cookie.access_token)

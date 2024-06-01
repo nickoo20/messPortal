@@ -31,14 +31,15 @@ export const makeStudentRepresentative = async (req, res) => {
   }
 };
 export const removeStudentRepresentative = async (req, res) => {
-  const { registrationNumber } = req.params;
+  //const { registrationNumber } = req.params;
+  const   {registrationNumber} = parseInt(req.params, 10);
   if(registrationNumber)
    console.log(registrationNumber)
    else
    console.log("not here")
   try {
     const user = await User.findOneAndUpdate(
-      { registrationNumber },
+       registrationNumber ,
       { isStudentRepresentative: false },
       { new: true } // Return the updated document
     );
@@ -53,5 +54,12 @@ export const removeStudentRepresentative = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
+export const findALLMr=async (req, res) => {
+  try {
+    const students = await User.find({ isStudentRepresentative: true });
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch students' });
+  }
+}
 

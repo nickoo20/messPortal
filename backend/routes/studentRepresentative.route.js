@@ -1,6 +1,6 @@
 import express from 'express';
 
-import {makeStudentRepresentative,removeStudentRepresentative} from '../controllers/StudentRepresentative.js';
+import {makeStudentRepresentative,removeStudentRepresentative,findALLMr} from '../controllers/StudentRepresentative.js';
 const router=express.Router();
 router.patch("/add/:num",makeStudentRepresentative);
 router.patch('/remove/:num',removeStudentRepresentative);
@@ -14,4 +14,5 @@ router.patch('/remove/:num',removeStudentRepresentative);
 //     }
     
 // })
+router.get('/all',findALLMr);
 export default router;
