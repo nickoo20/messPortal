@@ -3,10 +3,10 @@ import React from 'react';
 const Hero = () => {
   return (
     <section id="features" className="p-10 text-center text-white">
-      <h2 className="text-4xl font-bold mb-8 text-gray-800">Features</h2>
+      <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800">Features</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="p-6 bg-white text-blue-800 border rounded-lg shadow-lg transform hover:scale-105 transition-transform">
-          <h3 className="text-2xl font-semibold mb-4 flex items-center justify-center">
+          <h3 className="text-2xl font-semibold mb-4 flex items-center justify-center flex-wrap">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m-3-3V8m0 8v4" />
             </svg>

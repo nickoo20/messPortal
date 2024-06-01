@@ -56,7 +56,7 @@ const RegisterStudent = () => {
     <div className="flex flex-col h-screen bg-gradient-to-r from-gray-300 to-gray-600 min-h-screen">
       <Header />
       <div className="flex justify-center items-center flex-1">
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-xl">
           <h2 className="text-xl font-semibold font-montserrat mb-4 text-blue-700">
             Are you a NIT Srinagar Hosteller ?{" "}
             <span className="text-green-700"> Register here</span>
@@ -64,7 +64,7 @@ const RegisterStudent = () => {
           <div className="flex flex-col gap-2 items-center justify-center">
             <form
               onSubmit={handleSubmit}
-              className="w-full flex flex-col gap-2 items-center justify-center"
+              className="w-full flex flex-col gap-2 font-jakarta"
             >
               <input
                 type="email"
@@ -73,7 +73,7 @@ const RegisterStudent = () => {
                 onChange={handleChange}
                 placeholder="Enter your Email"
                 required
-                className="border p-2 w-full rounded-xl focus:outline-none"
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
               <input
                 type="password"
@@ -82,7 +82,7 @@ const RegisterStudent = () => {
                 onChange={handleChange}
                 placeholder="Enter your Password"
                 required
-                className="border p-2 w-full rounded-xl focus:outline-none"
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
               <input
                 type="text"
@@ -91,7 +91,7 @@ const RegisterStudent = () => {
                 onChange={handleChange}
                 placeholder="Enter you Enrollment Number"
                 required
-                className="border p-2 w-full rounded-xl focus:outline-none"
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
               <input
                 type="text"
@@ -100,17 +100,22 @@ const RegisterStudent = () => {
                 onChange={handleChange}
                 placeholder="Enter your Full Name"
                 required
-                className="border p-2 w-full rounded-xl focus:outline-none"
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
+              <div className="flex flex-wrap">
+                <div className="text-sm text-red-800">Registration Number in format : </div>
+                <div className="text-sm">(e.g., <span className="text-green-700">20200832</span> 
+                from <span className="text-green-700">2020</span>NITSGR<span className="text-green-700">0832</span>)</div>
+              </div>
               <input
                 type="Number"
                 name="registrationNumber"
                 value={formData.registrationNumber}
                 onChange={handleChange}
-                placeholder="Enter your Registration Number"
+                placeholder="Enter your Registration Number "
                 required
-                className="border p-2 w-full rounded-xl focus:outline-none"
-              />
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
+                />
               <div className="flex flex-col items-start justify-center w-full gap-4">
                 <div className="flex items-center">
                   <span>Are you a hosteller?</span>
