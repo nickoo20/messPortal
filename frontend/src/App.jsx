@@ -49,14 +49,14 @@ const App = () => {
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/verify-warden" element={<VerifyWarden />} />
           <Route path="/*" element={<NotFound />} />
-<Route path="/signup-admin" element={<RegisterAdmin />} />
+{/* <Route path="/signup-admin" element={<RegisterAdmin />} /> */}
     <Route path="/login" element={<LoginAdmin/>}/>
     <Route path="/admin-landing" element={<AdminLanding/>}/>
     <Route path="/allcomplaints" element={<Allcomplaints/>}/>
-          {/* <Route path="/register-warden" element={<RegisterWarden />} />
+          <Route path="/register-warden" element={<RegisterWarden />} />
           <Route path="/login-warden" element={<LoginWarden />} />
           <Route path="/register-accountant" element={<RegisterAccountant />} />
-          <Route path="/login-accountant" element={<LoginAccountant />} /> */}
+          <Route path="/login-accountant" element={<LoginAccountant />} />
         </Routes>
       </div>
     </BrowserRouter>
