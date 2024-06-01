@@ -6,7 +6,7 @@ import axios from "axios";
 import { useAuth } from "../context/userContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTab, useToast } from "@chakra-ui/react";
-import Cookies from 'js-cookie';
+//import Cookies from 'js-cookie';
 
 
 const ProfileDropdown = () => {
@@ -24,7 +24,7 @@ const ProfileDropdown = () => {
     });
     try {
      const response= await axios.post("http://localhost:8080/api/auth/logout");
-     Cookies.remove('access_token');
+    // Cookies.remove('access_token');
     } catch (error) {
       const msg = error.message;
       toast({

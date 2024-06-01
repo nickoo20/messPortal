@@ -30,6 +30,6 @@ router.put('/resolve/:complaintId',authMiddleWare, resolveComplaint) ;
 router.put("/escalate/:complaintId", AdminauthMiddleWare ,escalateComplaint) ;
 
 //router.put('/:id/resolve',authMiddleWare, resolveComplaint) ; 
-router.get("/",getAllComplaintsAdmin);
+router.get("/",AdminauthMiddleWare,getAllComplaintsAdmin);
 router.patch("/:id",patchComplaint);
 export default router ; 
