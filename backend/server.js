@@ -28,8 +28,25 @@ const PORT = 8080 || process.env.PORT ;
 //   origin: 'http://localhost:3000',
 //   credentials: true, // Allow credentials (cookies, authorization headers, TLS client certificates)
 // };
+
 app.use(cookieParser());
-app.use(cors());
+
+app.use(cors({
+  origin:'http://localhost:3000',
+  credentials: true,
+  preflightContinue: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+
+}));
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000/");
+//   res.header("Access-Control-Allow-Credentials", true);
+//   if (req.method === "OPTIONS") {
+//     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+//     return res.status(200).json({});
+//   }
+//   next();
+// });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()) ;
 

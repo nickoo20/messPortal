@@ -11,7 +11,9 @@ const App = () => {
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/complaints');
+        const response = await axios.get('http://localhost:8080/api/complaints', {  
+          withCredentials: true
+        });
         //console.log(response);
         setComplaints(response.data.comp1);
         
@@ -37,7 +39,7 @@ const App = () => {
   };
   const handleForwardClick = (complaintId) => {
     setfl(!fl);
-    setSelectedComplaint(complaintId);
+    //setSelectedComplaint(complaintId);
   };
 
   const handleCommentChange = (e) => {
@@ -46,13 +48,20 @@ const App = () => {
 
   const handleSendClick = async (complaintId) => {
     try {
-      console.log(complaintId)
-      await axios.put(`http://localhost:8080/api/complaints/escalate/${complaintId}`, {
+      console.log(complaintId) 
+      const res=await axios.put(`http://localhost:8080/api/complaints/escalate/${complaintId}`,JSON.stringify({ comment }),{
         
-        comment: comment
+        //comment: comment,
+        
+    
+      headers: {
+        'Content-Type': 'application/json'
+      },
+        withCredentials: true 
       });
+      console.log(res);
       alert('Comment sent successfully!');
-      setSelectedComplaint(null); // Reset after sending
+      //setSelectedComplaint(null); // Reset after sending
       setComment(''); // Clear the comment field
       handleStatusChange(complaintId, 'escalated'); // Call handleStatusChange
     } catch (error) {
@@ -101,12 +110,12 @@ const App = () => {
           </div>
           
           {fl&&(<div>
-          <p><label for="w3review">Your Comment:</label></p>
-  <textarea id="comment" name="comment" value={comment}
-  onChange={handleCommentChange} rows="4" cols="50"></textarea>
+          <p><label htmlFor="comments">Your Comment:</label></p>
+  <textarea id="comments" name="comment" value={comment}
+  onChange={(e)=>handleCommentChange(e)} rows="4" cols="50"></textarea>
   <button
               onClick={() => handleSendClick(complaint._id)}
-              className="bg-red-500 text-white px-4 py-2 rounded"
+              className="bg-red-500 text-white px-4 py-2 rounded"  
             >
               Send
             </button>

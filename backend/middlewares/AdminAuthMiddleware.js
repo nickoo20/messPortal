@@ -17,7 +17,7 @@ export const AdminauthMiddleWare = async(req, res, next) => {
     
     console.log(req.cookies)
     const token = req.cookies?.access_token ;
-    //console.log(token);
+    console.log(token);
     if(!token){
         return res.status(400).json({
             message:'No Token, Authorization denied!',
