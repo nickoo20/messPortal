@@ -38,7 +38,7 @@ const MyComplaints = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 mx-auto gap-3'>
 
             {complaints.length > 0 ? (
-              complaints.map((complaint) => (
+              complaints?.map((complaint) => (
                 <>
             <Complaint key={complaint._id} complaint={complaint}/>
             </>

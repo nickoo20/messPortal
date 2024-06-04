@@ -37,6 +37,7 @@ const LoginStudent = () => {
       );
       console.log(res);
       if(res?.data?.success === false){
+        toast.error(res?.data.message) ;
         dispatch(signInFailure(res?.data?.message)) ;
         return ; 
       }
@@ -47,6 +48,7 @@ const LoginStudent = () => {
         navigate("/student/dashboard");
       // Add success message or redirection logic here
     } catch (error) {
+      toast.error(error.message) ;
       console.error("Error:", error.message);
       dispatch(signInFailure(error.message)) ;
       // Add error handling logic here

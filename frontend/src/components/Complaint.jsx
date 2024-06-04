@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getRefresh } from "../redux/complaints/complaintSlice";
 
 const Complaint = ({ complaint }) => {
-  console.log(complaint);
   const { currentUser } = useSelector((state) => state.user);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState(complaint.comments);
