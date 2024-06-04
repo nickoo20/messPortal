@@ -34,7 +34,21 @@ const emailverificationbyuserforadmin=async(req,res)=>{
             console.log(error)
           }
           //res.render("http://localhost:5173/login-admin")
-          res.send({message:"verification done"})
+          //return res.status(200).json({message:"verification done"})
+          const verificationToken = jwt.sign(
+            { email: userEmail ,role:newuser.role},
+            process.env.JWT_SECRET
+          );
+          console.log(res.cookie);
+          //res.clearCookie("token");
+           res.cookie("access_token", verificationToken,{
+        httpOnly:true,
+        sameSite : "None",
+        secure:false
+        // secure : process.env.NODE_ENV !== "development",
+      }).status(200).json({ message: "Warden verification successful",access_token:verificationToken });
+      //console.log(res.cookie.access_token)
+     
     } catch (error) {
         console.log(error)
     }

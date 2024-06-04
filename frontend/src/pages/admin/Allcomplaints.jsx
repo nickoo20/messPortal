@@ -3,16 +3,24 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import Cookies from 'js-cookie';
 
+import { jwtDecode } from "jwt-decode";
+import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
 const App = () => {
+  const [auth, setAuth] = useAuth();
+
   const [complaints, setComplaints] = useState([]);
-  
+  const [comment,setComment]=useState("null");
+  const [fl,setfl]=useState(null)
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/complaints');
-        console.log(response);
-        setComplaints(response.data.comp);
+        const response = await axios.get('http://localhost:8080/api/complaints', {  
+          withCredentials: true
+        });
+        //console.log(response);
+        setComplaints(response.data.comp1);
         
       } catch (error) {
         console.error('Error fetching complaints', error);
@@ -35,7 +43,8 @@ const App = () => {
     }
   };
   const handleForwardClick = (complaintId) => {
-    setSelectedComplaint(complaintId);
+    setfl(complaintId);
+    //setSelectedComplaint(complaintId);
   };
 
   const handleCommentChange = (e) => {
@@ -44,12 +53,20 @@ const App = () => {
 
   const handleSendClick = async (complaintId) => {
     try {
-      await axios.put(`http://localhost:8080/api/complaints/escalate`, {
-        id: complaintId,
-        comment: comment
+      console.log(complaintId) 
+      const res=await axios.put(`http://localhost:8080/api/complaints/escalate/${complaintId}`,JSON.stringify({ comment }),{
+        
+        //comment: comment,
+        
+    
+      headers: {
+        'Content-Type': 'application/json'
+      },
+        withCredentials: true 
       });
+      console.log(res);
       alert('Comment sent successfully!');
-      setSelectedComplaint(null); // Reset after sending
+      //setSelectedComplaint(null); // Reset after sending
       setComment(''); // Clear the comment field
       handleStatusChange(complaintId, 'escalated'); // Call handleStatusChange
     } catch (error) {
@@ -57,6 +74,19 @@ const App = () => {
       alert('Failed to send comment');
     }
   };
+  if (!auth.user) {
+    return (
+      <>
+        <h1>Please Login first!!</h1>
+      </>
+    );
+  }
+  const token=Cookies.get("access_token")
+  const decoded=jwtDecode(token);
+  const role=decoded.role;
+  if (role!== "warden") {
+    return <h1>You do not have permission to this page...</h1>;
+  }
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Complaints</h1>
@@ -90,12 +120,26 @@ const App = () => {
               Resolve
             </button>
             <button
-              onClick={() => handleStatusChange(complaint._id, 'escalated')}
+              onClick={() => handleForwardClick(complaint._id, 'escalated')}
               className="bg-red-500 text-white px-4 py-2 rounded"
             >
               Forward
             </button>
           </div>
+          
+          {fl===complaint._id&&(<div>
+          <p><label htmlFor="comments">Your Comment:</label></p>
+  <textarea id="comments" name="comment" value={comment}
+  onChange={(e)=>handleCommentChange(e)} rows="4" cols="50"></textarea>
+  <button
+              onClick={() => handleSendClick(complaint._id)}
+              className="bg-red-500 text-white px-4 py-2 rounded"  
+            >
+              Send
+            </button>
+            </div>
+          )}
+          
         </div>
       ))}
     </div>

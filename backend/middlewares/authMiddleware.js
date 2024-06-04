@@ -38,3 +38,29 @@ export const authMiddleWare = async (req, res, next) => {
         });
     }
 };
+
+
+// export const authMiddleWare = async(req, res, next) => {
+//     console.log("in the middleware");
+    
+//     console.log(req)
+//     const token = req.cookies?.access_token ;
+//    // console.log(token);
+//     if(!token){
+//         return res.status(400).json({
+//             message:'No Token, Authorization denied!',
+//         }) ;
+//     }
+//     try{
+//         const decoded=jwt.verify(token,process.env.JWT_SECRET) ;
+//         // console.log(decoded) ;
+//         console.log(decoded)
+//         const user = await getUserByEmail(decoded.email);
+//         console.log(user); 
+//         req.user= user ;
+//         next() ;
+//     }catch(error){
+//         console.log(`Error in AuthMiddleware:,  ${error.message}`) ;
+//     }
+// }
+// >>>>>>> accountant

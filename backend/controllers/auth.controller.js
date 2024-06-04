@@ -168,29 +168,26 @@ export const loginUser = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
+  try{
+    console.log(res)
   res.clearCookie('access_token') ;
   res.status(200).json({
     message: 'User logged out successfully!',
   }) ;
 }
+catch(err){
+  console.log("error trying deleting token :",err.message)
+}
+}
 export const RegisterAdmin=async(req,res)=>{
-  const { name, email, password, HostelID, HostelName } = req.body;
-if(!name)
-  return next(new Errorhandler("Please Enter your Name", 400));
-
-if (!email) {
-  return next(new Errorhandler("Please Enter your Email", 400));
-}
-if (!password) {
-  return next(new Errorhandler("Please Enter your Password", 400));
-}
-if (!HostelID) {
-  return next(new Errorhandler("Please Enter your HostelID", 400));
-}
-if (!HostelName) {
-  return next(new Errorhandler("Please Enter your HostelName", 400));
-}
-
+  
+// if (!HostelID) {
+//   return next(new Errorhandler("Please Enter your HostelID", 400));
+// }
+// if (!HostelName) {
+//   return next(new Errorhandler("Please Enter your HostelName", 400));
+// }
+const {name,email,password,role}=req.body;
 const admin = await Admin.findOne({ email });
 
 if (admin) {
@@ -206,8 +203,7 @@ const newAdmin = await Admin.create({
   name,
   email,
   password: hashedPassword,
-  HostelID,
-  HostelName,
+  role
 });
 // const token = await jwt.sign({ _id: newAdmin._id }, process.env.JWT_SECRET, {
 //   expiresIn: "7d",
@@ -218,16 +214,16 @@ await verificationbyuserforadmin(req,res,email,token);
   //await verificationbyadmin(req,res,adminemail,newUser,token)
 
 //res.status(201).json({ message: ' Verification email sent.' });
-const options = {
-  expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-};
+// const options = {
+//   expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+// };
 // res.cookie("jwtoken", token, options).status(200).json({
 //   success: true,
 //   message: "New Admin Registered Successfully!",
 //   token,
 //   newAdmin,
 // });
-res.status(201).json({ message: ' Verification email sent.' });
+//res.status(201).json({ message: ' Verification email sent.' });
 }
 export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
   const { email, password } = req.body;
@@ -251,15 +247,16 @@ export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
     return next(new Errorhandler("you are not verified yet", 400));
   }
   const isMatch = await comparePassword(password, user.password);
-  const token = await jwt.sign({ _id: user._id }, 'your_secret_key', {
+  const token = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 
   const options = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   };
+  const token1 = jwt.sign({email:user.email,role:user.role}, process.env.JWT_SECRET) ;
   if (isMatch) {
-    res.cookie("token", token, options).status(200).json({
+    res.cookie('access_token',token1).status(200).json({
       success: true,
       message: "Login Successfull! Redirecting",
       token,
