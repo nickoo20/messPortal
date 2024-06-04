@@ -157,23 +157,14 @@ catch(err){
 }
 }
 export const RegisterAdmin=async(req,res)=>{
-  const { name, email, password, HostelID, HostelName } = req.body;
-if(!name)
-  return next(new Errorhandler("Please Enter your Name", 400));
-
-if (!email) {
-  return next(new Errorhandler("Please Enter your Email", 400));
-}
-if (!password) {
-  return next(new Errorhandler("Please Enter your Password", 400));
-}
+  
 // if (!HostelID) {
 //   return next(new Errorhandler("Please Enter your HostelID", 400));
 // }
 // if (!HostelName) {
 //   return next(new Errorhandler("Please Enter your HostelName", 400));
 // }
-
+const {name,email,password,role}=req.body;
 const admin = await Admin.findOne({ email });
 
 if (admin) {
@@ -189,8 +180,7 @@ const newAdmin = await Admin.create({
   name,
   email,
   password: hashedPassword,
-  HostelID,
-  HostelName,
+  role
 });
 // const token = await jwt.sign({ _id: newAdmin._id }, process.env.JWT_SECRET, {
 //   expiresIn: "7d",
@@ -241,7 +231,7 @@ export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
   const options = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   };
-  const token1 = jwt.sign({email}, process.env.JWT_SECRET) ;
+  const token1 = jwt.sign({email:user.email,role:user.role}, process.env.JWT_SECRET) ;
   if (isMatch) {
     res.cookie('access_token',token1).status(200).json({
       success: true,

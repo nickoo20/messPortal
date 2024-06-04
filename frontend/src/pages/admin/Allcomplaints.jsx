@@ -7,7 +7,7 @@ import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 const App = () => {
   const [complaints, setComplaints] = useState([]);
   const [comment,setComment]=useState("null");
-  const [fl,setfl]=useState(false)
+  const [fl,setfl]=useState(null)
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
@@ -38,7 +38,7 @@ const App = () => {
     }
   };
   const handleForwardClick = (complaintId) => {
-    setfl(!fl);
+    setfl(complaintId);
     //setSelectedComplaint(complaintId);
   };
 
@@ -109,7 +109,7 @@ const App = () => {
             </button>
           </div>
           
-          {fl&&(<div>
+          {fl===complaint._id&&(<div>
           <p><label htmlFor="comments">Your Comment:</label></p>
   <textarea id="comments" name="comment" value={comment}
   onChange={(e)=>handleCommentChange(e)} rows="4" cols="50"></textarea>

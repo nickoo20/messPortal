@@ -2,8 +2,8 @@ import express from 'express';
 
 import {makeStudentRepresentative,removeStudentRepresentative,findALLMr} from '../controllers/StudentRepresentative.js';
 const router=express.Router();
-router.patch("/add/:num",makeStudentRepresentative);
-router.patch('/remove/:num',removeStudentRepresentative);
+router.patch("/add/:registrationNumber",makeStudentRepresentative);
+router.patch('/remove/:registrationNumber',removeStudentRepresentative);
 // router.get("/add/0832",async(req,res)=>{
 //     try {
 //         console.log("in the get");

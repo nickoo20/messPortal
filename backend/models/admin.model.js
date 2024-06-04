@@ -35,8 +35,10 @@ const AdminSchema = new mongoose.Schema(
       default: false
     },
     role: {
-      type: Number,
-      default: 1,
+      type:String,
+        // required: true,
+        enum:['accountant', 'warden'], 
+        default:'warden',
     },
   },
   { timestamps: true }

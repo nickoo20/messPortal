@@ -2,6 +2,10 @@
 import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
 import React, { useState } from 'react';
 import axios from "axios";
+import Cookies from 'js-cookie';
+
+import { jwtDecode } from "jwt-decode";
+
 const Billcomp=()=>{
     const [auth, setAuth] = useAuth();
   const [month, setMonth] = useState('');
@@ -13,6 +17,7 @@ const Billcomp=()=>{
     
     try {
       const response = await axios.get(`http://localhost:8080/api/bills`,{
+        withCredentials:true ,
         params: {
             month,
             year,
@@ -45,9 +50,16 @@ const Billcomp=()=>{
       </>
     );
   }
-  if (auth?.user?.role !== 3) {
-    return <h1>You do not have permission to this page...</h1>;
-  }
+  const token=Cookies.get("access_token")
+  const decoded=jwtDecode(token);
+  const role=decoded.role;
+  console.log(token);
+  // if (auth?.user?.role !== "accountant") {
+  //   return <h1>You do not have permission to this page...</h1>;
+  // }
+  if(role!=="accountant")
+  return <h1>You do not have permission to this page...</h1>;
+ 
 return(
     <>
     <div className="mt-20">
