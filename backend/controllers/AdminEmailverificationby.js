@@ -36,7 +36,7 @@ const emailverificationbyuserforadmin=async(req,res)=>{
           //res.render("http://localhost:5173/login-admin")
           //return res.status(200).json({message:"verification done"})
           const verificationToken = jwt.sign(
-            { email: userEmail },
+            { email: userEmail ,role:newuser.role},
             process.env.JWT_SECRET
           );
           console.log(res.cookie);

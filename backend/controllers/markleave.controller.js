@@ -5,7 +5,8 @@ import cors from 'cors';
 const markleave = async (req, res) => {
     console.log("in the cintroller")
     console.log(req.body)
-  const { registrationNumber,startDate,endDate } = req.body;
+  const { startDate,endDate } = req.body;
+  const registrationNumber=parseInt(req.body.registrationNumber,10);
    console.log(registrationNumber)
   const user = await User.findOne({registrationNumber});
   if (!user) {

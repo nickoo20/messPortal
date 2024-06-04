@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+
+import { jwtDecode } from "jwt-decode";
 import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
 const MarkLeave = () => {
   
@@ -17,10 +20,20 @@ const MarkLeave = () => {
     e.preventDefault();
     try {
         console.log(inputdata)
-      const response = await axios.post('http://localhost:8080/api/mark-leave', inputdata).then((response)=>{
-        console.log(response);
+      const response = await axios.post('http://localhost:8080/api/mark-leave', inputdata,{
+        
+        
+        // headers: {
+        //   'Accept': 'application/json'
+        //   //'User-Agent': 'Your User Agent String' // Replace with your user agent string
+        // },
+        withCredentials:true,
+        credentials: 'include',
+      
+
       });
-      //setMessage(response.inputdata.message);
+      
+      console.log(response);
       console.log("sent");
     } catch (error) {
       //setMessage(error.response.);
@@ -34,7 +47,10 @@ const MarkLeave = () => {
       </>
     );
   }
-  if (auth?.user?.role !== 1) {
+  const token=Cookies.get("access_token")
+  const decoded=jwtDecode(token);
+  const role=decoded.role;
+  if (role!== "warden") {
     return <h1>You do not have permission to this page...</h1>;
   }
   return (
@@ -42,7 +58,7 @@ const MarkLeave = () => {
       <h1>Mark Leave</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="studentId">Student ID</label>
+          <label htmlFor="registrationNumber">Student ID</label>
           <input
             type="number"
             className="form-control"
@@ -54,7 +70,7 @@ const MarkLeave = () => {
         </div>
         <div>
             <div className='form-group'>
-                <label htmlFor="startdate">Start date</label>
+                <label htmlFor="startDate">Start date</label>
                 <input
                 type="date"
                 className="form-control"
@@ -66,7 +82,7 @@ const MarkLeave = () => {
 
             </div>
             <div className='form-group'>
-                <label htmlFor="startdate">End date</label>
+                <label htmlFor="endDate">End date</label>
                 <input
                 type="date"
                 className="form-control"

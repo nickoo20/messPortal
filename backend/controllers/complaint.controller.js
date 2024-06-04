@@ -213,7 +213,7 @@ export const escalateComplaint = async(req, res) => {
         }
 
         // Check if the user is a warden
-        if(user.role !== 1) {
+        if(user.role !== "warden") {
             return res.status(403).json({ message: 'You are not authorized to escalate complaints' });
         }
 

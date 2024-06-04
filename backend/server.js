@@ -34,8 +34,10 @@ app.use(cookieParser());
 app.use(cors({
   origin:'http://localhost:3000',
   credentials: true,
-  preflightContinue: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+    optionsSuccessStatus: 204
 
 }));
 // app.use((req, res, next) => {
