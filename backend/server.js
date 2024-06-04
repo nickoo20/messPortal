@@ -7,8 +7,9 @@ import authRoutes from './routes/auth.route.js' ;
 import complaintRoutes from './routes/complaint.route.js' ;
 import userRoutes from './routes/user.route.js'; 
 import cors from 'cors' ;
-// import { v2 as cloudinary } from "cloudinary";
-// 
+import { v2 as cloudinary } from "cloudinary";
+import billRoutes from "./routes/bills.route.js";
+import leaveRoutes from "./routes/leave.route.js";
 // import complaintRoutes from './routes/complaint.route.js' ;
 // import verificationRoutes from './routes/verification.route.js' ;
 // cloudinary.config({
@@ -24,12 +25,35 @@ import studentRepresentativeRoutes from './routes/studentRepresentative.route.js
 dotenv.config() ;
 const app= express() ;
 const PORT = 8080 || process.env.PORT ;
+// const corsOptions = {
+//   origin: 'http://localhost:3000',
+//   credentials: true, // Allow credentials (cookies, authorization headers, TLS client certificates)
+// };
 
 app.use(cors({
   origin: 'http://localhost:3000', // your frontend's URL
   credentials: true, // if you need to include cookies in the requests
 }));
 app.use(cookieParser());
+
+app.use(cors({
+  origin:'http://localhost:3000',
+  credentials: true,
+  preflightContinue: false,
+     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+    optionsSuccessStatus: 204
+
+}));
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000/");
+//   res.header("Access-Control-Allow-Credentials", true);
+//   if (req.method === "OPTIONS") {
+//     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+//     return res.status(200).json({});
+//   }
+//   next();
+// });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()) ;
 
@@ -40,6 +64,9 @@ app.use("/api/complaints", complaintRoutes) ;
 app.use("/api/user",userRoutes) ;
 
 
+// app.use('/api', verificationRoutes) ;
+app.use("/api/bills",billRoutes);
+app.use("/api/mark-leave",leaveRoutes);
 //app.use(cors());
 //app.use(express.json()) ;
 

@@ -12,15 +12,17 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [HostelID, setHostelID] = useState();
   const [HostelName, setHostelName] = useState("");
+  const [role,setRole]=useState('warden');
   const navigate = useNavigate();
   const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      
       const res = await axios.post(
         `http://localhost:8080/api/auth/register-admin`,
-        { name, email, password, HostelID, HostelName }
+        { name, email, password, role }
       );
       console.log(res);
       if (res.data.success) {
@@ -31,7 +33,7 @@ const Register = () => {
           duration: 3000,
           isClosable: true,
         });
-        navigate("/login");
+        navigate("/login-warden");
       }
     } catch (error) {
       const msg = error.response.data.message;
@@ -44,7 +46,7 @@ const Register = () => {
       });
     }
   };
-
+ console.log(role);
   return (
     <>
       <div className="flex items-center justify-center min-h-screen">
@@ -59,13 +61,24 @@ const Register = () => {
             <h1 className="text-3xl">Create Account</h1>
             <span className="  text-[17px]">
               Already have an account?{" "}
-              <NavLink className="font-bold" to="/login-admin">
+              <NavLink className="font-bold" to="/login-warden">
                 Sign In
               </NavLink>
             </span>
           </div>
           <form action="/register" method="post" onSubmit={handleSubmit}>
             <div className="flex flex-col py-4 gap-2 px-2">
+            <label htmlFor="option-select" className="block mb-2">Register as</label>
+          <select
+             id="option-select"
+             name="options"
+            // value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          >
+            <option value="warden">Warden</option>
+            <option value="accountant">Accountant</option>
+          </select>
               <input
                 className="p-2 text-lg font-mono font-bold bg-pink-950"
                 type="text"
@@ -76,7 +89,7 @@ const Register = () => {
                 onChange={(e) => setName(e.target.value)}
                 required
               />
-              <input
+              {/* <input
                 className="p-2 text-lg font-mono font-bold bg-pink-950"
                 type="number"
                 name="studentid"
@@ -96,7 +109,7 @@ const Register = () => {
                 value={HostelName}
                 onChange={(e) => setHostelName(e.target.value)}
                 required
-              />
+              /> */}
 
               <input
                 className="p-1.5 text-lg font-mono font-bold bg-pink-950"

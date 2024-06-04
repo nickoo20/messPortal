@@ -2,20 +2,39 @@
 import React from 'react';
 import { useState } from 'react';
 ///import { useHistory } from 'react-router-dom';
+import axios from "axios";
 import { useAuth } from "../context/userContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTab, useToast } from "@chakra-ui/react";
+//import Cookies from 'js-cookie';
+
+
 const ProfileDropdown = () => {
   //const history = useHistory();
   const [auth, setAuth] = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const handleLogout = () => {
+  const toast = useToast();
+  const handleLogout = async() => {
     localStorage.removeItem("auth");
     setAuth({
       ...auth,
       user: null,
       token: "",
     });
+    try {
+     const response= await axios.post("http://localhost:8080/api/auth/logout");
+    // Cookies.remove('access_token');
+    } catch (error) {
+      const msg = error.message;
+      toast({
+        title: `${msg}`,
+        description: "Error",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
     navigate("/login");
   };
   const toggleDropdown = () => {

@@ -185,10 +185,14 @@ export const resolveComplaint = async (req, res) => {
 export const getAllComplaintsAdmin=async(req,res)=>{
          try{
         const comp = await Complaint.find({});
+        const comp1=comp.filter((c)=>{
+            return c.status==='pending'||c.status==='escalated'
+        });
+        //console.log(comp1);
         res.status(200).json({
           success: true,
           message: "Fetched Successfully!",
-          comp,
+          comp1,
         });
     }catch(err){
         console.log(err);
@@ -223,6 +227,7 @@ export const patchComplaint=async(req,res)=>{
 
     
 
+
 export const escalateComplaint = async (req, res) => {
   try {
     const { complaintId } = req.params;
@@ -233,6 +238,11 @@ export const escalateComplaint = async (req, res) => {
         message: "User not found!",
       });
     }
+        // // Check if the user is a warden
+        // if(user.role !== "warden") {
+        //     return res.status(403).json({ message: 'You are not authorized to escalate complaints' });
+        // }
+
 
     // Check if the user is a warden
     if (user.role !== "warden") {

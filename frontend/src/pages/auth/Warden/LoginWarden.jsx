@@ -20,9 +20,12 @@ const LoginWarden = () => {
     try {
       const res = await axios.post(
         `http://localhost:8080/api/auth/login-admin`,
-        { email, password }
+        { email, password },{
+          withCredentials:true
+        }
       );
-
+       //const token=res.cookies.assess_token;
+       console.log(res.data);
       if (res.data.success) {
         setAuth({
           ...auth,
@@ -37,12 +40,14 @@ const LoginWarden = () => {
           duration: 3000,
           isClosable: true,
         });
-        if (auth?.user?.role === 1)
+        if (res.data.user.role === "warden")
         navigate("/admin-landing");
+        else if(res.data.user.role==="accountant")
+        navigate("/accountant-landing")
         //else if
       }
     } catch (error) {
-      const msg = error.response.data.message;
+      const msg = error.message;
       toast({
         title: `${msg}`,
         description: "Error",
@@ -67,7 +72,7 @@ const LoginWarden = () => {
             <h1 className="text-3xl font-mono mb-2">Admin Login</h1>
             <span className=" text-[17px]">
               Don't have an account?{" "}
-              <NavLink className="font-bold" to="/register-warden">
+              <NavLink className="font-bold" to="/signup-admin">
                 Sign Up
               </NavLink>
             </span>
