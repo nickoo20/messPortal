@@ -31,7 +31,7 @@ const AllComplaints = () => {
         <h1 className="text-2xl font-bold mb-6 text-red-800 font-jakarta">All Complaints</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mx-auto">
         {complaints.length > 0 ? (
-          complaints.map((complaint) => (
+          complaints?.map((complaint) => (
             <Complaint key={complaint._id} complaint={complaint}/>
           ))
         ) : (

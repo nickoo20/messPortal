@@ -16,7 +16,10 @@ import StudentPage from "./pages/StudentPage.jsx";
 import Profile from "./pages/ProfilePage.jsx";
 import AllComplaints from "./pages/AllComplaints.jsx";
 import MyComplaints from "./pages/MyComplaints.jsx";
-import MessMenu from "./pages/MessMenu.jsx";
+import GenerateBill from './pages/GenerateBill.jsx' ;
+import UpdateCostPerDay from './pages/UpdateCostPerDay.jsx';
+import AddMenu from "./pages/AddMenu.jsx";
+import LatestMenu from "./pages/LatestMenu.jsx";
 // import Footer from "./components/Footer.jsx";
 
 const App = () => {
@@ -32,7 +35,8 @@ const App = () => {
             <Route path="my-complaints/:id" element={<MyComplaints />} />
             <Route path="all-complaints" element={<AllComplaints />} />
             <Route path="monthly-bills" element={<MonthlyBills />} />
-            <Route path="mess-menu" element={<MessMenu />} />
+            <Route path="mess-menu" element={<LatestMenu />} />
+            <Route path="add-menu" element={<AddMenu/>}/>
             <Route path="profile" element={<Profile />} />
           </Route>
           <Route path="/verify-email" element={<VerifyEmail />} />
@@ -43,6 +47,10 @@ const App = () => {
           <Route path="/login-warden" element={<LoginWarden />} />
           <Route path="/register-accountant" element={<RegisterAccountant />} />
           <Route path="/login-accountant" element={<LoginAccountant />} />
+
+          <Route path="/generate-bill" element={<GenerateBill/>}/>
+            <Route path='/update-cost' element={<UpdateCostPerDay/>}/>
+
         </Routes>
       </div>
     </BrowserRouter>

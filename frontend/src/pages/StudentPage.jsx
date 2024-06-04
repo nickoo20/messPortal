@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import { Outlet, useNavigate } from "react-router-dom";
-import MainContent from "../components/MainContent";
+// import MainContent from "../components/MainContent";
 
 const StudentPage = () => {
   const navigate=useNavigate() ;
