@@ -5,9 +5,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTab, useToast } from "@chakra-ui/react";
 import axios from "axios";
-import Header from "../../../components/Header";
+import Header from "../../components/Header";
 
-const RegisterWarden = () => {
+const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -108,4 +108,4 @@ const RegisterWarden = () => {
   );
 };
 
-export default RegisterWarden;
+export default Register;

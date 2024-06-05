@@ -38,6 +38,10 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         default:false,
     },
+    isStudentRepresentative:{
+        type:Boolean,
+        default:false,
+    },
     studentRep:{
         type:Boolean,
         default:false,

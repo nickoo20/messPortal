@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useTab, useToast } from "@chakra-ui/react";
-import { useAuth } from '../../../context/userContext' ;
 
-const LoginWarden = () => {
+import { useAuth } from "../../context/userContext";
+
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [auth, setAuth] = useAuth();
@@ -72,7 +73,7 @@ const LoginWarden = () => {
             <h1 className="text-3xl font-mono mb-2">Admin Login</h1>
             <span className=" text-[17px]">
               Don't have an account?{" "}
-              <NavLink className="font-bold" to="/register-warden">
+              <NavLink className="font-bold" to="/signup-admin">
                 Sign Up
               </NavLink>
             </span>
@@ -122,6 +123,6 @@ const LoginWarden = () => {
       </div>
     </>
   );
-}
+};
 
-export default LoginWarden;
+export default Login;
