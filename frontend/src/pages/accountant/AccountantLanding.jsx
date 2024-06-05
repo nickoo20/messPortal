@@ -1,6 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import ProfileDropdown from '../../components/ProfileDropdown' ;
+=======
+import ProfileDropdown from '/Users/richashrivastava/finalyear/messPortal/frontend/src/components/ProfileDropdown.jsx'
+>>>>>>> d06c04a85e27f4d60f0491134fc3eb445724f74b
 
 const NavigationButtons = () => {
   const navigate = useNavigate();

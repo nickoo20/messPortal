@@ -7,9 +7,15 @@ import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 
 import Cookies from 'js-cookie';
+<<<<<<< HEAD
 import { useAuth } from '../../context/userContext' ; 
 import ProfileDropdown from '../../components/ProfileDropdown'; 
 
+=======
+import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
+
+import ProfileDropdown from '/Users/richashrivastava/finalyear/messPortal/frontend/src/components/ProfileDropdown.jsx'
+>>>>>>> d06c04a85e27f4d60f0491134fc3eb445724f74b
 const AdminLanding = () => {
   const [auth, setAuth] = useAuth();
 
