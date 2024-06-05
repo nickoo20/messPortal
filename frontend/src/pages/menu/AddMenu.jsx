@@ -31,9 +31,12 @@ const AddMenu = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
+        {
+          withCredentials:true,
+        },
       );
-      console.log(response);
+      console.log(response.data) ;
       setMessage("Menu added successfully!");
     } catch (error) {
       setMessage("Failed to add menu");

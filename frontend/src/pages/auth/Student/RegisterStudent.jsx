@@ -19,7 +19,8 @@ const RegisterStudent = () => {
     hosteller:false,
     studentRep: false,
   });
-  const navigate=useNavigate() ;
+  const [errors, setErrors] = useState({}) ;
+  // const navigate=useNavigate() ;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,8 +34,34 @@ const RegisterStudent = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
+
+  const validateForm = () => {
+    const emailRegex = /^[a-z]+_[0-9]{4}[a-z]{4}[0-9]{3}@nitsri\.ac\.in$/;
+    const passwordRegex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    
+    let formErrors = {};
+
+    if (!emailRegex.test(formData.email)) {
+      formErrors.email = "Invalid email format!";
+    }
+    if (!passwordRegex.test(formData.password)) {
+      formErrors.password = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character!";
+    }
+    if (!formData.hosteller) {
+      formErrors.hosteller = "Non-hosteller students cannot register!";
+    }
+    
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const res = await axios.post("http://localhost:8080/api/auth/register-student", formData,{
         withCredentials:true,
@@ -46,7 +73,7 @@ const RegisterStudent = () => {
         // navigate("/login-student");
       }
     } catch (error) {
-      toast.error(error.message) ;
+      setErrors({ apiError: error.response?.data?.message || "Error in signup" });
       console.error("Error in signup:", error.response ? error.response.data : error.message);
       // Add error handling logic here, e.g., show an error message to the user
     }
@@ -75,6 +102,7 @@ const RegisterStudent = () => {
                 required
                 className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
+               {errors.email && <p className="text-red-500 text-xs italic">{errors.email}</p>}
               <input
                 type="password"
                 name="password"
@@ -84,6 +112,8 @@ const RegisterStudent = () => {
                 required
                 className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
+              {errors.password && <p className="text-red-500 text-xs italic">{errors.password}</p>}
+
               <input
                 type="text"
                 name="enrollmentNumber"
@@ -127,6 +157,7 @@ const RegisterStudent = () => {
                     checked={formData.hosteller}
                   />
                 </div>
+                {errors.hosteller && <p className="text-red-500 text-xs italic">{errors.hosteller}</p>}
                 <div className="flex items-center ">
                   <span>Are you a Mess Representative ?</span>
                   <input
@@ -145,6 +176,7 @@ const RegisterStudent = () => {
                 Register
               </button>
             </form>
+            {errors.apiError && <p className="text-red-500 text-xs italic mt-4">{errors.apiError}</p>}
             <div className="font-roboto">
               Already verified ? Login{" "}
               <Link to="/login-student" className="text-blue-700 underline">

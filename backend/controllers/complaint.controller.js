@@ -155,7 +155,6 @@ export const resolveComplaint = async (req, res) => {
     if (!complaint) {
       return res.status(404).json({ message: "Complaint not found" });
     }
-
     if (!user) {
       return res.status(404).json({
         message: "User not found!",
@@ -180,8 +179,54 @@ export const resolveComplaint = async (req, res) => {
     return res.status(500).json({
       error: "Internal Server Error!",
     });
+  
   }
-};
+}
+export const getAllComplaintsAdmin=async(req,res)=>{
+         try{
+        const comp = await Complaint.find({});
+        const comp1=comp.filter((c)=>{
+            return c.status==='pending'||c.status==='escalated'
+        });
+        //console.log(comp1);
+        res.status(200).json({
+          success: true,
+          message: "Fetched Successfully!",
+          comp1,
+        });
+    }catch(err){
+        console.log(err);
+    }
+      
+}
+export const patchComplaint=async(req,res)=>{
+    const { id } = req.params;
+  const { status } = req.body;
+  // Check if the status is one of the allowed values
+  const allowedStatuses = ['pending', 'resolved', 'escalated'];
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({ message: 'Invalid status value' });
+  }
+
+  try {
+    const complaint = await Complaint.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true, runValidators: true }
+    );
+
+    if (!complaint) {
+      return res.status(404).json({ message: 'Complaint not found' });
+    }
+
+    res.status(200).json({ message: 'Complaint status updated successfully', complaint });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+}
+
+    
+
 
 export const escalateComplaint = async (req, res) => {
   try {
@@ -193,6 +238,11 @@ export const escalateComplaint = async (req, res) => {
         message: "User not found!",
       });
     }
+        // // Check if the user is a warden
+        // if(user.role !== "warden") {
+        //     return res.status(403).json({ message: 'You are not authorized to escalate complaints' });
+        // }
+
 
     // Check if the user is a warden
     if (user.role !== "warden") {

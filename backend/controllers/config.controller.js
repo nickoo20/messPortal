@@ -21,7 +21,7 @@ export const updateCostPerDay = async(req, res) => {
             await config.save();
             return res.status(200).json({ message: 'Cost per day updated successfully' });
         }catch(err){
-            return res.status(500).json({ error: error.message });
+            return res.status(500).json({ error: err.message });
         }
     }
 }
