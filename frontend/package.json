@@ -20,6 +20,17 @@
     "@reduxjs/toolkit": "^2.2.5",
     "axios": "^1.7.2",
     
+<<<<<<< HEAD
+=======
+   
+    
+    
+    
+    
+    
+    
+    
+>>>>>>> d06c04a85e27f4d60f0491134fc3eb445724f74b
     "react-scripts": "^5.0.1",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.2.6",

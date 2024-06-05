@@ -4,8 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useTab, useToast } from "@chakra-ui/react";
+<<<<<<< HEAD
 import { useAuth } from '../../../context/userContext' ;
 
+=======
+
+import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
+>>>>>>> d06c04a85e27f4d60f0491134fc3eb445724f74b
 const LoginWarden = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -72,7 +77,11 @@ const LoginWarden = () => {
             <h1 className="text-3xl font-mono mb-2">Admin Login</h1>
             <span className=" text-[17px]">
               Don't have an account?{" "}
+<<<<<<< HEAD
               <NavLink className="font-bold" to="/register-warden">
+=======
+              <NavLink className="font-bold" to="/signup-admin">
+>>>>>>> d06c04a85e27f4d60f0491134fc3eb445724f74b
                 Sign Up
               </NavLink>
             </span>

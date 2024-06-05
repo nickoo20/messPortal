@@ -6,7 +6,11 @@ import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
 
 import { jwtDecode } from "jwt-decode";
+<<<<<<< HEAD
 import { useAuth } from '../../context/userContext'; 
+=======
+import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
+>>>>>>> d06c04a85e27f4d60f0491134fc3eb445724f74b
 const App = () => {
   const [auth, setAuth] = useAuth();
 
