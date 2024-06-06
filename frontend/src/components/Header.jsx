@@ -70,8 +70,7 @@ const Header = () => {
                   ) : (
                     <>
                       <li><Link to="/login-student">For Students</Link></li>
-                      <li><Link to="/login-warden">For Wardens</Link></li>
-                      <li><Link to="/login-accountant">For Accountants</Link></li>
+                      <li><Link to="/login-admin">For Admins</Link></li>
                     </>
                   )}
                 </ul>
