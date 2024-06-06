@@ -28,20 +28,15 @@ let persistor= persistStore(store) ;
 
 // )
 
-
-
-
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-    <AuthProvider>
-    {/* <ColorModeScript /> */}
-    <ChakraProvider disableGlobalStyle>
-      <App />
-      <Toaster />
+    <ChakraProvider >
+      <AuthProvider>
+        <App />
+        <Toaster />
+      </AuthProvider>
       </ChakraProvider>
-</AuthProvider>
     </PersistGate>
   </Provider>
 );

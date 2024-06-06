@@ -10,11 +10,13 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage';
 import userReducer from './user/userSlice'; 
-import complaintSlice from './complaints/complaintSlice';
+import complaintReducer from './complaints/complaintSlice';
+import adminReducer from './admin/adminSlice';  
 
 const rootReducer = combineReducers({ 
     user: userReducer, 
-    complaint: complaintSlice,
+    complaint: complaintReducer,
+    admin: adminReducer,
 })
 const persistConfig = {
     key: 'root',

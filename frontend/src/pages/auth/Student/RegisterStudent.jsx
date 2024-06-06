@@ -84,7 +84,7 @@ const RegisterStudent = () => {
       <Header />
       <div className="flex justify-center items-center flex-1">
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-xl">
-          <h2 className="text-xl font-semibold font-montserrat mb-4 text-blue-700">
+          <h2 className="text-xl font-semibold mb-4 text-blue-700">
             Are you a NIT Srinagar Hosteller ?{" "}
             <span className="text-green-700"> Register here</span>
           </h2>

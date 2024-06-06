@@ -8,8 +8,9 @@ import {
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
-const Sidebar = () => {
-  const { currentUser } = useSelector((state) => state.user);
+const SidebarAdmin = () => {
+  // const { currentUser } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.admin) ;
 
   const { id } = useParams();
   return (
@@ -21,7 +22,7 @@ const Sidebar = () => {
         <ul className="space-y-4">
           <li>
             <NavLink
-              to={`my-complaints/${id}`}
+              to={`allcomplaints`}
               className={({ isActive }) =>
                 isActive
                   ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200"
@@ -29,12 +30,12 @@ const Sidebar = () => {
               }
             >
               <FaUser className="mr-2" />
-              <span className="font-inter">My Complaints</span>
+              <span className="font-inter">All Complaints</span>
             </NavLink>
           </li>
           <li>
             <NavLink
-              to="all-complaints"
+              to="mark-leave"
               className={({ isActive }) =>
                 isActive
                   ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200"
@@ -42,12 +43,12 @@ const Sidebar = () => {
               }
             >
               <FaClipboardList className="mr-2" />
-              <span className="font-inter">All Complaints</span>
+              <span className="font-inter">Mark Leave</span>
             </NavLink>
           </li>
           <li>
             <NavLink
-              to="monthly-bills"
+              to="manage-mr"
               className={({ isActive }) =>
                 isActive
                   ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200"
@@ -55,7 +56,7 @@ const Sidebar = () => {
               }
             >
               <FaFileInvoiceDollar className="mr-2" />
-              <span className="font-inter">Monthly Bills</span>
+              <span className="font-inter">Manage MR</span>
             </NavLink>
           </li>
           <li>
@@ -71,25 +72,10 @@ const Sidebar = () => {
               <span className="font-inter">Mess Menu</span>
             </NavLink>
           </li>
-          {currentUser.studentRep && (
-            <li>
-              <NavLink
-                to="add-menu"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200"
-                    : "flex items-center text-blue-700 border-b-2 hover:text-blue-900 transition-colors duration-200"
-                }
-              >
-                <FaUtensils className="mr-2" />
-                <span className="font-inter">Add Menu</span>
-              </NavLink>
-            </li>
-          )}
         </ul>
       </div>
     </div>
   );
 };
 
-export default Sidebar;
+export default SidebarAdmin;

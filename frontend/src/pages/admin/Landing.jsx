@@ -7,31 +7,26 @@ import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 
 import Cookies from 'js-cookie';
-<<<<<<< HEAD
 import { useAuth } from '../../context/userContext' ; 
 import ProfileDropdown from '../../components/ProfileDropdown'; 
+import { useSelector } from 'react-redux';
 
-=======
-import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
-
-import ProfileDropdown from '/Users/richashrivastava/finalyear/messPortal/frontend/src/components/ProfileDropdown.jsx'
->>>>>>> d06c04a85e27f4d60f0491134fc3eb445724f74b
 const AdminLanding = () => {
-  const [auth, setAuth] = useAuth();
+  // const [auth, setAuth] = useAuth();
+  const {user} = useSelector(state=>state.admin) ;
 
-  if (!auth.user) {
+  if (!user) {
     return (
       <>
         <h1>Please Login first!!</h1>
       </>
     );
   }
-  const token=Cookies.get("access_token")
-  const decoded=jwtDecode(token);
-  const role=decoded.role;
-  if (role!== "warden") {
-    return <h1>You do not have permission to this page...</h1>;
-  }
+    if(user.role !== "warden"){
+      return (
+        <p>You don't have access to this page.</p>
+      )
+    }
   return (
     
       <div className="min-h-screen bg-gray-100 flex flex-col items-center">
