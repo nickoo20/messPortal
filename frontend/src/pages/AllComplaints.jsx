@@ -20,7 +20,7 @@ const AllComplaints = () => {
       }
     };
 
-    fetchAllComplaints();
+    fetchAllComplaints() ; 
   }, []);
 
   return (

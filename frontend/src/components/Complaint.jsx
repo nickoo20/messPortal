@@ -16,8 +16,8 @@ const Complaint = ({ complaint }) => {
   const [upvotes, setUpvotes] = useState(complaint.upvotes);
   const [downvotes, setDownvotes] = useState(complaint.downvotes);
   const dispatch = useDispatch();
-
   const formattedDate = format(new Date(complaint.createdAt), "PPpp");
+  
   const handleUpvote = async () => {
     try {
       const res = await axios.post(
@@ -25,7 +25,7 @@ const Complaint = ({ complaint }) => {
         {},
         { withCredentials: true }
       );
-      dispatch(getRefresh());
+      dispatch(getRefresh()) ;
       toast.success(res?.data.message);
       setUpvotes(res?.data?.upvotes || []);
     } catch (err) {
@@ -79,11 +79,9 @@ const Complaint = ({ complaint }) => {
 
   return (
     <div className="p-4 rounded-lg mb-4 ">
-      <div className="bg-white shadow-md rounded-lg cursor-pointer">
-        <div className="p-6">
-          <div className="flex justify-between ">
+      <div className="bg-white shadow-md rounded-lg cursor-pointer p-6">
+          <div className="flex justify-between">
             <div className="text-gray-500 text-sm mt-4">{formattedDate}</div>
-            <div>
               {currentUser?._id === complaint?.createdBy?._id && (
                 <div
                   onClick={() => deleteComplaint(complaint?._id)}
@@ -94,12 +92,11 @@ const Complaint = ({ complaint }) => {
                   </div>
                 </div>
               )}
-            </div>
           </div>
           <h2 className="text-lg font-semibold text-gray-800">
             {complaint?.title}
           </h2>
-          <p className="text-gray-700">{complaint?.description}</p>
+          <p className="text-gray-700 bg-gray-50 p-2 rounded-lg">{complaint?.description}</p>
           <div className="text-sm text-gray-600 mt-4">
             <div className="flex items-center">
               <button
@@ -212,17 +209,19 @@ const Complaint = ({ complaint }) => {
           <div className="flex items-center gap-4 mt-2">
             <div className="font-semibold text-gray-800">Status: </div>
             <div
-              className={` border rounded-full px-2 text-white
+              className={` border rounded-full px-2 text-sm text-white font-mono
                 ${complaint.status === "pending"
-                  ? "bg-yellow-700"
-                  : "bg-purple-600 font-semibold"}
+                ? "bg-yellow-700"
+                : complaint.status === "resolved"
+                ? "bg-green-600 "
+                : "bg-purple-600 font-semibold"
+                }
               `}
             >
               {complaint.status}
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 };
