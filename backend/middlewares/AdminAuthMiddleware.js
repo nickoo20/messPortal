@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken' ;
-import {adminModel as User} from '../models/admin.model.js' ;
+import Admin from '../models/admin.model.js' ;
 
 const getUserByEmail = async(email) => {
     try {
-        const user = await User.findOne({ email }).select("-password") ;
+        const user = await Admin.findOne({ email }).select("-password") ;
         return user ;
     } catch (error) {
         console.error(`Error in getUserByEmail: ${error.message}`);
@@ -14,8 +14,6 @@ const getUserByEmail = async(email) => {
 }
 export const AdminauthMiddleWare = async(req, res, next) => {
     console.log("in the middleware");
-    
-    console.log(req.cookies)
     const token = req.cookies?.access_token ;
     console.log(token);
     if(!token){
@@ -25,9 +23,8 @@ export const AdminauthMiddleWare = async(req, res, next) => {
     }
     try{
         const decoded=jwt.verify(token,process.env.JWT_SECRET) ;
-        // console.log(decoded) ;
-        console.log(decoded)
-        const user = await getUserByEmail(decoded.email);
+        console.log(decoded) ;
+        const user = await getUserByEmail(decoded.email) ;
         console.log(user); 
         req.user= user ;
         next() ;

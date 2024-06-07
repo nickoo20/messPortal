@@ -22,21 +22,17 @@ const AdminSchema = new mongoose.Schema(
       required: true,
       minLength: 6,
     },
-    // HostelID: {
-    //   type: Number,
-    //   required: true,
-    // },
-    // HostelName: {
-    //   type: String,
-    //   required: true,
-    // },
+    HostelName: {
+      type:String,
+      enum:['Girls Hostel', 'Jhelum Boys Hostel', 'Manasbal Boys Hostel', 'Mansar Boys Hostel', 'Chenab Boys Hostel'],
+      default: 'Girls Hostel',
+    },
     verified: {
       type: Boolean,
       default: false
     },
     role: {
-      type:String,
-        // required: true,
+        type:String,
         enum:['accountant', 'warden'], 
         default:'warden',
     },
@@ -44,5 +40,5 @@ const AdminSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const adminModel = mongoose.model("Admin", AdminSchema);
-//export  {adminModel}
+const Admin = mongoose.model("Admin", AdminSchema);
+export default Admin ;

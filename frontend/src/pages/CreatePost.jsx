@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { getRefresh } from "../redux/complaints/complaintSlice";
 import { useDispatch } from "react-redux";
@@ -9,6 +9,18 @@ const CreatePost = () => {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
+  // useEffect(()=>{
+  //   fetchComplaints() ;
+  // },[]) ;
+
+  // const fetchComplaints = async() => {
+  //   try{
+  //     const res = await axios.get('http://localhost:8080/api/complaints/all') ;
+  //   }catch(err){
+  //     console.log(error) ;
+  //   }
+  // }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
