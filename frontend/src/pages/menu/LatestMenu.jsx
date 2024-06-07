@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const LatestMenu = () => {
     const [menu, setMenu] = useState(null);
@@ -22,7 +23,9 @@ const LatestMenu = () => {
         fetchLatestMenu();
     }, []);
 
-    if (loading) return <p className="text-center text-gray-500">Loading...</p>;
+    if (loading) return <div className="flex justify-center items-center">
+        <LoadingSpinner/>
+    </div>;
     if (error) return <p className="text-center text-red-500">{error}</p>;
     if (!menu) return <p className="text-center text-gray-500">No menu available</p>;
 

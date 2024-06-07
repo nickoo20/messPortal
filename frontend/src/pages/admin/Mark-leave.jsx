@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { jwtDecode } from "jwt-decode";
-import { useAuth } from "../../context/userContext";
 import { useSelector } from 'react-redux';
 
 const MarkLeave = () => {
@@ -11,9 +8,7 @@ const MarkLeave = () => {
     startDate: "",
     endDate: "",
   };
-
   const [inputData, setInputData] = useState(initialData);
-  const { auth, setAuth } = useAuth();
   const { user } = useSelector(state => state.admin);
   const [message, setMessage] = useState(null);
 
@@ -27,7 +22,6 @@ const MarkLeave = () => {
       console.log(inputData);
       const response = await axios.post('http://localhost:8080/api/mark-leave', inputData, {
         withCredentials: true,
-        credentials: 'include',
       });
 
       console.log(response);
@@ -36,7 +30,7 @@ const MarkLeave = () => {
         type: "success"
       });
     } catch (error) {
-      console.log("Error in axios", error);
+      console.log("Error in axios", error.message) ;
       setMessage({
         text: "There was an error marking the leave.",
         type: "error"
@@ -67,7 +61,7 @@ const MarkLeave = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 relative">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md -mt-40">
-        <h1 className="text-2xl font-bold mb-6">Mark Leave</h1>
+        <h1 className="text-2xl text-purple-800 font-inter font-bold mb-6">Mark Leave</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           {message && (
             <div className={`p-4 rounded ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
@@ -111,9 +105,11 @@ const MarkLeave = () => {
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
-          <button type="submit" className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            Submit
-          </button>
+          <div className='flex justify-center items-center'>
+            <button type="submit" className="py-2 px-6 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>
