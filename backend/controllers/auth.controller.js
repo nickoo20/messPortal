@@ -1,13 +1,12 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import nodemailer from 'nodemailer' ;
-import {adminModel as Admin} from "../models/admin.model.js";
+import nodemailer from "nodemailer";
+import Admin from "../models/admin.model.js";
 import Errorhandler from "../error/errorClass.js";
-import {verificationbyuserforadmin,generateToken} from "../middlewares/AdminReg.js";
+import { verificationByAdmin, generateToken } from "../middlewares/AdminReg.js";
 import { comparePassword, hashPassword } from "../helper/auth.js";
 // import { verificationByStudent } from "../utils/verification.js";
-import { validationResult } from "express-validator";
 //import {sendVerificationEmail,sendWardenVerificationEmail} from '../utils/mailer.js' ;
 import AsyncErrorHandler from "../error/CatchAsyncError.js";
 
@@ -41,12 +40,10 @@ export const registerUser = async (req, res) => {
     const passwordRegex =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
     if (!passwordRegex.test(password)) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character!",
-        });
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character!",
+      });
     }
 
     // Check if enrollment number is unique
@@ -83,7 +80,6 @@ export const registerUser = async (req, res) => {
     });
     // user.verificationToken = verificationToken;
     await user.save();
-
     // Send verification email
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -105,7 +101,7 @@ export const registerUser = async (req, res) => {
         return console.log(error);
       }
       // toast.success("Go to your email!")
-      console.log("Email sent: " + info.response);
+      console.log("Email sent to student : " + info.response);
     });
     return res
       .cookie("initial_token", token, {
@@ -118,7 +114,7 @@ export const registerUser = async (req, res) => {
         message:
           "Registration successful!, check your email for verification link!",
         initial_token: token,
-        success:true,
+        success: true,
       });
   } catch (error) {
     console.log(`, ${error.message}!`);
@@ -157,7 +153,6 @@ export const loginUser = async (req, res) => {
         success: true,
         message: "Login successful!",
         user,
-        
       });
   } catch (error) {
     console.log(error);
@@ -168,63 +163,126 @@ export const loginUser = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  try{
-    console.log(res)
-  res.clearCookie('access_token') ;
-  res.status(200).json({
-    message: 'User logged out successfully!',
-  }) ;
-}
-catch(err){
-  console.log("error trying deleting token :",err.message)
-}
-}
-export const RegisterAdmin=async(req,res)=>{
-  
-// if (!HostelID) {
-//   return next(new Errorhandler("Please Enter your HostelID", 400));
-// }
-// if (!HostelName) {
-//   return next(new Errorhandler("Please Enter your HostelName", 400));
-// }
-const {name,email,password,role}=req.body;
-const admin = await Admin.findOne({ email });
+  try {
+    console.log(res);
+    res.clearCookie("access_token");
+    res.status(200).json({
+      message: "User logged out successfully!",
+    });
+  } catch (err) {
+    console.log("error trying deleting token :", err.message);
+  }
+};
 
-if (admin) {
-  return res.status(400).json({
-    success: false,
-    message: "Admin Already exist",
+export const RegisterAdmin = async (req, res, next) => {
+  const { name, email, password, role, HostelName } = req.body;
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      message:
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character!",
+    });
+  }
+
+  const admin = await Admin.findOne({ email });
+
+  if (admin) {
+    return res.status(400).json({
+      success: false,
+      message: "Admin Already exist",
+    });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newAdmin = await Admin.create({
+    name,
+    email,
+    password: hashedPassword,
+    role,
+    HostelName,
   });
-}
+  await newAdmin.save();
 
-const hashedPassword = await hashPassword(password);
+  const token = generateToken({ email: email });
+  // await verificationByAdmin(req, res, email, token);
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER, // Your email address
+      pass: process.env.EMAIL_PASS, // Your email password
+    },
+  });
 
-const newAdmin = await Admin.create({
-  name,
-  email,
-  password: hashedPassword,
-  role
-});
-// const token = await jwt.sign({ _id: newAdmin._id }, process.env.JWT_SECRET, {
-//   expiresIn: "7d",
-// });
-const token=generateToken({email:email})
-await verificationbyuserforadmin(req,res,email,token);
+  const adminMailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Account Verification",
+    html: `
+    <html>
+    <head>
+      <style>
+        .email-container {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+        }
+        .email-header {
+          padding: 20px;
+          text-align: center;
+        }
+        .email-body {
+          padding: 20px;
+        }
+        .email-footer {
+          background-color: ;
+          padding: 20px;
+          text-align: center;
+          font-size: 12px;
+          color: #777;
+        }
+        .verification-link {
+          display: inline-block;
+          padding: 10px 20px;
+          margin: 20px 0;
+          text-decoration: none;
+          border-radius: 5px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="email-container">
+        <div class="email-header">
+          <h1>Account Verification</h1>
+        </div>
+        <div class="email-body">
+          <p>Dear ${name},</p>
+          <p>Thank you for registering as an Admin. To complete your registration, please verify your email address by clicking the link below:</p>
+          <a href="${process.env.BASE_URL}/verify-admin?token=${token}" class="verification-link">Verify Email</a>
+          <p>If you did not register for this account, please ignore this email.</p>
+        </div>
+        <div class="email-footer">
+          <p>&copy; ${new Date().getFullYear()} Mess Portal. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `,
+  };
 
-  //await verificationbyadmin(req,res,adminemail,newUser,token)
-
-//res.status(201).json({ message: ' Verification email sent.' });
-// const options = {
-//   expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-// };
-// res.cookie("jwtoken", token, options).status(200).json({
-//   success: true,
-//   message: "New Admin Registered Successfully!",
-//   token,
-//   newAdmin,
-// });
-//res.status(201).json({ message: ' Verification email sent.' });
-}
+  transporter.sendMail(adminMailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    // toast.success("Go to your email!")
+    console.log("Email sent to Admin : " + info.response);
+  });
+  return res.status(200).json({
+    message: "Registration successful! Verify your email now !" ,
+    success:true,
+    token,
+  }) ;
+};
 export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -234,7 +292,6 @@ export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
       message: "Enter all fields",
     });
   }
-
   const user = await Admin.findOne({ email });
   if (!user) {
     return res.status(400).json({
@@ -242,30 +299,28 @@ export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
       message: "User Not found!",
     });
   }
-  if(user.verified==false)
-  {
+  if (user.verified == false) {
     return next(new Errorhandler("you are not verified yet", 400));
   }
-  const isMatch = await comparePassword(password, user.password);
-  const token = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(404).json({
+      message: "Invalid credentials!",
+    });
+  }
+  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 
-  const options = {
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  };
-  const token1 = jwt.sign({email:user.email,role:user.role}, process.env.JWT_SECRET) ;
-  if (isMatch) {
-    res.cookie('access_token',token1).status(200).json({
+  const token1 = jwt.sign(
+    { email: user.email, role: user.role },
+    process.env.JWT_SECRET
+  );
+    return res.cookie("access_token", token1)
+      .status(200).json({
       success: true,
-      message: "Login Successfull! Redirecting",
+      message: "Login Successfull ! ",
       token,
       user,
     });
-  } else {
-    return res.status(401).json({
-      success: false,
-      message: "Incorrect Password",
-    });
-  }
 });

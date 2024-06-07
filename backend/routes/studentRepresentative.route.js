@@ -2,6 +2,7 @@ import express from 'express';
 
 import {makeStudentRepresentative,removeStudentRepresentative,findALLMr} from '../controllers/StudentRepresentative.js';
 const router=express.Router();
+
 router.patch("/add/:registrationNumber",makeStudentRepresentative);
 router.patch('/remove/:registrationNumber',removeStudentRepresentative);
 // router.get("/add/0832",async(req,res)=>{

@@ -17,6 +17,7 @@ import { v2 as cloudinary } from "cloudinary";
 // Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const PORT = 8080 || process.env.PORT ;
 
 // import { v2 as cloudinary } from "cloudinary";
 // cloudinary.config({
@@ -26,19 +27,19 @@ const __dirname = path.dirname(__filename);
   // });
 dotenv.config() ;
 const app= express() ;
-const PORT = 8080 || process.env.PORT ;
+// Middleware to serve static files from the "public" directory
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
 // const corsOptions = {
 //   origin: 'http://localhost:3000',
 //   credentials: true, // Allow credentials (cookies, authorization headers, TLS client certificates)
 // };
-
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(cors({
   origin: 'http://localhost:3000', // your frontend's URL
   credentials: true, // if you need to include cookies in the requests
 }));
+
+
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()) ;
@@ -81,8 +82,6 @@ app.use(express.json()) ;
 //   }
 //   next();
 // });
-
-
 // Routes
 app.use("/api/auth", authRoutes) ; 
 app.use("/api/complaints", complaintRoutes) ;

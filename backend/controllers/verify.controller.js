@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
+import Admin from "../models/admin.model.js";
 
 export const verifyEmail = async (req, res) => {
   try {
@@ -128,5 +129,42 @@ export const verifyWarden = async (req, res) => {
   } catch (error) {
     console.log(`Error in warden verification, ${error.message}`);
     return res.status(500).json({ error: "Error in warden verification" });
+  }
+};
+
+export const emailVerificationByAdmin = async (req, res) => {
+  try {
+    const token = req.query.token;
+
+    if (!token) {
+      return res.status(400).json({ message: "Token is required" });
+    }
+
+    // Verify JWT token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userEmail = decoded.email;
+    const newuser = Admin.findOne({ userEmail });
+    try {
+      await Admin.findOneAndUpdate({ email: userEmail }, { verified: true });
+    } catch (error) {
+      console.log(error);
+    }
+    const verificationToken = jwt.sign(
+      { email: userEmail, role: newuser.role },
+      process.env.JWT_SECRET
+    );
+    return res
+      .cookie("access_token", verificationToken, {
+        httpOnly: true,
+        secure: false,
+        secure : process.env.NODE_ENV === "development",
+      })
+      .status(200)
+      .json({
+        message: "Admin verification successful !",
+        access_token: verificationToken,
+      });
+  } catch (error) {
+    console.log(error);
   }
 };
