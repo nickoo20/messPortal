@@ -85,12 +85,12 @@ const Header = () => {
                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box md:w-52 w-28">
                   {currentUser?._id ? (
                     <>
-                      <li><Link to="/profile">Profile</Link></li>
+                      <li><Link to="profile">Profile</Link></li>
                       <li onClick={handleLogoutStudent}><a href="#">Logout</a></li>
                     </>
                   ) : user?._id ? (
                     <>
-                      <li><Link to="/profile">Profile</Link></li>
+                      <li><Link to="profile">Profile</Link></li>
                       <li onClick={handleLogoutAdmin}><a href="#">Logout</a></li>
                     </>
                   ) : (

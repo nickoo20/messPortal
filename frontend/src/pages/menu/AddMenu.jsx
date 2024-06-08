@@ -49,7 +49,7 @@ const AddMenu = () => {
 
   return (
     <div className="flex flex-col items-center  min-h-screen bg-gray-100 px-4">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg mt-20">
+      <div className="bg-white p-6 rounded-lg w-full max-w-lg mt-20 border-r-4 border-l-4 shadow-md">
         <h1 className="text-md sm:text-2xl mb-6 mt-0 font-roboto text-right text-blue-700">Add New Menu </h1>
         <form onSubmit={handleSubmit} className="space-y-2">
           <div className=" flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2 flex-1 ">
