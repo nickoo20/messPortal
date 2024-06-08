@@ -15,7 +15,7 @@ const Features = () => {
           </p>
         </div>
         <div className="p-6 bg-white border rounded-lg shadow-lg transform hover:scale-105 transition-transform">
-          <Link to={'/register-warden'}>
+          <Link to={'/register-admin'}>
             <h3 className="text-2xl font-semibold mb-4 text-blue-700">For Wardens</h3>
           </Link>
           <p className="text-gray-600">
@@ -23,7 +23,7 @@ const Features = () => {
           </p>
         </div>
         <div className="p-6 bg-white border rounded-lg shadow-lg transform hover:scale-105 transition-transform">
-          <Link to={'/register-accountant'}>
+          <Link to={'/register-admin'}>
             <h3 className="text-2xl font-semibold mb-4 text-blue-700">For Accountants</h3>
           </Link>
           <p className="text-gray-600">Log in to add and manage monthly bills.</p>

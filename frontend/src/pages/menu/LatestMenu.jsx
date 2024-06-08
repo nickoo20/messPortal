@@ -31,7 +31,7 @@ const LatestMenu = () => {
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-100 py-6 px-6">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg mt-20">
+            <div className="bg-white p-8 rounded-lg shadow-md border-r-4 border-l-4 w-full max-w-lg mt-20">
                 <h1 className="text-2xl font-bold mb-6 text-blue-800">Latest Menu</h1>
                 <div className="space-y-4">
                     <h2 className="text-xl font-semibold text-gray-500 ">{`Menu for ${menu.month}/${menu.year}`}</h2>

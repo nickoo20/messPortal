@@ -1,16 +1,16 @@
-import React from 'react';
-import Sidebar from '../../components/MR_SideBar';
-import MainContentAdmin from '../../components/MainContentAdmin.jsx';
-import  { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import LoadingSpinner from '../../components/LoadingSpinner.jsx'; 
-import {toast} from 'react-hot-toast' ;
+import Sidebar from '../../components/MR_SideBar';
+import MainContentAdmin from '../../components/MainContentAdmin';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import { toast } from 'react-hot-toast';
 
-const ManageMr=() => {
+const ManageMr = () => {
   const [selectedOption, setSelectedOption] = useState('remove');
   const [students, setStudents] = useState([]);
-  const [loading, setLoading] = useState(true); // State for loading
-  const [text,setText]=useState("Remove MR");
+  const [loading, setLoading] = useState(true);
+  const [text, setText] = useState("Remove MR");
+
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -20,12 +20,11 @@ const ManageMr=() => {
     try {
       const response = await axios.get('http://localhost:8080/api/mr/all');
       setStudents(response.data);
-      setLoading(false); // Data fetching complete
-      if(response.data.length===0)
-      setText("No MR assigned");
+      setLoading(false);
+      if (response.data.length === 0) setText("No MR assigned");
     } catch (error) {
       console.error('Error fetching students:', error);
-      setLoading(false); // Data fetching failed
+      setLoading(false);
     }
   };
 
@@ -37,8 +36,9 @@ const ManageMr=() => {
     try {
       await axios.patch(`http://localhost:8080/api/mr/remove/${registrationNumber}`);
       fetchStudents();
+      toast.success('MR removed successfully');
     } catch (error) {
-      toast.error('Error removing MR!') ;
+      toast.error('Error removing MR!');
       console.error('Error removing MR:', error);
     }
   };
@@ -47,20 +47,26 @@ const ManageMr=() => {
     try {
       await axios.patch(`http://localhost:8080/api/mr/add/${registrationNumber}`);
       fetchStudents();
-      setSelectedOption('remove'); // Switch back to remove view after adding MR
+      setSelectedOption('remove');
       toast.success('MR added successfully');
     } catch (error) {
-      toast.error('Error adding MR!') ;
+      toast.error('Error adding MR!');
       console.error('Error adding MR:', error);
     }
   };
 
   if (loading) {
-    return <div className='flex justify-center items-center'><LoadingSpinner/></div>; // Show loading state
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
-    <div className="flex justify-evenly">
+    <div className="flex min-h-screen bg-gray-100 p-6">
+      <Sidebar onSelectOption={handleSelectOption} />
+      <div className="flex-grow ml-6">
         <MainContentAdmin
           selectedOption={selectedOption}
           students={students}
@@ -68,8 +74,9 @@ const ManageMr=() => {
           onAddMr={handleAddMr}
           textontop={text}
         />
-      <Sidebar onSelectOption={handleSelectOption} />
+      </div>
     </div>
   );
-}
+};
+
 export default ManageMr;

@@ -19,6 +19,7 @@ const LoginAdmin = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { auth, setAuth } = useAuth();
 
   const navigate = useNavigate();
@@ -47,10 +48,11 @@ const LoginAdmin = () => {
       );
       console.log(res.data);
       if (res.data.success === false) {
+        setErrorMessage("Invalid credentials. Please try again.");
         dispatch(signInFailure());
         return;
       }
-      dispatch(signInSuccess(res?.data.user)) ;
+      dispatch(signInSuccess(res?.data.user));
       // setAuth({
       //   ...auth,
       //   user: res.data.user,
@@ -70,8 +72,9 @@ const LoginAdmin = () => {
         navigate("/accountant-landing");
       }
     } catch (error) {
-      dispatch(signInFailure()) ;  
-      console.log(error.message) ;
+      setErrorMessage("An error occurred during login. Please try again.");
+      dispatch(signInFailure());
+      console.log(error.message);
     }
   };
 
@@ -84,10 +87,13 @@ const LoginAdmin = () => {
       <Header />
       <div className="flex justify-center items-center grow flex-1">
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-          <h1 className="text-xl font-mono mb-2">
-            Login now (For Admins only*)
+          <h1 className="text-xl font-semibold mb-4 text-blue-700 font-montserrat">
+            Login now (<span className="text-red-800">For Admins only*</span>)
           </h1>
           <div className="flex flex-col items-center justify-center gap-2">
+            {errorMessage && (
+              <div className="text-red-500 text-sm mb-2">{errorMessage}</div>
+            )}
             <form
               onSubmit={handleSubmit}
               className="w-full flex flex-col gap-2 items-center justify-center font-jakarta"

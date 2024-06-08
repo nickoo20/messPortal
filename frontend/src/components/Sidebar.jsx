@@ -14,57 +14,57 @@ const Sidebar = () => {
   const { id } = useParams();
   return (
     <div className="w-64 min-h-screen flex flex-col p-4">
-      <div className="flex-1 bg-white rounded-lg p-4">
+      <div className="flex-1 bg-gray-50 rounded-lg p-4 ">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 font-jakarta">
           Dashboard
         </h2>
         <ul className="space-y-4">
-          <li>
+          <li className="hover:bg-gray-100 p-2">
             <NavLink
               to={`my-complaints/${id}`}
               className={({ isActive }) =>
                 isActive
-                  ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200"
-                  : "flex items-center text-blue-700 border-b-2 hover:text-blue-900 transition-colors duration-200"
+                  ? "flex items-center text-yellow-900 transition-colors duration-200"
+                  : "flex items-center text-blue-700 hover:text-blue-900 transition-colors duration-200"
               }
             >
               <FaUser className="mr-2" />
               <span className="font-inter">My Complaints</span>
             </NavLink>
           </li>
-          <li>
+          <li className="hover:bg-gray-100 p-2">
             <NavLink
               to="all-complaints"
               className={({ isActive }) =>
                 isActive
-                  ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200"
-                  : "flex items-center text-blue-700 border-b-2 hover:text-blue-900 transition-colors duration-200"
+                  ? "flex items-center text-yellow-900 transition-colors duration-200"
+                  : "flex items-center text-blue-700 hover:text-blue-900 transition-colors duration-200"
               }
             >
               <FaClipboardList className="mr-2" />
               <span className="font-inter">All Complaints</span>
             </NavLink>
           </li>
-          <li>
+          <li className="hover:bg-gray-100 p-2">
             <NavLink
               to="monthly-bills"
               className={({ isActive }) =>
                 isActive
-                  ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200"
-                  : "flex items-center text-blue-700 border-b-2 hover:text-blue-900 transition-colors duration-200"
+                  ? "flex items-center text-yellow-900 transition-colors duration-200"
+                  : "flex items-center text-blue-700  hover:text-blue-900 transition-colors duration-200"
               }
             >
               <FaFileInvoiceDollar className="mr-2" />
               <span className="font-inter">Monthly Bills</span>
             </NavLink>
           </li>
-          <li>
+          <li className="hover:bg-gray-100 p-2">
             <NavLink
               to="mess-menu"
               className={({ isActive }) =>
                 isActive
-                  ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200"
-                  : "flex items-center text-blue-700 border-b-2 hover:text-blue-900 transition-colors duration-200"
+                  ? "flex items-center text-yellow-900 transition-colors duration-200"
+                  : "flex items-center text-blue-700 hover:text-blue-900 transition-colors duration-200"
               }
             >
               <FaUtensils className="mr-2" />
@@ -72,13 +72,13 @@ const Sidebar = () => {
             </NavLink>
           </li>
           {currentUser.studentRep && (
-            <li>
+            <li className="hover:bg-gray-100 p-2">
               <NavLink
                 to="add-menu"
                 className={({ isActive }) =>
                   isActive
-                    ? "flex items-center text-yellow-900 border-b-2 transition-colors duration-200"
-                    : "flex items-center text-blue-700 border-b-2 hover:text-blue-900 transition-colors duration-200"
+                    ? "flex items-center text-yellow-900 transition-colors duration-200"
+                    : "flex items-center text-blue-700 hover:text-blue-900 transition-colors duration-200"
                 }
               >
                 <FaUtensils className="mr-2" />

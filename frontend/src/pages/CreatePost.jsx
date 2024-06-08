@@ -50,8 +50,8 @@ const CreatePost = () => {
   };
   return (
     <>
-      <div className="p-4 mb-4 bg-white rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-6 font-jakarta text-blue-700">Have a problem ? Write a Complaint ....</h2>
+      <div className="p-4 mb-4 rounded-lg shadow-md">
+        <h2 className="text-xl font-bold mb-6 text-center italic font-jakarta text-blue-700">Have a problem ? Write a Complaint ....</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4 flex ">
             <input
@@ -75,11 +75,11 @@ const CreatePost = () => {
               required
             ></textarea>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <button
               type="submit"
               className="bg-pink-600 hover:bg-pink-800 text-white rounded-2xl
-              font-bold py-2 px-6 focus:outline-none focus:shadow-outline tracking-widest"
+              font-bold py-2 px-8 focus:outline-none focus:shadow-outline tracking-widest"
               disabled={loading}
             >
               {loading ? "Creating..." : "Post"}

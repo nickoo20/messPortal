@@ -4,17 +4,19 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import { signOutUserStart, deleteUserFailure, deleteUserSuccess } from '../redux/user/userSlice';
+import { deleteAdminFailure, deleteAdminSuccess, signOutAdminStart } from "../redux/admin/adminSlice";
 import toast from "react-hot-toast";
 
 const Header = () => {
   const { currentUser } = useSelector(state => state.user);
+  const { user } = useSelector(state => state.admin);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogout = async () => {
+  const handleLogoutStudent = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await axios.post('http://localhost:8080/api/auth/logout-student', {
+      const res = await axios.post('http://localhost:8080/api/auth/logout-student', {}, {
         withCredentials: true,
       });
       if (res?.data.success === false) {
@@ -26,7 +28,26 @@ const Header = () => {
       navigate('/login-student');
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
-      console.log(error.message) ;
+      console.log(error.message);
+    }
+  };
+
+  const handleLogoutAdmin = async () => {
+    try {
+      dispatch(signOutAdminStart());
+      const res = await axios.post('http://localhost:8080/api/auth/logout', {}, {
+        withCredentials: true,
+      });
+      if (res?.data.success === false) {
+        dispatch(deleteAdminFailure(res?.data.message));
+        return;
+      }
+      toast.success(res?.data.message);
+      dispatch(deleteAdminSuccess(res?.data));
+      navigate('/login-admin');
+    } catch (error) {
+      dispatch(deleteAdminFailure(error.message));
+      console.log(error.message);
     }
   };
 
@@ -35,17 +56,17 @@ const Header = () => {
       <header className="bg-[#F6F5F2] shadow-md pt-2 w-full">
         <div className="flex items-center justify-between px-4 py-2 sm:pl-12 gap-3 mr-4">
           <Link to="/" className="flex gap-2 items-center">
-            <div className="hidden sm:block border-2 rounded-full"><NitPhoto/></div>
+            <div className="hidden sm:block border-2 rounded-full"><NitPhoto /></div>
             <div className="flex flex-col items-center ">
-            <h1 className="text-sm sm:text-xl font-poetsen flex border-none rounded-full tracking-wide mb-0 ">
-              MESS PORTAL
-            </h1>
-            <div className="text-sm font-bold text-blue-500">(NIT Srinagar)</div>
+              <h1 className="text-sm sm:text-xl font-poetsen flex border-none rounded-full tracking-wide mb-0 ">
+                MESS PORTAL
+              </h1>
+              <div className="text-sm font-bold text-blue-500">(NIT Srinagar)</div>
             </div>
           </Link>
           <div className="">
             <div className="flex justify-end items-center gap-2">
-              <ul className="flex items-center text-[#003C43] font-semibold md:ml-20 ">
+              <ul className="flex items-center text-[#003C43] font-semibold md:ml-20 text-md">
                 <Link to="/">
                   <li className="hidden md:inline hover:transition duration-900 rounded-md px-4 py-3">
                     Home
@@ -59,13 +80,18 @@ const Header = () => {
               </ul>
               <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="m-1 text-[#003C43] font-semibold text-sm sm:text-md">
-                  {currentUser?._id ? <GiHamburgerMenu size={24} /> : 'Register/Login'}
+                  {currentUser?._id || user?._id ? <GiHamburgerMenu size={24} /> : 'Register/Login'}
                 </div>
                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box md:w-52 w-28">
                   {currentUser?._id ? (
                     <>
-                      <li><Link to="profile">Profile</Link></li>
-                      <li onClick={handleLogout}><a href="#">Logout</a></li>
+                      <li><Link to="/profile">Profile</Link></li>
+                      <li onClick={handleLogoutStudent}><a href="#">Logout</a></li>
+                    </>
+                  ) : user?._id ? (
+                    <>
+                      <li><Link to="/profile">Profile</Link></li>
+                      <li onClick={handleLogoutAdmin}><a href="#">Logout</a></li>
                     </>
                   ) : (
                     <>

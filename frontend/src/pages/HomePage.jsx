@@ -43,8 +43,8 @@ const HomePage = () => {
             </div>
           </div>
           <div className="mt-10">
-            <Hero />
             <Features />
+            <Hero />
           </div>
         </div>
       </div>
