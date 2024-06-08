@@ -101,7 +101,7 @@ const Complaint = ({ complaint }) => {
 
   return (
     <div className="p-2 rounded-lg mb-4 ">
-      <div className="shadow-md rounded-lg cursor-pointer p-6 border-r-4 border-l-4 hover:shadow-sm">
+      <div className="shadow-md rounded-lg cursor-pointer p-6 border-r-4 border-l-4 hover:shadow-sm bg-white">
           <div className="flex justify-between">
             <div className="text-gray-500 text-sm mt-4">{formattedDate}</div>
               {currentUser?._id === complaint?.createdBy?._id && (

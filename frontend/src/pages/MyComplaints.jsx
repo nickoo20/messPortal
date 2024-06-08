@@ -36,10 +36,10 @@ const MyComplaints = () => {
 
   return (
     <div className="">
-      <h1 className="text-2xl font-bold mb-6 text-red-800 font-jakarta">
+      <h1 className="text-3xl font-bold mb-6 text-red-800 font-jakarta">
         My Complaints
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 mx-auto gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 mx-auto gap-3 bg-gray-100 p-2 rounded-lg">
         {
         myComplaints?.length > 0 ? (
           myComplaints?.map((complaint) => (

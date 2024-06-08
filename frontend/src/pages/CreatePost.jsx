@@ -50,8 +50,8 @@ const CreatePost = () => {
   };
   return (
     <>
-      <div className="p-4 mb-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-6 text-center italic font-jakarta text-blue-700">Have a problem ? Write a Complaint ....</h2>
+      <div className="p-4 bg-white rounded-lg shadow-md max-w-xl mx-auto mb-10 mt-3 border-t-4">
+        <h2 className="text-xl font-bold mb-6 italic font-jakarta text-blue-700">Have a problem ? Write a Complaint ....</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4 flex ">
             <input
@@ -75,7 +75,7 @@ const CreatePost = () => {
               required
             ></textarea>
           </div>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-end">
             <button
               type="submit"
               className="bg-pink-600 hover:bg-pink-800 text-white rounded-2xl
