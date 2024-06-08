@@ -1,6 +1,6 @@
 import express from 'express' ;
 import { authMiddleWare } from '../middlewares/authMiddleware.js' ;
-import { createComplaint,patchComplaint, commentOnComplaint, deleteComplaint, 
+import { createComplaint,patchComplaint, commentOnComplaint, deleteComplaint, deleteComment ,
 resolveComplaint, escalateComplaint, getMyComplaints, getAllComplaints,getAllComplaintsAdmin} from '../controllers/complaint.controller.js';
 import { downvoteComplaint, upvoteComplaint } from '../controllers/vote.controller.js';
 import {AdminauthMiddleWare} from '../middlewares/AdminAuthMiddleware.js'
@@ -19,6 +19,8 @@ router.post('/downvote/:complaintId', authMiddleWare, downvoteComplaint) ;
 
 // Comment on a complaint
 router.post('/comment/:complaintId',authMiddleWare, commentOnComplaint) ;
+// Delete comment on complaint
+router.delete('/comment/:complaintId/:commentId',authMiddleWare,deleteComment) ;
 
 // Delete a complaint
 router.delete("/delete/:complaintId", authMiddleWare, deleteComplaint) ;

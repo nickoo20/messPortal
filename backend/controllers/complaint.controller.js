@@ -39,18 +39,19 @@ export const commentOnComplaint = async (req, res) => {
       });
     }
 
+
     const complaint = await Complaint.findById(complaintId).populate({
       path:"comments.user",
-      select: "name email"
+      select: "name email "
     });
 
     if (!complaint) {
       return res.status(404).json({ message: "Complaint not found" });
     }
-
     const comment = {
       user: req.user._id,
       text,
+      createdAt: new Date(),
     };
     complaint.comments.push(comment);
     await complaint.save();
@@ -62,6 +63,28 @@ export const commentOnComplaint = async (req, res) => {
     });
   }
 };
+
+// Delete a comment on Complaint
+export const deleteComment = async(req, res)=>{
+  try{
+    const {complaintId, commentId} = req.params ;
+    const complaint = await Complaint.findById(complaintId) ;
+
+    if(!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
+    const comment = complaint.comments.includes(commentId) ;   
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    
+
+  }catch(err){  
+    console.log('Error while deleting comment!', err.message) ;
+    return res.status(500).json('Internal server error while deleting comments!') ;
+  }
+}
 
 // Delete a complaint
 export const deleteComplaint = async (req, res) => {
