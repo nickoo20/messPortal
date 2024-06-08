@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
-import { BiSolidCommentDetail } from "react-icons/bi";
 import { FaRegComment } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +15,14 @@ const Complaint = ({ complaint }) => {
   const [upvotes, setUpvotes] = useState(complaint.upvotes);
   const [downvotes, setDownvotes] = useState(complaint.downvotes);
   const dispatch = useDispatch();
-  const formattedDate = format(new Date(complaint.createdAt), "PPpp");
+  const formattedDate = format(new Date(complaint.createdAt), "PP p");
+
+  useEffect(() => {
+    // Ensure we are using fresh data from the props
+    setComments(complaint.comments || []);
+    setUpvotes(complaint.upvotes || []);
+    setDownvotes(complaint.downvotes || []);
+  }, [complaint]);
   
   const handleUpvote = async () => {
     try {
@@ -26,7 +32,8 @@ const Complaint = ({ complaint }) => {
         { withCredentials: true }
       );
       dispatch(getRefresh()) ;
-      toast.success(res?.data.message);
+      console.log('upvote: ', res) ;
+      // toast.success(res?.data.message);
       setUpvotes(res?.data?.upvotes || []);
     } catch (err) {
       toast.error("Error upvoting complaint");
@@ -34,23 +41,24 @@ const Complaint = ({ complaint }) => {
   };
 
   const handleDownvote = async () => {
-    try {
+    try { 
+      axios.defaults.withCredentials = true;
       const res = await axios.post(
         `http://localhost:8080/api/complaints/downvote/${complaint?._id}`,
         {},
         { withCredentials: true }
       );
       dispatch(getRefresh());
-      toast.error(res?.data.message);
+      // toast.error(res?.data.message);
       setDownvotes(res?.data?.downvotes || []);
     } catch (err) {
       toast.error("Error downvoting complaint");
     }
   };
-
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     try {
+
       const res = await axios.post(
         `http://localhost:8080/api/complaints/comment/${complaint?._id}`,
         { text: commentText },
@@ -77,9 +85,23 @@ const Complaint = ({ complaint }) => {
     }
   };
 
+  const deleteComment = async(commentId) =>{
+    try{
+        axios.defaults.withCredentials=true;
+        const res = await axios.delete(
+          `http://localhost:8080/api/complaints/comment/${complaint._id}/${commentId}`
+        );
+        dispatch(getRefresh());
+        setComments(res.data.comments);
+    }   
+    catch(err){
+      toast.error("Error deleting comment");
+    }
+  }
+
   return (
-    <div className="p-4 rounded-lg mb-4 ">
-      <div className="bg-white shadow-md rounded-lg cursor-pointer p-6">
+    <div className="p-2 rounded-lg mb-4 ">
+      <div className="shadow-md rounded-lg cursor-pointer p-6 border-r-4 border-l-4 hover:shadow-sm">
           <div className="flex justify-between">
             <div className="text-gray-500 text-sm mt-4">{formattedDate}</div>
               {currentUser?._id === complaint?.createdBy?._id && (
@@ -93,10 +115,10 @@ const Complaint = ({ complaint }) => {
                 </div>
               )}
           </div>
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-bold text-gray-600">
             {complaint?.title}
           </h2>
-          <p className="text-gray-700 bg-gray-50 p-2 rounded-lg">{complaint?.description}</p>
+          <p className="text-gray-700 rounded-lg">{complaint?.description}</p>
           <div className="text-sm text-gray-600 mt-4">
             <div className="flex items-center">
               <button
@@ -133,11 +155,11 @@ const Complaint = ({ complaint }) => {
               </div>
               <dialog
                 id={`comments_modal${complaint?._id}`}
-                className="modal fixed inset-0 flex items-center justify-center"
+                className="modal inset-0 flex items-center justify-center mt-10 fixed"
               >
-                <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
-                  <span className="text-md font-semibold text-gray-700">
-                    Comments
+                <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto ">
+                  <span className="text-md font-semibold text-amber-700 font-jakarta">
+                    Comments :
                   </span>
                   <div className="flex flex-col gap-3 max-h-60 overflow-y-auto mt-2">
                     {comments.length === 0 ? (
@@ -148,18 +170,31 @@ const Complaint = ({ complaint }) => {
                       comments.map((comment) => (
                         <div
                           key={comment._id}
-                          className="flex gap-2 items-start"
+                          className=""
                         >
-                          <div className="flex flex-col">
+                          <div className="flex flex-col justify-center bg-gray-50 w-full">
+                            <div className="flex justify-between w-full">
                             <div className="flex items-center gap-1">
-                              <span className="font-bold">
+                              <span className="font-bold text-blue-700">
                                 {comment?.user.name}
                               </span>
-                              <span className="text-gray-700 text-sm">
+                              <span className="text-gray-500 text-xs">
                                 @{comment?.user.email}
                               </span>
+                              </div>
+                              <div className="flex flex-col items-end">
+                              <div className="text-xs text-gray-500">{format(new Date(comment.createdAt), "PP p")}</div>
+                              {currentUser?._id === comment?.user._id && (
+                              <button
+                                onClick={() => deleteComment(comment._id)}
+                                className="text-red-500 hover:text-red-700 transition-colors duration-200"
+                              >
+                                <MdOutlineDeleteOutline size={20} />
+                              </button>
+                            )}
                             </div>
-                            <div className="text-sm">{comment?.text}</div>
+                            </div>
+                            <div className="text-sm rounded-lg p-1">{comment?.text}</div>
                           </div>
                         </div>
                       ))
@@ -173,12 +208,12 @@ const Complaint = ({ complaint }) => {
                       value={commentText}
                       onChange={(e) => setCommentText(e.target.value)}
                       placeholder="Write a comment..."
-                      className="textarea w-full p-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
+                      className="textarea w-full p-2 rounded border border-gray-300 focus:outline-none"
                       required
                     />
                     <button
                       type="submit"
-                      className="bg-blue-600 hover:bg-blue-800 text-white rounded-full py-2 px-4 focus:outline-none focus:shadow-outline"
+                      className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                     >
                       Submit
                     </button>
@@ -198,16 +233,16 @@ const Complaint = ({ complaint }) => {
             </div>
           </div>
           <div className="flex items-center gap-4 mt-2">
-            <div className="font-semibold text-gray-800">Created By:</div>
+            <div className="font-semibold text-gray-800 text-sm">Created By:</div>
             <div>
-              <div className="text-gray-500">{complaint?.createdBy?.name}</div>
-              <div className="text-gray-500 text-sm">
+              <div className="text-gray-500 text-sm">{complaint?.createdBy?.name}</div>
+              <div className="text-gray-500 text-xs">
                 ({complaint?.createdBy?.email})
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4 mt-2">
-            <div className="font-semibold text-gray-800">Status: </div>
+            <div className="font-semibold text-gray-800 text-sm">Status: </div>
             <div
               className={` border rounded-full px-2 text-sm text-white font-mono
                 ${complaint.status === "pending"

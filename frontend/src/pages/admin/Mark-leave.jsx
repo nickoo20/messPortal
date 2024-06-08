@@ -59,10 +59,11 @@ const MarkLeave = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 relative">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md -mt-40">
-        <h1 className="text-2xl text-purple-800 font-inter font-bold mb-6">Mark Leave</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className='min-h-screen bg-gray-100'>
+      <h1 className="text-3xl text-center text-purple-800 font-inter font-bold mb-6 p-4">Mark Student Leave</h1>
+    <div className="flex items-center justify-center ">
+      <div className="bg-white p-8 rounded-lg shadow-md border-r-4 border-l-4 w-full max-w-xl ">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {message && (
             <div className={`p-4 rounded ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
               {message.text}
@@ -80,7 +81,7 @@ const MarkLeave = () => {
               onChange={handleChange}
               placeholder="Enter Student ID"
               required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             />
           </div>
           <div className="form-group">
@@ -91,7 +92,7 @@ const MarkLeave = () => {
               value={inputData.startDate}
               onChange={handleChange}
               required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             />
           </div>
           <div className="form-group">
@@ -102,16 +103,17 @@ const MarkLeave = () => {
               value={inputData.endDate}
               onChange={handleChange}
               required
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none"
             />
           </div>
           <div className='flex justify-center items-center'>
-            <button type="submit" className="py-2 px-6 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button type="submit" className="py-2 px-6 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm focus:outline-none">
               Submit
             </button>
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 };

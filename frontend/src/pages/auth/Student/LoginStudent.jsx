@@ -83,7 +83,7 @@ const LoginStudent = () => {
       <Header />
       <div className="flex justify-center items-center grow flex-1">
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-          <h2 className="text-xl font-semibold mb-4 text-blue-700 font-montserrat">
+          <h2 className="text-xl font-semibold mb-4 text-blue-700 ">
             Login now <span className="text-red-700"> (Hostellers only*)</span>
           </h2>
           <div className="flex flex-col items-center justify-center gap-2">

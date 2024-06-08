@@ -1,34 +1,32 @@
-const useGetMyComplaints = () => {
-    // const dispatch= useDispatch() ; 
-    // const {refresh,isActive} = useSelector(store => store.tweet) ; 
-    // // const {user}= useSelector(store => store.user) ;  
-    // const fetchMyComplaints = async() => {
-    //     try {
-    //         const res = await axios.get(`${TWEET_API_END_POINT}/alltweets/${id}`, { 
-    //             withCredentials:true
-    //         });
-    //         dispatch(getAllTweets(res.data.tweets)) ; 
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    //    }
-    //    const followingTweetHandler = async() => {
-    //     // const id=user?._id ; 
-    //     try{
-    //         const res = await axios.get(`${TWEET_API_END_POINT}/followingtweets/${id}`,{
-    //             withCredentials:true  
-    //         }) ;
-    //         console.log(res) ;
-    //         dispatch(getAllTweets(res?.data?.tweets)) ;  
-    //         // dispatch(getRefresh()) ; 
-    //     }catch(error){
-    //         console.log(error) ;
-    //     }
-    // }
-    // useEffect(() => {
-    //     if(isActive)    fetchMyProfile() ;
-    //    else followingTweetHandler() ;
-    // }, [refresh,isActive])  ;
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getMyComplaints } from "../redux/complaints/complaintSlice";
+import axios from "axios";
+
+const useGetMyComplaints = (id) => {
+    const dispatch = useDispatch() ;
+    const { refresh } = useSelector(state=>state.complaint) ;
+    const fetchComplaints = async () => {
+        try {
+        //   console.log(`Fetching complaints for ID: ${id}`);
+            const response = await axios.get(`http://localhost:8080/api/complaints/my/${id}`,{
+              withCredentials:true,
+            });
+             // Debugging: Log the response
+            //  console.log('API Response:', response.data);
+             dispatch(getMyComplaints(response?.data)) ; 
+            // setComplaints(response?.data) ;
+        } catch (err) {
+                // Debugging: Log the error
+                console.error('Error fetching complaints:', err);
+                // setError('Error fetching complaints: ' + err.message);
+        }
+    };
+    // fetchComplaints() ;
+    useEffect(()=>{
+        fetchComplaints() ; 
+    },[refresh])  ;
+
 }
 
 export default useGetMyComplaints;

@@ -1,21 +1,23 @@
-// src/components/Sidebar.jsx
 import React from 'react';
 
 const Sidebar = ({ onSelectOption }) => {
+  const handleSelectChange = (event) => {
+    onSelectOption(event.target.value);
+  };
+
   return (
-    <div className=" text-white rounded-lg p-4 flex flex-col shadow-md">
-      <button
-        className="w-full mb-4 px-4 bg-gray-600 hover:bg-gray-700 rounded-lg flex-1 font-jakarta"
-        onClick={() => onSelectOption('remove')}
+    <div className="rounded-lg p-4 flex flex-col w-60">
+      <select
+        className="font-jakarta font-semibold text-blue-800 bg-gray-50 hover:bg-gray-100 border-r-4 border-l-4 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-gray-200 transition duration-200 cursor-pointer text-center"
+        onChange={handleSelectChange}
+        defaultValue=""
       >
-        Remove MR
-      </button>
-      <button
-        className="w-full px-4 bg-gray-600 hover:bg-gray-700 flex-1 rounded-lg font-jakarta"
-        onClick={() => onSelectOption('add')}
-      >
-        Add MR
-      </button>
+        <option value="" disabled>
+          Select an option
+        </option>
+        <option value="remove">Remove MR</option>
+        <option value="add">Add MR</option>
+      </select>
     </div>
   );
 };
