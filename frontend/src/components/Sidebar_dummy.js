@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import { FaUser, FaClipboardList, FaFileInvoiceDollar, FaUtensils, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { MdOutlineFoodBank } from "react-icons/md";
@@ -8,37 +8,27 @@ const Sidebar = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [showSidebar, setShowSidebar] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("/");
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const { id } = useParams();
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY > lastScrollY) {
-        setShowSidebar(false);
-      } 
-
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [lastScrollY]);
+  const { id } = useParams();
 
   return (
-    <div className="relative flex">
-      {showSidebar && <div className="sidebar-backdrop fixed inset-0 bg-gray-900 opacity-50"></div>}
-      <div className={`fixed h-full min-h-screen w-64 bg-gray-300 p-4 transition-transform duration-300 ease-in-out ${showSidebar ? 'transform-none' : '-translate-x-full'}`}>
-        <div className="flex-1 h-full p-4 bg-gray-50 font-semibold">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-700 font-jakarta">Dashboard</h2>
+    <div className="relative">
+      {
+       showSidebar && <FaChevronLeft size={24} className="absolute top-9 left-9 cursor-pointer text-gray-800" onClick={toggleSidebar} />
+      }
+      {!showSidebar && (
+        <>
+        <FaChevronRight size={30} className='absolute top-10 left-12 cursor-pointer text-gray-800' onClick={toggleSidebar}/>
+        <span className='absolute top-10 left-20 font-jakarta cursor-pointer font-semibold text-xl tracking-wider text-green-800' onClick={toggleSidebar}>Dashboard</span>
+        </>
+      )}
+      <div className={`w-64 h-full min-h-screen flex flex-col p-4 bg-gray-200 transition-all duration-400 ease-in-out ${showSidebar ? '' : '-translate-x-full delay-200'}`}>
+        <div className="flex-1 rounded-lg p-4 bg-gray-50 font-semibold">
+          <h2 className="text-2xl font-bold mb-6 text-center text-green-800 font-jakarta">Dashboard</h2>
           <ul className="space-y-2">
             <li className={`hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'my-complaints' ? 'border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('my-complaints')}>
               <NavLink to={`my-complaints/${id}`} className={({ isActive }) =>
@@ -85,13 +75,6 @@ const Sidebar = () => {
           </ul>
         </div>
       </div>
-      {showSidebar ? (
-        <FaChevronLeft size={28} className="absolute top-9 left-9 cursor-pointer text-gray-800" onClick={toggleSidebar} />
-      ) : (
-        <>
-          <FaChevronRight size={30} className='absolute top-10 left-12 cursor-pointer text-gray-800' onClick={toggleSidebar}/>
-        </>
-      )}
     </div>
   );
 };

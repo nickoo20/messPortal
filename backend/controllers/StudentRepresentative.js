@@ -19,7 +19,7 @@ export const makeStudentRepresentative = async (req, res) => {
     // console.log(u1);
     const user = await User.findOneAndUpdate(
        {registrationNumber},
-      { isStudentRepresentative: true },
+      { studentRep: true },
       { new: true } // Return the updated document
     );
     console.log(user);
@@ -40,7 +40,7 @@ export const removeStudentRepresentative = async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
        {registrationNumber} ,
-      { isStudentRepresentative: false },
+      { studentRep: false },
       { new: true } // Return the updated document
     );
 
@@ -56,7 +56,7 @@ export const removeStudentRepresentative = async (req, res) => {
 };
 export const findALLMr=async (req, res) => {
   try {
-    const students = await User.find({ isStudentRepresentative: true });
+    const students = await User.find({ studentRep: true });
     res.json(students);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch students' });
