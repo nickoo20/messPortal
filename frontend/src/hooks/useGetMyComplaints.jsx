@@ -25,7 +25,7 @@ const useGetMyComplaints = (id) => {
     // fetchComplaints() ;
     useEffect(()=>{
         fetchComplaints() ; 
-    },[refresh])  ;
+    },[refresh, id])  ;
 
 }
 

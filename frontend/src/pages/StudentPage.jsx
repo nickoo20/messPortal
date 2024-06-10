@@ -11,15 +11,15 @@ const StudentPage = () => {
 
   const navigate=useNavigate() ;
   return (
-    <div className="flex flex-col bg-gradient-to-r from-gray-300 to-gray-700 min-h-screen">
+    <div className="flex flex-col bg-gradient-to-r from-gray-200 to-gray-500 min-h-screen">
       <Header />
-      <div className="flex bg-gray-200">
+      <div className="flex from-gray-400 to-gray-700">
           <Sidebar />
           {/* <MainContent/> */}
-        <div className="flex-1 p-6 bg-gray-50 shadow-lg rounded-lg m-4">
-          <h1 className="text-3xl ">Welcome to your Mess Portal ,  
-            <span className="text-blue-700 italic font-semibold text-2xl"> {currentUser.name.toUpperCase()}</span></h1>
-          <p className="text-md text-red-800 my-4 italic">Select from the sidebar .</p>
+        <div className="flex-1 p-6 bg-gray-50 shadow-lg m-4 ">
+          {/* <h1 className="text-2xl my-4">Welcome to your Mess Portal ,   */}
+            {/* <span className="text-green-700 italic font-semibold text-2xl"> {currentUser.name.toUpperCase()}</span> */}
+          {/* </h1> */}
           <Outlet />
         </div>
       </div>

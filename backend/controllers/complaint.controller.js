@@ -38,8 +38,6 @@ export const commentOnComplaint = async (req, res) => {
         error: "Text is required!",
       });
     }
-
-
     const complaint = await Complaint.findById(complaintId).populate({
       path:"comments.user",
       select: "name email "
@@ -121,39 +119,72 @@ export const deleteComplaint = async (req, res) => {
   }
 };
 // Get My Complaints
-export const getMyComplaints = async (req, res,next) => {
-console.log(req.user) ;
-console.log(req.params.id) ;
-if (req.user._id.toString() != req.params.id) {
-  return res.status(500).json('You can only view your own complaints!') ;
-}
-  try {
-    const complaint = await Complaint.find({ createdBy: req.params.id }).populate({
-      path: "createdBy",
-      select: "name email",
-    });
-    res.status(200).json(complaint);
-  } catch (error) {
-    next(error) ;
+export const getMyComplaints = async (req, res, next) => {
+  console.log(req.user);
+  console.log(req.params.id);
+  
+  if (req.user._id.toString() !== req.params.id) {
+    return res.status(500).json('You can only view your own complaints!');
   }
-}
+  
+  try {
+    const complaints = await Complaint.find({ createdBy: req.params.id })
+      .populate({
+        path: "createdBy",
+        select: "name email",
+      })
+      .sort({ createdAt: -1 });
+    // Sort the complaints first by createdAt (latest first) and then by status (escalated first)
+    // complaints.sort((a, b) => {
+    //   if (a.status === "escalated" && b.status !== "escalated") {
+    //     return -1;
+    //   }
+    //   if (a.status !== "escalated" && b.status === "escalated") {
+    //     return 1;
+    //   }
+    //   // If both have the same status, sort by createdAt (latest first)
+    //   return new Date(b.createdAt) - new Date(a.createdAt);
+    // });
+
+    return res.status(200).json(complaints);
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 // Get All complaints
 export const getAllComplaints = async (req, res) => {
   try {
+    // Fetch all complaints sorted by createdAt in descending order
     const comp = await Complaint.find({})
-    .sort({ createdAt: -1 })
-    .populate({
-      path: "createdBy",
-      select: "name email",
-    }).populate({
-      path: "comments.user",
-      select:"name email",
-    });
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "createdBy",
+        select: "name email",
+      })
+      .populate({
+        path: "comments.user",
+        select: "name email",
+      });
+
+    // Filter complaints with status "pending" or "escalated"
     const comp1 = comp.filter((c) => {
       return c.status === "pending" || c.status === "escalated";
     });
-    // console.log(comp1);
+
+    // Sort the filtered complaints to prioritize "escalated" status
+    // comp1.sort((a, b) => {
+    //   if (a.status === "escalated" && b.status !== "escalated") {
+    //     return -1;
+    //   }
+    //   if (a.status !== "escalated" && b.status === "escalated") {
+    //     return 1;
+    //   }
+    //   return 0;
+    // });
+
+    // Send the filtered and sorted complaints
     res.status(200).json({
       success: true,
       comp1,
@@ -166,6 +197,7 @@ export const getAllComplaints = async (req, res) => {
       .json("Error in All complaints controller ", err.message);
   }
 };
+
 
 // Resolve or escalate a complaint (warden only)
 // Resolve a Complaint

@@ -16,6 +16,10 @@ const menuSchema = new mongoose.Schema({
     pdfPath: {
         type: String
     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
 },{timestamps:true}) ;
 
 const Menu = mongoose.model('Menu', menuSchema);

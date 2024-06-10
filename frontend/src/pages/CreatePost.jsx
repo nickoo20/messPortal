@@ -1,26 +1,20 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { getRefresh } from "../redux/complaints/complaintSlice";
 import { useDispatch } from "react-redux";
+import Modal from '../components/Modal' // Import the Modal component
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
-  // useEffect(()=>{
-  //   fetchComplaints() ;
-  // },[]) ;
-
-  // const fetchComplaints = async() => {
-  //   try{
-  //     const res = await axios.get('http://localhost:8080/api/complaints/all') ;
-  //   }catch(err){
-  //     console.log(error) ;
-  //   }
-  // }
+  const toggleModalVisibility = () => {
+    setShowModal(!showModal);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +28,7 @@ const CreatePost = () => {
           description,
         },
         {
-          withCredentials: true, // Ensure cookies are sent with the request
+          withCredentials: true,
         }
       );
       setLoading(false);
@@ -43,17 +37,25 @@ const CreatePost = () => {
       // Reset the form
       setTitle("");
       setDescription("");
+      toggleModalVisibility(); // Close the modal after submission
     } catch (err) {
       setLoading(false);
       toast.error("Error creating complaint");
     }
   };
+
   return (
-    <>
-      <div className="p-4 bg-white rounded-lg shadow-md max-w-xl mx-auto mb-10 mt-3 border-t-4">
-        <h2 className="text-xl font-bold mb-6 italic font-jakarta text-blue-700">Have a problem ? Write a Complaint ....</h2>
+    <div className="p-4 bg-white rounded-lg max-w-md mx-auto mb-5 border-blue-300 border-b-4">
+      <h1
+        className="text-md font-bold mb-2 italic text-center font-jakarta text-blue-700 cursor-pointer"
+        onClick={toggleModalVisibility}
+      >
+        Write a Complaint... Click!
+      </h1>
+      <Modal show={showModal} onClose={toggleModalVisibility}>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4 flex ">
+          <h1 className="text-blue-600 mb-2 italic text-md">Your complaint: </h1>
+          <div className="mb-4 flex">
             <input
               type="text"
               id="title"
@@ -78,7 +80,7 @@ const CreatePost = () => {
           <div className="flex items-center justify-end">
             <button
               type="submit"
-              className="bg-pink-600 hover:bg-pink-800 text-white rounded-2xl
+              className="bg-blue-600 hover:opacity-85 hover:bg-blue-800 text-white rounded-2xl
               font-bold py-2 px-8 focus:outline-none focus:shadow-outline tracking-widest"
               disabled={loading}
             >
@@ -86,9 +88,8 @@ const CreatePost = () => {
             </button>
           </div>
         </form>
-      </div>
-      
-    </>
+      </Modal>
+    </div>
   );
 };
 
