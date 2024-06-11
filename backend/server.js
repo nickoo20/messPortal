@@ -3,7 +3,7 @@ import { connectToMongoose } from './db/connectToMongoose.js' ;
 import dotenv from "dotenv" ;
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.route.js' ;
-
+import expenseRoutes from './routes/expense.route.js'
 import complaintRoutes from './routes/complaint.route.js' ;
 import userRoutes from './routes/user.route.js'; 
 import cors from 'cors' ;
@@ -45,15 +45,7 @@ app.use(cors({
     optionsSuccessStatus: 204
 
 }));
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000/");
-//   res.header("Access-Control-Allow-Credentials", true);
-//   if (req.method === "OPTIONS") {
-//     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-//     return res.status(200).json({});
-//   }
-//   next();
-// });
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()) ;
 
@@ -67,6 +59,7 @@ app.use("/api/user",userRoutes) ;
 // app.use('/api', verificationRoutes) ;
 app.use("/api/bills",billRoutes);
 app.use("/api/mark-leave",leaveRoutes);
+app.use("/api/expense",expenseRoutes);
 //app.use(cors());
 //app.use(express.json()) ;
 
