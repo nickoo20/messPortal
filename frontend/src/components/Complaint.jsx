@@ -90,6 +90,12 @@ const Complaint = ({ complaint }) => {
       const res = await axios.delete(
         `http://localhost:8080/api/complaints/comment/${complaint._id}/${commentId}`
       );
+      console.log('deleteComment: ',res) ; 
+      if(res?.data.success === false){
+        toast.error("Error deleting comment");
+        return ;
+      }
+    toast.success(res?.data.message) ;
       dispatch(getRefresh());
       setComments(res.data.comments);
     } catch (err) {
@@ -122,13 +128,13 @@ const Complaint = ({ complaint }) => {
               onClick={handleUpvote}
               className="flex items-center mr-1 text-[#008080] hover:text-green-700 transition-colors duration-200"
               >
-              <AiFillLike size={20} className="mr-1" /> {upvotes.length}
+              <AiFillLike size={20} className="mr-1" /> {upvotes?.length}
             </button>
             <button
               onClick={handleDownvote}
               className="flex items-center text-[#8B0000] hover:text-red-700 transition-colors duration-200"
               >
-              <AiFillDislike size={20} className="mr-1" /> {downvotes.length}
+              <AiFillDislike size={20} className="mr-1" /> {downvotes?.length}
             </button>
             </div>
             {/* </div> */}
@@ -160,20 +166,20 @@ const Complaint = ({ complaint }) => {
                     Comments :
                   </span>
                   <div className="flex flex-col gap-3 max-h-60 overflow-y-auto mt-2">
-                    {comments.length === 0 ? (
+                    {comments?.length === 0 ? (
                       <p className="text-sm text-slate-500">
                         No comments yet 🤔
                       </p>
                     ) : (
                       comments.map((comment) => (
                         <div key={comment._id} className="">
-                          <div className="flex flex-col justify-center bg-gray-50 w-full">
+                          <div className="flex flex-col p-1 justify-center bg-gray-50 w-full">
                             <div className="flex justify-between w-full">
-                              <div className="flex items-center gap-1">
-                                <span className="font-bold text-gray-700">
+                              <div className="flex items-center gap-1  text-xs">
+                                <span className="font-bold text-gray-600">
                                   {comment?.user.name}
                                 </span>
-                                <span className="text-gray-500 text-xs">
+                                <span className="text-gray-500 italic">
                                   @{comment?.user.email}
                                 </span>
                               </div>
@@ -212,7 +218,8 @@ const Complaint = ({ complaint }) => {
                     />
                     <button
                       type="submit"
-                      className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                      className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br 
+                      focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-xs px-4 py-2 text-center me-2 mb-2"
                     >
                       Submit
                     </button>
