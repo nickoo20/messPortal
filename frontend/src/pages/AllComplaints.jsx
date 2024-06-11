@@ -29,11 +29,10 @@ const AllComplaints = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 rounded-lg">
-      <div className="rounded-lg p-6">
+      <h1 className="text-3xl font-bold mb-6 text-[#003366] font-jakarta text-center">All Complaints</h1>
       <CreatePost/>
       <div className="">
-        <h1 className="text-3xl font-bold mb-6 text-red-800 font-jakarta">All Complaints</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-1 mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mx-auto">
         {/* {complaints.length > 0 ? (
           complaints?.map((complaint) => (
             <Complaint key={complaint._id} complaint={complaint}/>
@@ -42,7 +41,7 @@ const AllComplaints = () => {
           <p className="text-gray-600 text-lg">No complaints found.</p>
         )} */}
         {
-          allComplaints?.length > 0 ? (allComplaints?.map((complaint)=>(
+          allComplaints?.length > 0 ? (allComplaints?.map((complaint) => (
             <Complaint key={complaint._id} complaint={complaint}/>
           ))) : (
             <p className="text-gray-600 text-lg">No complaints found.</p>
@@ -51,7 +50,6 @@ const AllComplaints = () => {
         </div>
       </div>
         </div>
-    </div>
   );
 };
 

@@ -66,7 +66,7 @@ const LoginStudent = () => {
       dispatch(signInSuccess(res?.data.user));
       toast.success(res?.data?.message);
       console.log("Login", res);
-      navigate("/student/dashboard");
+      navigate("/student/dashboard/all-complaints");
     } catch (error) {
       setFormErrors({ apiError: error.response?.data?.message || "Error in login" });
       console.error("Error:", error.message);
@@ -117,7 +117,7 @@ const LoginStudent = () => {
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                   onClick={toggleShowPassword}
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </span>
               </div>
               {formErrors.password && <p className="text-red-500 text-xs italic">{formErrors.password}</p>}
