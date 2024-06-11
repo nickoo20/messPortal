@@ -5,9 +5,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useTab, useToast } from "@chakra-ui/react";
 
-import { useAuth } from "../../context/userContext";
-
-const Login = () => {
+import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
+const LoginWarden = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [auth, setAuth] = useAuth();
@@ -123,6 +122,6 @@ const Login = () => {
       </div>
     </>
   );
-};
+}
 
-export default Login;
+export default LoginWarden;

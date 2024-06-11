@@ -1,18 +1,25 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const LeaveSchema = new mongoose.Schema({
-  registrationNumber: {
-    type: Number,
-    required: true,
-  },
+    registrationNumber: {
+        type: Number,
+        
+        
+        required: true,
+        
+      },
   startDate: {
     type: Date,
-    required: true,
+    required: true
   },
   endDate: {
     type: Date,
-    required: true,
+    required: true
   },
+//   noOfDays: {
+//     type: Number,
+//     required: true
+//   }
 });
 
-export const LeaveModel = mongoose.model("Leave", LeaveSchema);
+export const LeaveModel = mongoose.model('Leave', LeaveSchema);

@@ -2,6 +2,10 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
+import Cookies from 'js-cookie';
+import toast from 'react-hot-toast';
+import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../../context/userContext";
 const MarkLeave = () => {
   const initialData = {
     registrationNumber: 0,
@@ -25,16 +29,17 @@ const MarkLeave = () => {
       });
 
       console.log(response);
-      setMessage({
-        text: "Leave marked successfully. The leave has been recorded.",
-        type: "success"
-      });
+      if (response?.status===200) {
+        toast.success(response.data.message) ;
+        // Navigate to login page or show a success message
+        
+        // navigate("/login-student");
+      }
+      console.log("sent");
     } catch (error) {
-      console.log("Error in axios", error.message) ;
-      setMessage({
-        text: "There was an error marking the leave.",
-        type: "error"
-      });
+      //setMessage(error.response.);
+      toast.error(error.message)
+      console.log("error in axios")
     }
   };
 
