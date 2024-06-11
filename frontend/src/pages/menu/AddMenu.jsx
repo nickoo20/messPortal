@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const AddMenu = () => {
   const [month, setMonth] = useState("");
@@ -9,6 +10,7 @@ const AddMenu = () => {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate() ;
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -48,8 +50,10 @@ const AddMenu = () => {
   }
 
   return (
-    <div className="flex flex-col items-center  min-h-screen bg-gray-100 px-4">
-      <div className="bg-white p-6 rounded-lg w-full max-w-lg mt-20 border-r-4 border-l-4 shadow-md">
+    <div className="min-h-screen">
+    <div className="flex flex-col items-center bg-gray-100 px-4 h-screen">
+      <button onClick={()=>navigate(-1)}>Go Back</button>
+      <div className="bg-white p-6 rounded-lg w-full max-w-lg mt-20 border-r-4 border-green-300 shadow-md">
         <h1 className="text-md sm:text-2xl mb-6 mt-0 font-roboto text-right text-blue-700">Add New Menu </h1>
         <form onSubmit={handleSubmit} className="space-y-2">
           <div className=" flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-2 flex-1 ">
@@ -102,6 +106,7 @@ const AddMenu = () => {
             </div>
         </form>
         {message && <p className="mt-4 text-center text-gray-800">{message}</p>}
+      </div>
       </div>
     </div>
   );

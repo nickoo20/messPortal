@@ -45,7 +45,7 @@ router.post('/add', upload.single('menuPdf'), async (req, res) => {
 // Route to get the latest menu
 router.get('/latest', async (req, res) => {
   try {
-    const latestMenu = await Menu.findOne().sort({ year: -1, month: -1 }).exec();
+    const latestMenu = await Menu.findOne().sort({ createdAt:-1 }) ;
     if (!latestMenu) {
       return res.status(404).json({ message: 'No menu found' });
     }
