@@ -41,7 +41,7 @@ const AllComplaints = () => {
           <p className="text-gray-600 text-lg">No complaints found.</p>
         )} */}
         {
-          allComplaints.length > 0 ? (allComplaints?.map((complaint)=>(
+          allComplaints?.length > 0 ? (allComplaints?.map((complaint) => (
             <Complaint key={complaint._id} complaint={complaint}/>
           ))) : (
             <p className="text-gray-600 text-lg">No complaints found.</p>
