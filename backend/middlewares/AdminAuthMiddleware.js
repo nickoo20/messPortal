@@ -13,9 +13,9 @@ const getUserByEmail = async(email) => {
     }
 }
 export const AdminauthMiddleWare = async(req, res, next) => {
-    console.log("in the middleware");
+    
     const token = req.cookies?.access_token ;
-    console.log(token);
+    //console.log(token);
     if(!token){
         return res.status(400).json({
             message:'No Token, Authorization denied!',
@@ -23,9 +23,9 @@ export const AdminauthMiddleWare = async(req, res, next) => {
     }
     try{
         const decoded=jwt.verify(token,process.env.JWT_SECRET) ;
-        console.log(decoded) ;
-        const user = await getUserByEmail(decoded.email) ;
-        console.log(user); 
+        
+        const user = await getUserByEmail(decoded.email);
+
         req.user= user ;
         next() ;
     }catch(error){
