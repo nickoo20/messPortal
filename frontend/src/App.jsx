@@ -28,6 +28,9 @@ import MarkLeave from "./pages/admin/Mark-leave.jsx";
 import StudentBill from "./pages/accountant/SingleBill.jsx";
 import Billcomp from "./pages/accountant/Allbills.jsx";
 import ManageMr from "./pages/admin/ManageMr";
+import UpdtateBill from "./pages/UpdateBill.jsx";
+import ExpenseManager from "./pages/accountant/Expenses.jsx";
+import FestCharge from "./pages/accountant/Festival.jsx"
 const App = () => {
 
   
@@ -66,6 +69,9 @@ const App = () => {
     <Route path="/singlebill" element={<StudentBill/>}/>
     <Route path="/allbills" element={<Billcomp/>}/>
     <Route path="/manage-mr" element={<ManageMr/>}/>
+    <Route path="/updateBill" element={<UpdtateBill/>}/>
+    <Route path="/expense" element={<ExpenseManager/>}/>
+    <Route path="/fest-charge" element={<FestCharge/>}/>
         </Routes>
       </div>
     </BrowserRouter>

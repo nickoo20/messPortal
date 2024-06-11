@@ -73,7 +73,7 @@ const Login = () => {
             <h1 className="text-3xl font-mono mb-2">Admin Login</h1>
             <span className=" text-[17px]">
               Don't have an account?{" "}
-              <NavLink className="font-bold" to="/signup-admin">
+              <NavLink className="font-bold" to="/register-warden">
                 Sign Up
               </NavLink>
             </span>

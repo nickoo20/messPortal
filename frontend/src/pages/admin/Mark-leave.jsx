@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import toast from 'react-hot-toast';
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
 const MarkLeave = () => {
@@ -19,7 +19,7 @@ const MarkLeave = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        console.log(inputdata)
+        //console.log(inputdata)
       const response = await axios.post('http://localhost:8080/api/mark-leave', inputdata,{
         
         
@@ -34,9 +34,16 @@ const MarkLeave = () => {
       });
       
       console.log(response);
+      if (response?.status===200) {
+        toast.success(response.data.message) ;
+        // Navigate to login page or show a success message
+        
+        // navigate("/login-student");
+      }
       console.log("sent");
     } catch (error) {
       //setMessage(error.response.);
+      toast.error(error.message)
       console.log("error in axios")
     }
   };
