@@ -60,7 +60,23 @@ export const commentOnComplaint = async (req, res) => {
       error: "Internal Server Error!",
     });
   }
-};
+}; 
+
+export const seeComments = async(req, res) => { 
+  try{  
+      const {complaintId} = req.params ;
+      const complaint = await Complaint.findById(complaintId) ;
+      if(!complaint){
+        return res.status(404).json({
+          message: 'Complaint not found!' ,
+        }) ;
+      }
+      const comments = complaint.comments ;
+      return res.status(200).json(comments) ;
+  }catch(err){
+    console.log('Error in getting comments: ', err.message) ; 
+  }
+}
 
 // Delete a comment on Complaint
 export const deleteComment = async(req, res)=>{

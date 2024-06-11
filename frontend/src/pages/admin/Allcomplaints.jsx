@@ -15,6 +15,7 @@ const AllComplaints = () => {
   const [forwarding, setForwarding] = useState(false);
   const [resolving, setResolving] = useState(false);
   const [resolvingComplaintId, setResolvingComplaintId] = useState(null);
+  const [complaintComments, setComplaintComments] = useState(null) ;
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -88,6 +89,16 @@ const AllComplaints = () => {
     }
   };
 
+  const fetchComments = async(id) => {
+    try{
+      const res= await axios.get(`http://localhost:8080/api/complaints/comment/${id}`)
+    }catch(err){
+      console.log('Error fetching comments', err.message) ;
+    }
+    console.log('fetchComments: ', res) ;
+      setComplaintComments(res?.data) ;
+  }
+
   if (!user) {
     return <h1>Please Login first!!</h1>;
   }
@@ -132,6 +143,13 @@ const AllComplaints = () => {
                     <span>{complaint.downvotes.length}</span>
                   </div>
                 </div>
+                {
+                  complaintComments?.map((comment) => (
+                    <div key={comment._id}> 
+                        {comment.text}
+                      </div>
+                  ))
+                }
                 <div className="mt-4 flex flex-col md:flex-row justify-evenly items-center">
                   <button
                     onClick={() => handleStatusChange(complaint._id, "resolved")}
