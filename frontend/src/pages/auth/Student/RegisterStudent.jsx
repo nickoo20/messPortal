@@ -17,6 +17,7 @@ const RegisterStudent = () => {
     isVerified: false,
     isWardenVerified: false,
     hosteller:false,
+    hostelName:'Girls Hostel',
     studentRep: false,
   });
   const [errors, setErrors] = useState({}) ;
@@ -147,17 +148,43 @@ const RegisterStudent = () => {
                 className="border p-2 w-full rounded-xl focus:outline-none text-sm"
                 />
               <div className="flex flex-col items-start justify-center w-full gap-4">
-                <div className="flex items-center">
-                  <span>Are you a hosteller?</span>
-                  <input
-                    type="checkbox"
-                    id="hosteller"
-                    className="w-5  bg-[#FEFAF6]"
-                    onChange={handleChange}
-                    checked={formData.hosteller}
-                  />
-                </div>
-                {errors.hosteller && <p className="text-red-500 text-xs italic">{errors.hosteller}</p>}
+              <div className="flex items-center">
+        <span>Are you a hosteller?</span>
+        <input
+          type="checkbox"
+          id="hosteller"
+          name="hosteller"
+          className="w-5 bg-[#FEFAF6]"
+          onChange={handleChange}
+          checked={formData.hosteller}
+        />
+      </div>
+      {errors.hosteller && (
+        <p className="text-red-500 text-xs italic">{errors.hosteller}</p>
+      )}
+      
+      {formData.hosteller && (
+        <div className="flex items-center gap-4">
+          <label htmlFor="HostelName" className="text-sm">
+            Select your Hostel:
+          </label>
+          <select
+            id="hostelName"
+            name="hostelName"
+            value={formData.hostelName}
+            onChange={handleChange}
+            className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
+          >
+            <option value="">Select a Hostel</option>
+            <option value="Girls Hostel">Girls Hostel</option>
+            <option value="Jhelum Boys Hostel">Jhelum Boys Hostel</option>
+            <option value="Manasbal Boys Hostel">Manasbal Boys Hostel</option>
+            <option value="Mansar Boys Hostel">Mansar Boys Hostel</option>
+            <option value="Chenab Boys Hostel">Chenab Boys Hostel</option>
+            <option value="Indus Boys Hostel">Indus Boys Hostel</option>
+          </select>
+        </div>
+      )}
                 <div className="flex items-center ">
                   <span>Are you a Mess Representative ?</span>
                   <input

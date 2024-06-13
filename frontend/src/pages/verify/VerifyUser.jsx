@@ -17,7 +17,7 @@ const VerifyUser = () => {
           {
             params: { token },
           },
-          {
+          { 
             withCredentials: true,
           }
         );

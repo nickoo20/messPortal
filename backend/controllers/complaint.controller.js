@@ -247,8 +247,7 @@ export const resolveComplaint = async (req, res) => {
     }
 
     complaint.status = "resolved";
-    await complaint.save();
-
+    await complaint.save() ;
     return res
       .status(200)
       .json({ message: "Complaint resolved successfully", complaint });
@@ -262,7 +261,7 @@ export const resolveComplaint = async (req, res) => {
 }
 export const getAllComplaintsAdmin=async(req,res)=>{
          try{
-        const comp = await Complaint.find({});
+        const comp = await Complaint.find({}).sort({createdAt:-1});
         const comp1=comp.filter((c)=>{
             return c.status==='pending'||c.status==='escalated'
         });

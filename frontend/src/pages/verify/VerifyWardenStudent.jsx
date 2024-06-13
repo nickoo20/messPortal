@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
-const WardenVerify = () => {
+const VerifyWardenStudent = () => {
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const location = useLocation();
@@ -53,4 +53,4 @@ const WardenVerify = () => {
   );
 };
 
-export default WardenVerify;
+export default VerifyWardenStudent ;

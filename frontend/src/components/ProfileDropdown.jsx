@@ -23,7 +23,7 @@ const ProfileDropdown = () => {
       token: "",
     });
     try {
-     const response= await axios.post("http://localhost:8080/api/auth/logout");
+     const response= await axios.post("http://localhost:8080/api/auth/logout-student");
     // Cookies.remove('access_token');
     } catch (error) {
       const msg = error.message;
@@ -35,7 +35,7 @@ const ProfileDropdown = () => {
         isClosable: true,
       });
     }
-    navigate("/login");
+    navigate("/login-student");
   };
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

@@ -1,13 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import VerifyEmail from "./pages/verify/VerifyEmail.jsx";
-import VerifyWarden from "./pages/verify/VerifyWarden.jsx";
+import VerifyEmailStudent from "./pages/verify/VerifyEmailStudent.jsx";
+import VerifyWardenStudent from "./pages/verify/VerifyWardenStudent.jsx";
+import VerifyEmailWarden from './pages/verify/VerifyEmailWarden.jsx' ;
+import VerifyWardenDsw from './pages/verify/VerifyWardenDsw.jsx' ;
 import VerifyUser from "./pages/verify/VerifyUser.jsx";
 
 import HomePage from "./pages/HomePage.jsx";
-import LoginStudent from "./pages/auth/Student/LoginStudent.jsx";
-import RegisterStudent from "./pages/auth/Student/RegisterStudent.jsx";
-import RegisterAdmin from "./pages/auth/Admin/RegisterAdmin.jsx";
-import LoginAdmin from "./pages/auth/Admin/LoginAdmin.jsx";
+import LoginStudent from "./pages/auth/Student/LoginStudent.jsx" ;
+import RegisterStudent from "./pages/auth/Student/RegisterStudent.jsx" ;
+import LoginWarden from "./pages/auth/Warden/LoginWarden.jsx" ;
+import RegisterWarden from './pages/auth/Warden/RegisterWarden.jsx' ; 
 import RegisterAccountant from "./pages/auth/Accountant/RegisterAccountant.jsx";
 import LoginAccountant from "./pages/auth/Accountant/LoginAccountant.jsx";
 
@@ -29,7 +31,9 @@ import MarkLeave from "./pages/admin/Mark-leave.jsx";
 import StudentBill from "./pages/accountant/SingleBill.jsx";
 import Billcomp from "./pages/accountant/Allbills.jsx";
 import ManageMr from "./pages/admin/ManageMr";
-
+import UpdtateBill from "./pages/UpdateBill.jsx";
+import ExpenseManager from "./pages/accountant/Expenses.jsx";
+import FestCharge from "./pages/accountant/Festival.jsx"
 const App = () => {
   return (
     <BrowserRouter>
@@ -48,15 +52,16 @@ const App = () => {
             <Route path="profile" element={<Profile />} />
           </Route>
 
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/verify-warden" element={<VerifyWarden />} />
+          <Route path="/verify-email" element={<VerifyEmailStudent />} />
+          <Route path="/verify-warden" element={<VerifyWardenStudent />} />
+          <Route path="/warden/verify-email" element={<VerifyEmailWarden/>} />
+          <Route path="/warden/verify-dsw" element={<VerifyWardenDsw />} />
           <Route path="/verify-admin" element={<VerifyUser />} />
 
           <Route path="/*" element={<NotFound />} />
 
-          {/* <Route path="/login" element={<LoginAdmin />} /> */}
-          <Route path="/register-admin" element={<RegisterAdmin />} />
-          <Route path="/login-admin" element={<LoginAdmin />} />
+          <Route path="/register-warden" element={<RegisterWarden />} />
+          <Route path="/login-warden" element={<LoginWarden />} />
           <Route path="/admin-landing" element={<AdminPage />}>
             <Route path="allcomplaints" element={<Allcomplaints />} />
             <Route path="mark-leave" element={<MarkLeave />} />
@@ -68,9 +73,15 @@ const App = () => {
           <Route path="/login-accountant" element={<LoginAccountant />} />
           <Route path="/generate-bill" element={<GenerateBill />} />
           <Route path="/update-cost" element={<UpdateCostPerDay />} />
-          <Route path="/accountant-landing" element={<NavigationButtons />} />
-          <Route path="/singlebill" element={<StudentBill />} />
-          <Route path="/allbills" element={<Billcomp />} />
+          
+    <Route path="/accountant-landing" element={<NavigationButtons/>}/>
+    <Route path="/mark-leave" element={<MarkLeave/>}/>
+    <Route path="/singlebill" element={<StudentBill/>}/>
+    <Route path="/allbills" element={<Billcomp/>}/>
+    <Route path="/manage-mr" element={<ManageMr/>}/>
+    <Route path="/updateBill" element={<UpdtateBill/>}/>
+    <Route path="/expense" element={<ExpenseManager/>}/>
+    <Route path="/fest-charge" element={<FestCharge/>}/>
         </Routes>
       </div>
     </BrowserRouter>
