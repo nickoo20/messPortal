@@ -17,7 +17,11 @@ const VerifyUser = () => {
           {
             params: { token },
           },
+<<<<<<< HEAD
           { 
+=======
+          {
+>>>>>>> d4c00c63ad2c7ea03a890bc72c397b4e0343011d
             withCredentials: true,
           }
         );

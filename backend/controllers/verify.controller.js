@@ -35,7 +35,7 @@ export const verifySelfUserEmail = async (req, res) => {
       from: process.env.EMAIL_USER,
       to: decoded.wardenEmail,
       subject: "Warden Verification Required",
-      text: `A new user with Enrollment Number: ${user.enrollmentNumber.toUpperCase()} of hostel ${user.hostelName} has registered and requires your verification. Click on the following link to verify the user: 
+      text: `A new user with Enrollment Number: ${user.enrollmentNumber.toUpperCase()} of ${user.hostelName.toUpperCase()} has registered and requires your verification. Click on the following link to verify the user: 
       ${process.env.BASE_URL}/verify-warden?token=${verificationToken}`,
     };
 
@@ -73,7 +73,7 @@ export const verifyUserByWarden = async (req, res) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // Decode the token to get user details
     const user = await User.findOne({ email: decoded.userEmail }); // Find user by decoded email
-
+    console.log(user) ;
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
