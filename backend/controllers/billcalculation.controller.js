@@ -7,7 +7,10 @@ import moment from 'moment';
 import { billUpdate } from '../models/billUpdate.model.js';
 // Function to calculate bill for a student for a given month based on days present
 const billForALL=async (req, res) => {
-    const { month, year } = req.query;
+    let { month, year ,extraCharge,HostelName} = req.query;
+    //const Hostel=HostelName;
+    if(!extraCharge)
+    extraCharge=0;
    const bills=await billUpdate.findOne({month,year});
    let billPerDay=0;
    let serviceCharge=0;
@@ -22,10 +25,10 @@ const billForALL=async (req, res) => {
    
 
     try {
-      const students=await User.find();
+      const students=await User.find({HostelName});
       const bills = await Promise.all(
         students.map(async student => {
-          const finalbill = await calculateBillForStudent(student.registrationNumber, month, year,billPerDay,serviceCharge);
+          const finalbill = await calculateBillForStudent(student.registrationNumber, month, year,billPerDay,serviceCharge,extraCharge);
           const totalbill=finalbill.totalbill;
           const festivalcharges=finalbill.festCharges;
           const festival=finalbill.festival;
@@ -44,7 +47,10 @@ const billForALL=async (req, res) => {
   const billForOne= async (req, res) => {
     let {registrationNumber}=req.params;
 
-    const { month, year } = req.query;
+    let { month, year,extraCharge} = req.query;
+    if(!extraCharge)
+    extraCharge=0;
+    
     const bills=await billUpdate.findOne({month,year});
    let billPerDay=0;
    let serviceCharge=0;
@@ -61,7 +67,7 @@ const billForALL=async (req, res) => {
       const student=await User.findOne({registrationNumber});
       if(!student)
       return res.status(404).json({ message: 'User not found' });
-      const finalbill=await calculateBillForStudent(student.registrationNumber,month,year,billPerDay,serviceCharge);
+      const finalbill=await calculateBillForStudent(student.registrationNumber,month,year,billPerDay,serviceCharge,extraCharge);
 
       const festivalCharge=finalbill.festCharges;
       const festival=finalbill.festival;
@@ -74,7 +80,7 @@ const billForALL=async (req, res) => {
       res.status(500).json({ error: 'An error occurred while fetching bills' });
     }
   };
-const calculateBillForStudent = async (studentId, month, year,billPerDay,extraCharge) => {
+const calculateBillForStudent = async (studentId, month, year,billPerDay,extraCharge,ec) => {
     
     const startDate = moment(`${year}-${month}-01`);
     const endDate = startDate.clone().endOf('month');
@@ -106,7 +112,7 @@ const calculateBillForStudent = async (studentId, month, year,billPerDay,extraCh
     let bill=new Decimal(totalDays).minus(totalLeaveDays).times(billPerDay).toFixed(2);
     bill=parseInt(bill,10);
     
-    const totalbill=parseInt(bill,10)+parseInt(extraCharge,10)+parseInt(festCharges,10);
+    const totalbill=parseInt(bill,10)+parseInt(extraCharge,10)+parseInt(festCharges,10)+parseInt(ec,10);
     //console.log(totalbill)
     const finalbill={
       totalbill,

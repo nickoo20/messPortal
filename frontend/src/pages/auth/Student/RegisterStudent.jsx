@@ -18,6 +18,7 @@ const RegisterStudent = () => {
     isWardenVerified: false,
     hosteller:false,
     studentRep: false,
+    Hostel:""
   });
   const [errors, setErrors] = useState({}) ;
   // const navigate=useNavigate() ;
@@ -157,6 +158,24 @@ const RegisterStudent = () => {
                     checked={formData.hosteller}
                   />
                 </div>
+                {formData.hosteller&&(
+                 <>
+                 <select
+              id="Hostel"
+              value={formData.Hostel}
+              onChange={handleChange}
+              name="Hostel"
+              className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+               <option value="None">None</option>
+              <option value="Girls Hostel">Girls Hostel</option>
+              <option value="Jhelum Boys Hostel">Jhelum Boys Hostel</option>
+              <option value="Manasbal Boys Hostel">Manasbal Boys Hostel</option>
+              <option value="Mansar Boys Hostel">Mansar Boys Hostel</option>
+              <option value="Chenab Boys Hostel">Chenab Boys Hostel</option>
+            </select>
+                 </>
+                )}
                 {errors.hosteller && <p className="text-red-500 text-xs italic">{errors.hosteller}</p>}
                 <div className="flex items-center ">
                   <span>Are you a Mess Representative ?</span>

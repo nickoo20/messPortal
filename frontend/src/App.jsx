@@ -32,6 +32,8 @@ import ManageMr from "./pages/admin/ManageMr";
 import UpdtateBill from "./pages/UpdateBill.jsx";
 import ExpenseManager from "./pages/accountant/Expenses.jsx";
 import FestCharge from "./pages/accountant/Festival.jsx"
+import NoticeForm from "./pages/Notice/AddNotice.jsx";
+import SeeNotice from "./pages/Notice/SeeNotice.jsx";
 const App = () => {
   return (
     <BrowserRouter>
@@ -48,6 +50,9 @@ const App = () => {
               <Route path="mess-menu" element={<LatestMenu />} />
               <Route path="add-menu" element={<AddMenu />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="add-notice" element={<NoticeForm/>}/>
+            <Route path="see-notice" element={<SeeNotice/>}/>
+
           </Route>
 
           <Route path="/verify-email" element={<VerifyEmail />} />

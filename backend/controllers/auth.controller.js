@@ -19,6 +19,7 @@ export const registerUser = async (req, res) => {
       name,
       registrationNumber,
       hosteller,
+      Hostel
     } = req.body;
     const emailRegex = /^[a-z]+_[0-9]{4}[a-z]{4}[0-9]{3}@nitsri\.ac\.in$/;
     if (!emailRegex.test(email)) {
@@ -71,6 +72,7 @@ export const registerUser = async (req, res) => {
       enrollmentNumber,
       name,
       registrationNumber,
+      Hostel
     });
     user.password = await bcrypt.hash(password, 10);
 

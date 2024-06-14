@@ -73,6 +73,7 @@ const Sidebar = () => {
               </NavLink>
             </li>
             {currentUser.studentRep && (
+              <>
               <li className={`hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'add-menu' ? 'border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('add-menu')}>
                 <NavLink to="add-menu" className={({ isActive }) =>
                   `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-700 hover:text-gray-900'}`
@@ -81,7 +82,24 @@ const Sidebar = () => {
                   <span className="font-inter">Add Menu</span>
                 </NavLink>
               </li>
+              <li className={`hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'add-notice' ? 'border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('add-notice')}>
+                <NavLink to="add-notice" className={({ isActive }) =>
+                  `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-700 hover:text-gray-900'}`
+                }>
+                  <MdOutlineFoodBank size={20} className="mr-2" />
+                  <span className="font-inter">Add Notice</span>
+                </NavLink>
+              </li>
+              </>
             )}
+            <li className={`hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'see-notice' ? 'border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('see-notice')}>
+                <NavLink to="see-notice" className={({ isActive }) =>
+                  `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-700 hover:text-gray-900'}`
+                }>
+                  <MdOutlineFoodBank size={20} className="mr-2" />
+                  <span className="font-inter">See Notices</span>
+                </NavLink>
+              </li>
           </ul>
         </div>
       </div>
