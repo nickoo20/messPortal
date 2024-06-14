@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 
-const VerifyEmail = () => {
+const VerifyEmailStudent = () => {
   const [message, setMessage] = useState('');
   const location = useLocation();
 
@@ -39,15 +39,15 @@ const VerifyEmail = () => {
     <Header />
     <div className="flex justify-center items-center flex-1">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md text-center">
-        <h1 className="text-3xl font-bold mb-4 text-gray-800">Email Verification</h1>
+        <h1 className="text-3xl font-bold mb-4 text-blue-800">Self-Email Verified!</h1>
         <p className={`text-lg ${message.includes('Error') || message.includes('Invalid') ? 'text-red-600' : 'text-green-600'}`}>
           {message}
         </p>
         <p className="mt-4 text-gray-700">
-          Once the warden verifies you as a hosteller, you will be able to log in.
+          Once the Wardden verifies you as a hosteller, you will be able to log in.
         </p>
         <p className="mt-6">
-          <Link to='/' className='text-blue-600 underline'>Go to Home</Link>
+          <Link to='/' className='text-blue-300 underline'>Go to Home</Link>
         </p>
       </div>
     </div>
@@ -56,4 +56,4 @@ const VerifyEmail = () => {
   );
 };
 
-export default VerifyEmail;
+export default VerifyEmailStudent;

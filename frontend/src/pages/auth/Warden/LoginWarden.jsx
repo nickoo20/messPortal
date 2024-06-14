@@ -1,127 +1,141 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useTab, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../../../redux/admin/adminSlice";
 
-import { useAuth } from "/Users/richashrivastava/finalyear/messPortal/frontend/src/context/userContext.jsx";
 const LoginWarden = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [auth, setAuth] = useAuth();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const toast = useToast();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      dispatch(signInStart());
       const res = await axios.post(
-        `http://localhost:8080/api/auth/login-admin`,
-        { email, password },{
-          withCredentials:true
+        "http://localhost:8080/api/warden/login-warden",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
         }
       );
-       //const token=res.cookies.assess_token;
-       console.log(res.data);
-      if (res.data.success) {
-        setAuth({
-          ...auth,
-          user: res.data.user,
-          token: res.data.token,
-        });
-        localStorage.setItem("auth", JSON.stringify(res.data));
-        toast({
-          title: `Login Success!`,
-          description: "Success",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        if (res.data.user.role === "warden")
-        navigate("/admin-landing");
-        else if(res.data.user.role==="accountant")
-        navigate("/accountant-landing")
-        //else if
+      console.log(res.data);
+      if (res.data.success === false) {
+        setErrorMessage("Invalid credentials. Please try again.");
+        dispatch(signInFailure());
+        return;
       }
-    } catch (error) {
-      const msg = error.message;
+      dispatch(signInSuccess(res?.data.user));
+
       toast({
-        title: `${msg}`,
-        description: "Error",
-        status: "error",
+        title: "Login Success!",
+        description: "You have successfully logged in.",
+        status: "success",
         duration: 3000,
         isClosable: true,
       });
+      if (res?.data.user.role === "warden") {
+        navigate("/admin-landing");
+      } else if (res.data.user.role === "accountant") {
+        navigate("/accountant-landing");
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred during login. Please try again.");
+      dispatch(signInFailure());
+      console.log(error.message);
     }
   };
 
-  return (
-    <>
-      <div className="flex items-center justify-center min-h-screen">
-        <img
-          className="h-screen w-screen object-cover"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZRG_LDH3R9yJNpCqxAfFSBz0m0LKOov8-Aw&usqp=CAU"
-          alt="loginbg"
-        />
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
-        <div className="absolute w-[300px] h-[400px]  sm:w-[400px] sm:h-[430px] p-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-teal-950  text-gray-300 opacity-80">
-          <div className="text-center">
-            <h1 className="text-3xl font-mono mb-2">Admin Login</h1>
-            <span className=" text-[17px]">
-              Don't have an account?{" "}
-              <NavLink className="font-bold" to="/register-warden">
-                Sign Up
-              </NavLink>
-            </span>
-          </div>
-          <form
-            className=""
-            action="/Login"
-            method="post"
-            onSubmit={handleSubmit}
-          >
-            <div className="flex flex-col py-4 px-2">
-              <lable className="text-lg font-mono font-bold">Email</lable>
+  return (
+    <div className="flex flex-col bg-gradient-to-r from-gray-300 to-gray-600 min-h-screen">
+      <Header />
+      <div className="flex justify-center items-center grow flex-1">
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+          <h1 className="text-xl font-semibold mb-4 text-blue-700 font-montserrat">
+            Login now (<span className="text-red-800">For Admins only*</span>)
+          </h1>
+          <div className="flex flex-col items-center justify-center gap-2">
+            {errorMessage && (
+              <div className="text-red-500 text-sm mb-2">{errorMessage}</div>
+            )}
+            <form
+              onSubmit={handleSubmit}
+              className="w-full flex flex-col gap-2 items-center justify-center font-jakarta"
+            >
               <input
-                className="w-full  p-1.5 text-white bg-gray-700"
                 type="email"
                 name="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your Email"
                 required
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
+              <div className="relative w-full">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your Password"
+                  required
+                  className="border p-2 w-full rounded-xl focus:outline-none text-sm"
+                />
+                <span
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  onClick={toggleShowPassword}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-10 py-2 hover:bg-blue-600 hover:opacity-90 rounded-xl"
+              >
+                Login
+              </button>
+            </form>
+            <div className="font-roboto mt-4">
+              Not verified? Register Now{" "}
+              <NavLink className="text-blue-700 underline" to="/register-warden">
+                here
+              </NavLink>
             </div>
-            <div className="flex flex-col py-1 px-2">
-              <lable className="text-lg font-mono font-bold">Password</lable>
-              <input
-                className="w-full p-2 text-white bg-gray-700"
-                type="password"
-                name="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <p className="flex ml-2 items-center">
-              <input className="mr-2" type="checkbox" />
-              Remember me
-            </p>
-            <button
-              className="border w-full my-5 py-3 hover:bg-zinc-950  font-bold"
-              type="submit"
-            >
-              Login
-            </button>
-          </form>
+          </div>
         </div>
       </div>
-    </>
+      <Footer />
+    </div>
   );
-}
+};
 
-export default LoginWarden;
+export default LoginWarden ;

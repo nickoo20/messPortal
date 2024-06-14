@@ -9,6 +9,7 @@ import complaintRoutes from './routes/complaint.route.js' ;
 import userRoutes from './routes/user.route.js'; 
 import menuRoutes from './routes/menu.route.js'; 
 import leaveRoutes from './routes/leave.route.js' ;
+import wardenRoutes from './routes/warden.route.js' ;
 import studentRepresentativeRoutes from './routes/studentRepresentative.route.js'
 import { fileURLToPath } from 'url';
 import cors from 'cors' ;
@@ -52,6 +53,7 @@ app.use(express.json()) ;
 
 
 app.use("/api/auth", authRoutes) ; 
+app.use('/api/warden', wardenRoutes) ;
 app.use("/api/complaints", complaintRoutes) ;
 app.use("/api/user", userRoutes) ;
 app.use('/api/menu', menuRoutes) ;

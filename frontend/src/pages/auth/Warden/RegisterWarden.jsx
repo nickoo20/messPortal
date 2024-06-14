@@ -1,152 +1,177 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTab, useToast } from "@chakra-ui/react";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 import axios from "axios";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
 
-const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [HostelID, setHostelID] = useState();
-  const [HostelName, setHostelName] = useState("");
-  const [role,setRole]=useState('warden');
+const RegisterWarden = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    hostelName: "Girls Hostel", // Ensure consistent naming here
+    role: "warden",
+  });
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const toast = useToast();
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateForm = () => {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+
+    let formErrors = {};
+
+    if (!passwordRegex.test(formData.password)) {
+      formErrors.password =
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character!";
+    }
+
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
     try {
-      
       const res = await axios.post(
-        `http://localhost:8080/api/auth/register-admin`,
-        { name, email, password, role }
+        "http://localhost:8080/api/warden/register-warden",
+        formData,
+        {
+          withCredentials: true,
+        }
       );
       console.log(res);
-      if (res.data.success) {
+      if (res?.data?.success) {
         toast({
-          title: `Registered Successfully`,
-          description: "Redirecting..",
+          title: "Registration Successful",
+          description: res?.data.message,
           status: "success",
-          duration: 3000,
+          duration: 5000,
           isClosable: true,
         });
-        navigate("/login-warden");
       }
     } catch (error) {
-      const msg = error.response.data.message;
-      toast({
-        title: `${msg}`,
-        description: "Error",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      setErrors({ apiError: error.response?.data?.message || "Error in signup" });
+      console.error("Error in signup:", error.response ? error.response.data : error.message);
     }
   };
- console.log(role);
+
   return (
-    <>
-      <div className="flex items-center justify-center min-h-screen">
-        <img
-          className="h-screen w-screen object-cover "
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZRG_LDH3R9yJNpCqxAfFSBz0m0LKOov8-Aw&usqp=CAU"
-          alt="loginbg"
-        />
-
-        <div className="absolute w-[300px] h-[450px]  sm:w-[400px] sm:h-[540px] p-8 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-teal-950  text-white opacity-80">
-          <div className="text-center">
-            <h1 className="text-3xl">Create Account</h1>
-            <span className="  text-[17px]">
-              Already have an account?{" "}
-              <NavLink className="font-bold" to="/login-warden">
-                Sign In
-              </NavLink>
-            </span>
-          </div>
-          <form action="/register" method="post" onSubmit={handleSubmit}>
-            <div className="flex flex-col py-4 gap-2 px-2">
-            <label htmlFor="option-select" className="block mb-2">Register as</label>
-          <select
-             id="option-select"
-             name="options"
-            // value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          >
-            <option value="warden">Warden</option>
-            <option value="accountant">Accountant</option>
-          </select>
+    <div className="flex flex-col h-screen bg-gradient-to-r from-gray-300 to-gray-600 min-h-screen">
+      <Header />
+      <div className="flex justify-center items-center flex-1">
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-xl">
+          <h2 className="text-xl font-semibold font-montserrat mb-4 text-blue-700">
+            Register as an Admin!
+          </h2>
+          <div className="flex flex-col gap-2 items-center justify-center">
+            <form
+              onSubmit={handleSubmit}
+              className="w-full flex flex-col gap-2 font-jakarta"
+            >
               <input
-                className="p-2 text-lg font-mono font-bold bg-pink-950"
                 type="text"
-                name="username"
-                id="username"
-                placeholder="UserName"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your Full Name..."
                 required
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
-              {/* <input
-                className="p-2 text-lg font-mono font-bold bg-pink-950"
-                type="number"
-                name="studentid"
-                id="studentid"
-                placeholder="Hostel ID"
-                value={HostelID}
-                onChange={(e) => setHostelID(e.target.value)}
-                required
-              />
-
               <input
-                className="p-2 text-lg font-mono font-bold bg-pink-950"
-                type="text"
-                name="Hostel"
-                id="Hostel"
-                placeholder="Hostel Name"
-                value={HostelName}
-                onChange={(e) => setHostelName(e.target.value)}
-                required
-              /> */}
-
-              <input
-                className="p-1.5 text-lg font-mono font-bold bg-pink-950"
                 type="email"
                 name="email"
-                placeholder="Email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your Email..."
                 required
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
+              {errors.email && (
+                <p className="text-red-500 text-xs italic">{errors.email}</p>
+              )}
               <input
-                className="w-full p-2 text-lg font-mono font-bold h-[35px] bg-pink-950 "
                 type="password"
                 name="password"
-                placeholder="Password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your Password..."
                 required
+                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
+              {errors.password && (
+                <p className="text-red-500 text-xs italic">{errors.password}</p>
+              )}
+              <div className="flex items-center gap-4">
+                <label htmlFor="hostelName" className="text-sm">
+                  Select your Hostel:
+                </label>
+                <select
+                  id="hostelName"
+                  name="hostelName"
+                  value={formData.hostelName} // Use the correct state variable
+                  onChange={handleChange}
+                  className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
+                >
+                  <option value="Girls Hostel">Girls Hostel</option>
+                  <option value="Jhelum Boys Hostel">Jhelum Boys Hostel</option>
+                  <option value="Manasbal Boys Hostel">Manasbal Boys Hostel</option>
+                  <option value="Mansar Boys Hostel">Mansar Boys Hostel</option>
+                  <option value="Chenab Boys Hostel">Chenab Boys Hostel</option>
+                  <option value="Indus Boys Hostel">Indus Boys Hostel</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-4">
+                <label htmlFor="role" className="text-sm">
+                  Register as a?
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
+                >
+                  <option value="warden">Warden</option>
+                  <option value="accountant">Accountant</option>
+                </select>
+              </div>
+              <div className="flex items-center justify-center">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white p-10 py-2 hover:opacity-90 hover:bg-blue-600 rounded-xl"
+                >
+                  Register
+                </button>
+              </div>
+            </form>
+            {errors.apiError && (
+              <p className="text-red-500 text-xs italic mt-4">
+                {errors.apiError}
+              </p>
+            )}
+            <div className="font-roboto text-center mt-2 mb-0">
+              Already registered? Login{" "}
+              <Link to="/login-warden" className="text-blue-700 underline">
+                here
+              </Link>
             </div>
-            <p className="flex ml-2 items-center">
-              <input className="mr-2" type="checkbox" />
-              Remember me
-            </p>
-            <button
-              className="border-2 w-full my-5 py-4 hover:bg-zinc-950  font-bold"
-              type="submit"
-            >
-              Sign In
-            </button>
-          </form>
+          </div>
         </div>
       </div>
-    </>
+      <Footer />
+    </div>
   );
 };
 
-export default Register;
+export default RegisterWarden;

@@ -7,6 +7,7 @@ import { FaRegComment } from "react-icons/fa";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { getRefresh } from "../redux/complaints/complaintSlice";
+import LoadingSpinner from "./LoadingSpinner";
 
 const Complaint = ({ complaint }) => {
   const { currentUser } = useSelector((state) => state.user);
@@ -64,7 +65,7 @@ const Complaint = ({ complaint }) => {
         { withCredentials: true }
       );
       dispatch(getRefresh());
-      setComments(res.data.comments);
+      setComments(res?.data.comments);
       setCommentText("");
     } catch (err) {
       toast.error("Error adding comment");
@@ -78,7 +79,7 @@ const Complaint = ({ complaint }) => {
         `http://localhost:8080/api/complaints/delete/${id}`
       );
       dispatch(getRefresh());
-      toast.success(res.data.message);
+      toast.success(res?.data.message);
     } catch (error) {
       console.log(error);
     }
@@ -95,9 +96,9 @@ const Complaint = ({ complaint }) => {
         toast.error("Error deleting comment");
         return ;
       }
-    toast.success(res?.data.message) ;
-      dispatch(getRefresh());
-      setComments(res.data.comments);
+    // toast.success(res?.data.message) ;
+    setComments(res?.data.comments);
+    dispatch(getRefresh());
     } catch (err) {
       toast.error("Error deleting comment");
     }
@@ -153,7 +154,7 @@ const Complaint = ({ complaint }) => {
                     }
                   />
                   <span className="text-sm text-slate-500 group-hover:text-sky-400">
-                    {comments.length}
+                    {comments?.length}
                   </span>
                 </div>
               </div>
@@ -171,7 +172,7 @@ const Complaint = ({ complaint }) => {
                         No comments yet 🤔
                       </p>
                     ) : (
-                      comments.map((comment) => (
+                      comments?.map((comment) => (
                         <div key={comment._id} className="">
                           <div className="flex flex-col p-1 justify-center bg-gray-50 w-full">
                             <div className="flex justify-between w-full">

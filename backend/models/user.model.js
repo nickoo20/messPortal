@@ -22,7 +22,6 @@ const userSchema= new mongoose.Schema({
     },
     role:{
         type:String,
-        // required: true,
         enum:['student', 'warden','accountant'], 
         default:'student',
     },
@@ -30,15 +29,16 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         required:false,
     },
+    hostelName:{
+        type:String,
+        enum: ['Girls Hostel', 'Jhelum Boys Hostel', 'Chenab Boys Hostel', 'Manasbal Boys Hostel', 'Manasar Boys Hostel', 'Indus Boys Hostel'],
+        default:"Girls Hostel",
+    },
     isVerified:{
         type:Boolean,
         default:false,
     },
     isWardenVerified:{
-        type:Boolean,
-        default:false,
-    },
-    isStudentRepresentative:{
         type:Boolean,
         default:false,
     },

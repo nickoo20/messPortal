@@ -60,7 +60,23 @@ export const commentOnComplaint = async (req, res) => {
       error: "Internal Server Error!",
     });
   }
-};
+}; 
+
+export const seeComments = async(req, res) => { 
+  try{  
+      const {complaintId} = req.params ;
+      const complaint = await Complaint.findById(complaintId) ;
+      if(!complaint){
+        return res.status(404).json({
+          message: 'Complaint not found!' ,
+        }) ;
+      }
+      const comments = complaint.comments ;
+      return res.status(200).json(comments) ;
+  }catch(err){
+    console.log('Error in getting comments: ', err.message) ; 
+  }
+}
 
 // Delete a comment on Complaint
 export const deleteComment = async(req, res)=>{
@@ -231,8 +247,7 @@ export const resolveComplaint = async (req, res) => {
     }
 
     complaint.status = "resolved";
-    await complaint.save();
-
+    await complaint.save() ;
     return res
       .status(200)
       .json({ message: "Complaint resolved successfully", complaint });
@@ -246,7 +261,7 @@ export const resolveComplaint = async (req, res) => {
 }
 export const getAllComplaintsAdmin=async(req,res)=>{
          try{
-        const comp = await Complaint.find({});
+        const comp = await Complaint.find({}).sort({createdAt:-1});
         const comp1=comp.filter((c)=>{
             return c.status==='pending'||c.status==='escalated'
         });

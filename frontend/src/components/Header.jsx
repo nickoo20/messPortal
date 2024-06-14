@@ -44,7 +44,7 @@ const Header = () => {
       }
       toast.success(res?.data.message);
       dispatch(deleteAdminSuccess(res?.data));
-      navigate('/login-admin');
+      navigate('/login-warden');
     } catch (error) {
       dispatch(deleteAdminFailure(error.message));
       console.log(error.message);
@@ -58,10 +58,10 @@ const Header = () => {
           <Link to="/" className="flex gap-2 items-center">
             <div className="hidden sm:block border-2 rounded-full"><NitPhoto /></div>
             <div className="flex flex-col items-center ">
-              <h1 className="text-sm sm:text-xl font-jakarta flex border-none rounded-full tracking-wide mb-0 ">
-                MESS PORTAL
+              <h1 className="text-sm sm:text-sm font-jakarta flex border-none rounded-full tracking-wide mb-0 ">
+                MESS COMPLAINT PORTAL
               </h1>
-              <div className="text-sm font-bold text-blue-500">(NIT Srinagar)</div>
+              <div className="text-xs font-bold text-blue-500">(NIT Srinagar)</div>
             </div>
           </Link>
           <div className="">
@@ -96,7 +96,7 @@ const Header = () => {
                   ) : (
                     <>
                       <li><Link to="/login-student">For Students</Link></li>
-                      <li><Link to="/login-admin">For Admins</Link></li>
+                      <li><Link to="/login-warden">For Admins</Link></li>
                     </>
                   )}
                 </ul>
