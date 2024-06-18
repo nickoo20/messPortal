@@ -91,7 +91,7 @@ const FestCharge=()=>{
                     />
                     <input
                         type="text"
-                        placeholder="Occasion"
+                        placeholder="Extra Charges For "
                         value={festival}
                         name='festival'
                         onChange={(e) => setFestival(e.target.value)}

@@ -50,7 +50,7 @@ const checkEntryForFestival=async (req, res) => {
         return res.status(404).json({message:"User not found"});
 
       const existingEntry = await FestCharge.findOne({ month,year,festival,registrationNumber });
-  
+      
       if (existingEntry) {
         return res.status(200).json({ exists: true });
       }

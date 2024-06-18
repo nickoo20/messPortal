@@ -12,7 +12,6 @@ const StudentBill = () => {
   const [billData, setBillData] = useState(null);
   const [error, setError] = useState(null);
   const [auth, setAuth] = useAuth();
- const [extraCharge,setExtraCharge]=useState(0);
   const handleFetchBill = async (e) => {
     e.preventDefault();
     setError(null);
@@ -23,12 +22,11 @@ const StudentBill = () => {
         withCredentials: true,
         params: {
           month,
-          year,
-          extraCharge
+          year
         },
       });
       console.log(response.data);
-      setBillData(response.data);
+      setBillData(response.data.existing);
     } catch (err) {
       setError('Failed to fetch bill data');
     }
@@ -40,14 +38,14 @@ const StudentBill = () => {
   //   );
   // }
 
-  const token = Cookies.get("access_token");
-  const decoded = jwtDecode(token);
-  const role = decoded.role;
-  console.log(role);
+  // const token = Cookies.get("access_token");
+  // const decoded = jwtDecode(token);
+  // const role = decoded.role;
+  // console.log(role);
 
-  if (role !== 'accountant' && role !== 'student') {
-    return <h1 className="text-center text-xl mt-20">You do not have permission to this page...</h1>;
-  }
+  // if (role !== 'accountant' && role !== 'student') {
+  //   return <h1 className="text-center text-xl mt-20">You do not have permission to this page...</h1>;
+  // }
 
   return (
     <div className="mt-20 p-4 max-w-3xl mx-auto bg-white shadow-md rounded-lg">
@@ -89,18 +87,7 @@ const StudentBill = () => {
             />
           </label>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Extra Charge
-            <input
-              type="number"
-              value={extraCharge}
-              onChange={(e) => setExtraCharge(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              
-            />
-          </label>
-        </div>
+        
         <button 
           type="submit" 
           className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
@@ -118,19 +105,21 @@ const StudentBill = () => {
               <th className="border border-gray-300 px-4 py-2">Student ID</th>
               <th className="border border-gray-300 px-4 py-2">Student Name</th>
               <th className="border border-gray-300 px-4 py-2">Total Bill</th>
+              <th className="border border-gray-300 px-4 py-2">Bill Per Day</th>
               <th className="border border-gray-300 px-4 py-2">Service Charge</th>
-              <th className="border border-gray-300 px-4 py-2">Festival</th>
-              <th className="border border-gray-300 px-4 py-2">Festival Charge</th>
+              <th className="border border-gray-300 px-4 py-2">Extra Charge For</th>
+              <th className="border border-gray-300 px-4 py-2">Exatra Charge</th>
             </tr>
           </thead>
           <tbody>
             <tr className="bg-white hover:bg-gray-100">
-              <td className="border border-gray-300 px-4 py-2">{billData.studentId}</td>
+              <td className="border border-gray-300 px-4 py-2">{billData.registrationNumber}</td>
               <td className="border border-gray-300 px-4 py-2">{billData.studentName}</td>
               <td className="border border-gray-300 px-4 py-2">Rs. {billData.totalbill}</td>
+              <td className="border border-gray-300 px-4 py-2">Rs. {billData.billPerDay}</td>
               <td className="border border-gray-300 px-4 py-2">Rs. {billData.serviceCharge}</td>
               <td className="border border-gray-300 px-4 py-2">{billData.festival}</td>
-              <td className="border border-gray-300 px-4 py-2">Rs. {billData.festivalCharge}</td>
+              <td className="border border-gray-300 px-4 py-2">Rs. {billData.festivalcharges}</td>
             </tr>
           </tbody>
         </table>

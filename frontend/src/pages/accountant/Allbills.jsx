@@ -11,14 +11,16 @@ const Billcomp = () => {
   const [bills, setBills] = useState([]);
   const [error, setError] = useState(null);
   const [HostelName, setHostel] = useState('');
+  //const [extraCharge,setextraCharge]=useState(0);
   const fetchBills = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/bills`, {
         withCredentials: true,
-        params: { month, year,HostelName },
+        params: { month, year,HostelName},
       });
       const data = response.data;
       if (response.status === 200) {
+        console.log(data.bills)
         setBills(data.bills);
         setError(null);
       } else {
@@ -39,7 +41,7 @@ const Billcomp = () => {
 
     bills.forEach(bill => {
       const row = [
-        bill.studentId,
+        bill.registrationNumber,
         bill.studentName,
         bill.totalbill,
         bill.serviceCharge,
@@ -59,13 +61,13 @@ const Billcomp = () => {
     document.body.removeChild(link);
   };
 
-  const token = Cookies.get("access_token");
-  const decoded = jwtDecode(token);
-  const role = decoded.role;
+  // const token = Cookies.get("access_token");
+  // const decoded = jwtDecode(token);
+  // const role = decoded.role;
 
-  if (role !== "accountant") {
-    return <h1 className="text-center text-xl mt-20">You do not have permission to this page...</h1>;
-  }
+  // if (role !== "accountant") {
+  //   return <h1 className="text-center text-xl mt-20">You do not have permission to this page...</h1>;
+  // }
 
   return (
     <div className="mt-20 p-4 max-w-3xl mx-auto bg-white shadow-md rounded-lg">
@@ -95,6 +97,7 @@ const Billcomp = () => {
           required
         />
       </div>
+      
       <select
               id="HostelName"
               value={HostelName}
@@ -125,17 +128,19 @@ const Billcomp = () => {
                 <th className="border border-gray-300 px-4 py-2">Student ID</th>
                 <th className="border border-gray-300 px-4 py-2">Student Name</th>
                 <th className="border border-gray-300 px-4 py-2">Total Bill</th>
+                <th className="border border-gray-300 px-4 py-2">Bill Per Day</th>
                 <th className="border border-gray-300 px-4 py-2">Service Charge</th>
-                <th className="border border-gray-300 px-4 py-2">Festival</th>
-                <th className="border border-gray-300 px-4 py-2">Festival Charge</th>
+                <th className="border border-gray-300 px-4 py-2">Extra Charge For</th>
+                <th className="border border-gray-300 px-4 py-2">Extra Charge</th>
               </tr>
             </thead>
             <tbody>
               {bills.map((bill, index) => (
                 <tr key={index} className="bg-white hover:bg-gray-100">
-                  <td className="border border-gray-300 px-4 py-2">{bill.studentId}</td>
+                  <td className="border border-gray-300 px-4 py-2">{bill.registrationNumber}</td>
                   <td className="border border-gray-300 px-4 py-2">{bill.studentName}</td>
                   <td className="border border-gray-300 px-4 py-2">Rs. {bill.totalbill}</td>
+                  <td className="border border-gray-300 px-4 py-2">Rs. {bill.billPerDay}</td>
                   <td className="border border-gray-300 px-4 py-2">Rs. {bill.serviceCharge}</td>
                   <td className="border border-gray-300 px-4 py-2">{bill.festival}</td>
                   <td className="border border-gray-300 px-4 py-2">Rs. {bill.festivalcharges}</td>
