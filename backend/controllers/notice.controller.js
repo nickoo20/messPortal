@@ -2,14 +2,15 @@ import Notice from '../models/notice.model.js'
 export const createNotice=async(req,res)=>{
     try{
       const {Title,Description}=req.body;
-      const {HostelName}=req.user;
-      if(!HostelName)
+      const {hostelName}=req.user;
+      console.log(req.user)
+      if(!hostelName)
       return res.status(400).json({message:"All fields are required"});
       if(!Title)
       return res.status(400).json({message:"All fields are required"});
       if(!Description)
       return res.status(400).json({message:"All fields are required"});
-      const newNotice=new Notice({HostelName,Title,Description});
+      const newNotice=new Notice({hostelName,Title,Description});
       newNotice.save();
       res.status(200).json({success: true,
         message: "Notice Created Successfully!",
