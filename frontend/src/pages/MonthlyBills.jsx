@@ -64,8 +64,8 @@ const MonthlyBills = () => {
                 <th className="border border-gray-300 px-4 py-2">Total Bill</th>
                 <th className="border border-gray-300 px-4 py-2">Bill Per Day</th>
                 <th className="border border-gray-300 px-4 py-2">Service Charge</th>
-                <th className="border border-gray-300 px-4 py-2">Festival</th>
-                <th className="border border-gray-300 px-4 py-2">Festival Charge</th>
+                <th className="border border-gray-300 px-4 py-2">Exta Charge For</th>
+                <th className="border border-gray-300 px-4 py-2">Extra Charge</th>
               </tr>
             </thead>
             <tbody>
