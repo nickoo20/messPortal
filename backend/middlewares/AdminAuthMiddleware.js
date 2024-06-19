@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken' ;
-import Admin from '../models/admin.model.js' ;
+import Warden from '../models/warden.model.js' ;
 
 const getUserByEmail = async(email) => {
     try {
-        const user = await Admin.findOne({ email }).select("-password") ;
+        const user = await Warden.findOne({ email }).select("-password") ;
         return user ;
     } catch (error) {
         console.error(`Error in getUserByEmail: ${error.message}`);

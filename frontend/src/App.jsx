@@ -36,6 +36,9 @@ import ExpenseManager from "./pages/accountant/Expenses.jsx";
 import FestCharge from "./pages/accountant/Festival.jsx"
 import NoticeForm from "./pages/Notice/AddNotice.jsx";
 import SeeNotice from "./pages/Notice/SeeNotice.jsx";
+import StudentList from "./pages/admin/AllStudents.jsx";
+import ToggleHostelChange from "./pages/admin/HostelChange.jsx";
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -72,6 +75,8 @@ const App = () => {
             <Route path="mark-leave" element={<MarkLeave />} />
             <Route path="manage-mr" element={<ManageMr />} />
             <Route path="mess-menu" element={<LatestMenu />} />
+            <Route path="all-students" element={<StudentList />} />
+            <Route path="toggle-hostelChange" element={<ToggleHostelChange />} />
           </Route>
 
           <Route path="/register-accountant" element={<RegisterAccountant />} />

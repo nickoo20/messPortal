@@ -16,6 +16,8 @@ import cors from 'cors' ;
 import path from 'path';
 import { v2 as cloudinary } from "cloudinary";
 import noticeRoutes from './routes/notice.route.js';
+import studentsRoutes from './routes/allStudents.route.js';
+import hostelchangeRoutes from './routes/ToggleHostelChange.model.js'
 // Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,6 +64,8 @@ app.use("/api/mark-leave",leaveRoutes);
 app.use("/api/expense",expenseRoutes);
 app.use("/api/notice",noticeRoutes);
 app.use('/api/mr/',studentRepresentativeRoutes);
+app.use('/api/students',studentsRoutes);
+app.use('/api/toggle-hostel-change',hostelchangeRoutes)
 app.get("/", (req, res) => {
     res.send({
       message: "welcome to mess portal app",
