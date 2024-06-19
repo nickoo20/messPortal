@@ -31,7 +31,12 @@ const LatestMenu = () => {
         setShowDropdown(!showDropdown);
     };
 
-    if (loading) return <LoadingSpinner />;
+    if (loading) {
+        return ( 
+        <div className='flex justify-center items-center min-h-screen'>
+            <LoadingSpinner />;
+        </div> 
+    )}
     if (error) return <p className="text-center text-red-500">{error}</p>;
     if (!menu) return <p className="text-center text-gray-500">No menu available</p>;
 

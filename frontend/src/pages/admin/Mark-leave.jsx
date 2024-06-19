@@ -53,15 +53,15 @@ const MarkLeave = () => {
     );
   }
 
-  if (user.role !== "warden") {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">You do not have permission to access this page...</h1>
-        </div>
-      </div>
-    );
-  }
+  // if (user.role !== "warden") {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+  //       <div className="text-center">
+  //         <h1 className="text-2xl font-bold">You do not have permission to access this page...</h1>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className='min-h-screen bg-gray-100'>

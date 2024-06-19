@@ -13,7 +13,7 @@ const useGetAllComplaints = () => {
           withCredentials:true,
         });
         console.log(res) ;
-        dispatch(getAllComplaints(res?.data.comp1)) ;
+        dispatch(getAllComplaints(res?.data.complaints)) ;
         // setComplaints(res?.data.comp1); // Assuming res.data is an array of complaints
       } catch (err) {
         console.error("Error fetching complaints:", err.message);

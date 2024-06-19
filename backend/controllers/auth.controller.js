@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 import Errorhandler from "../error/errorClass.js";
 import AsyncErrorHandler from "../error/CatchAsyncError.js";
 import Warden from "../models/warden.model.js";
+import Accountant from '../models/accountant.model.js'; 
 
 export const registerUser = async (req, res) => {
   try {
@@ -16,6 +17,7 @@ export const registerUser = async (req, res) => {
       registrationNumber,
       hosteller,
       hostelName,
+      contactNumber,
     } = req.body;
 
     // Validate email format
@@ -55,6 +57,10 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ error: "Registration number already exists!" });
     }
 
+    if(contactNumber.length !== 10){
+      return  res.status(400).json({ error: "Enter a valid Contact number!" });
+    }
+
     // Create a new user
     user = new User({
       email,
@@ -62,7 +68,8 @@ export const registerUser = async (req, res) => {
       enrollmentNumber,
       name,
       registrationNumber,
-      hostelName
+      hostelName,
+      contactNumber,
     });
 
     // Find the warden for the specified hostel
@@ -176,36 +183,51 @@ export const logout = async (req, res) => {
   }
 };
 
-export const RegisterWarden = async (req, res, next) => {
-  const { name, email, password, hostelName } = req.body;
-
-  let warden = await Warden.findOne({ email });
+export const RegisterAdmin = async (req, res, next) => {
+  const { name, email, password, hostelName,role } = req.body;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
-
   if (!passwordRegex.test(password)) {
     return res.status(400).json({
       message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character!",
     });
   }
+  let admin ; 
 
-  if (warden) {
-    return res.status(400).json({
-      success: false,
-      message: "Warden Already exists!",
-    });
+  if(role === 'warden'){
+      let warden = await Warden.findOne({ email });
+    if (warden) {
+      return res.status(400).json({
+        success: false,
+        message: "Warden Already exists!",
+      });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    admin = new Warden({
+      name,
+      email,
+      password: hashedPassword,
+      hostelName,
+      role
+    }); 
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  warden = new Warden({
-    name,
-    email,
-    password: hashedPassword,
-    hostelName,
-  });
-
+  else{
+    let accountant = await Accountant.findOne( { email }) ;
+    if(accountant){
+      return res.status(404).json({
+        success:false,
+        message: 'Accountant already exists',
+      }) ;
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    admin = new Accountant({
+      name,
+      email,
+      password:hashedPassword,
+      role,
+    }) ;
+  }
   const token = jwt.sign({ email }, process.env.JWT_SECRET );
-  await warden.save(); 
+  await admin.save(); 
   
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -215,7 +237,7 @@ export const RegisterWarden = async (req, res, next) => {
     },
   });
 
-  const wardenMailOptions = {
+  const adminMailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "Account Verification",
@@ -258,8 +280,8 @@ export const RegisterWarden = async (req, res, next) => {
         </div>
         <div class="email-body">
           <p>Dear ${name},</p>
-          <p>Thank you for registering as a Warden. To complete your registration, please verify your email address by clicking the link below:</p>
-          <a href="${process.env.BASE_URL}/warden/verify-email?token=${token}" class="verification-link">Verify Email</a>
+          <p>Thank you for registering as an Admin. To complete your registration, please verify your email address by clicking the link below:</p>
+          <a href="${process.env.BASE_URL}/admin/verify-email?token=${token}" class="verification-link">Verify Email</a>
           <p>If you did not register for this account, please ignore this email.</p>
         </div>
         <div class="email-footer">
@@ -271,11 +293,11 @@ export const RegisterWarden = async (req, res, next) => {
   `,
   };
 
-  transporter.sendMail(wardenMailOptions, (error, info) => {
+  transporter.sendMail(adminMailOptions, (error, info) => {
     if (error) {
       return console.log(error);
     }
-    console.log("Email sent to Warden for self-verify : " + info.response);
+    console.log("Email sent to Admin for self-verify : " + info.response);
   });
 
   return res
@@ -288,12 +310,12 @@ export const RegisterWarden = async (req, res, next) => {
       message: "Registration successful! Verify your email now !",
       success: true,
       token,
-      warden
+      admin
     });
 };
 
-export const LoginWarden = AsyncErrorHandler(async (req, res, next) => {
-  const { email, password } = req.body;
+export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
+  const { email, password, role } = req.body ;
 
   if (!email || !password) {
     return res.status(401).json({
@@ -301,28 +323,34 @@ export const LoginWarden = AsyncErrorHandler(async (req, res, next) => {
       message: "Enter all fields",
     });
   }
-  const user = await Warden.findOne({ email });
-  if (!user) {
-    return res.status(400).json({
-      success: false,
-      message: "User Not found!",
-    });
+  let admin ;
+  if(role === 'warden'){
+    admin = await Warden.findOne({ email });
   }
-  if (user.verified == false) {
+  else{
+      admin = await Accountant.findOne({  email}) ;
+  }
+    if (!admin) {
+      return res.status(400).json({
+        success: false,
+        message: "Admin Not found!",
+      });
+    }
+  if (admin.verified == false) {
     return next(new Errorhandler("you are not verified yet", 400));
   }
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, admin.password);
   if (!isMatch) {
     return res.status(404).json({
       message: "Invalid credentials!",
     });
   }
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ _id: admin._id }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 
   const token1 = jwt.sign(
-    { email: user.email},
+    { email: admin.email},
     process.env.JWT_SECRET
   );
     return res.cookie("access_token", token1)
@@ -330,6 +358,6 @@ export const LoginWarden = AsyncErrorHandler(async (req, res, next) => {
       success: true,
       message: "Login Successfull ! ",
       token,
-      user,
+      admin,
     });
 });

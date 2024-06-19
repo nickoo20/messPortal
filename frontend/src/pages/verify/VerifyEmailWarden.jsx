@@ -16,7 +16,7 @@ const VerifyEmailStudent = () => {
 
     const verifyEmail = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/warden/verify-email`, {
+        const res = await axios.get(`http://localhost:8080/api/admin/verify-email`, {
           params: { token }
         });
         console.log(res);

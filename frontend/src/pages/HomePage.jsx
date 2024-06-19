@@ -9,44 +9,42 @@ const HomePage = () => {
   return (
     <div className="flex flex-col bg-gradient-to-r from-gray-50 to-gray-200 min-h-screen">
       <Header />
-      <div className="flex flex-col justify-center flex-1 items-center">
-        <div>
-          <div className="flex flex-col gap-4 xl:flex-row flex-wrap xl:gap-0 justify-evenly items-center pt-4">
-            <img
-              className="h-[300px] md:h-[500px] sm:h-[400px] bg-fixed bg-cover bg-no-repeat object-cover object-center rounded-md border-blue-700 shadow-lg"
-              src="https://www.scrolldroll.com/wp-content/uploads/2015/11/NIT-Srinagar-2.jpg"
-              alt="background"
+      <div className="relative flex flex-1">
+        <img
+          className="h-full w-full bg-center bg-cover bg-no-repeat"
+          src="https://www.scrolldroll.com/wp-content/uploads/2015/11/NIT-Srinagar-2.jpg"
+          alt="background"
+        />
+        <div className="absolute inset-0 bg-black opacity-50"></div> {/* Black overlay with opacity */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-10">
+          <h1 className="text-3xl font-jakarta shadow-md sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white -mt-36 mb-20">
+            Office of the Mess Chairman Committee
+          </h1>
+          <div className="flex flex-col items-center gap-4 mb-20">
+            <TypeAnimation
+              sequence={[
+                "Well Hello There",
+                1000,
+                "Welcome To The Mess Complaint Portal",
+                1000,
+                "Let's Dive In!",
+                1200,
+              ]}
+              wrapper="span"
+              speed={50}
+              style={{ fontSize: "2em", display: "inline-block" }}
+              repeat={Infinity}
+              className="mb-4 font-roboto text-green-300 shadow-lg sm:text-3xl md:text-4xl lg:text-5xl"
             />
-            <div className="flex flex-col justify-center items-center gap-10 p-6 xl:p-0">
-              <TypeAnimation
-                sequence={[
-                  "Well Hello There",
-                  1000,
-                  "Welcome To The Mess Portal",
-                  1000,
-                  "Let's Dive Into It!",
-                  1200,
-                ]}
-                wrapper="span"
-                speed={50}
-                style={{
-                  fontSize: "1.5em",
-                  display: "inline-block",
-                  color: "#615EFC",
-                }}
-                repeat={Infinity}
-                className="text-2xl font-semibold"
-              />
-              <p className="sm:text-xl text-sm font-semibold font-inter border-b-4 border-blue-700 text-[#01204E] text-center">
-                Your one-stop solution for all mess-related issues!
-              </p>
-            </div>
-          </div>
-          <div className="mt-10">
-            <Features />
-            <Hero />
+            <p className="sm:text-xl text-md mt-10 border bg-green-600 font-bold font-roboto px-4 py-2 text-white">
+              Your one-stop solution for all mess-related issues!
+            </p>
           </div>
         </div>
+      </div>
+      <div className="flex flex-col items-center mt-10 px-6">
+        <Features />
+        <Hero />
       </div>
       <Footer />
     </div>

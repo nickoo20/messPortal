@@ -1,15 +1,24 @@
-import { useState, useEffect } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
-import { FaUser, FaClipboardList, FaFileInvoiceDollar, FaUtensils, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useState, useEffect, useRef } from 'react';
+import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
+import { FaUser, FaClipboardList, FaFileInvoiceDollar, FaUtensils, FaChevronLeft, FaSignOutAlt, FaChevronRight } from 'react-icons/fa';
 import { MdOutlineFoodBank } from "react-icons/md";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { deleteUserFailure, deleteUserSuccess, signOutUserStart } from '../redux/user/userSlice';
+import { IoCloseSharp } from "react-icons/io5";
+import { FaUserEdit } from "react-icons/fa";
+
 
 const Sidebar = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [showSidebar, setShowSidebar] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("/");
   const [lastScrollY, setLastScrollY] = useState(0);
+  const sidebarRef = useRef(null);
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -21,76 +30,131 @@ const Sidebar = () => {
 
       if (currentScrollY > lastScrollY) {
         setShowSidebar(false);
-      } 
+      }
 
       setLastScrollY(currentScrollY);
     };
 
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setShowSidebar(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [lastScrollY]);
 
+  const handleLogout = async () => {
+    try {
+      dispatch(signOutUserStart());
+      const res = await axios.post('http://localhost:8080/api/auth/logout', {}, {
+        withCredentials: true,
+      });
+      if (res?.data.success === false) {
+        dispatch(deleteUserFailure(res?.data.message));
+        return;
+      }
+      toast.success(res?.data.message);
+      dispatch(deleteUserSuccess(res?.data));
+      navigate('/login-student');
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="relative flex">
-      {showSidebar && <div className="sidebar-backdrop fixed inset-0 bg-gray-900 opacity-50"></div>}
-      <div className={`fixed h-full min-h-screen w-64 bg-gray-300 p-4 transition-transform duration-300 ease-in-out ${showSidebar ? 'transform-none' : '-translate-x-full'}`}>
-        <div className="flex-1 h-full p-4 bg-gray-50 font-semibold">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-700 font-jakarta">Dashboard</h2>
-          <ul className="space-y-2">
-            <li className={`hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'my-complaints' ? 'border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('my-complaints')}>
+      {showSidebar && <div className="fixed inset-0 bg-gray-400 opacity-50 z-40" onClick={toggleSidebar}></div>}
+      <div
+        ref={sidebarRef}
+        className={`fixed top-0 right-0 min-h-screen w-72 shadow-lg rounded-lg bg-white p-4 transition-transform duration-300 ease-in-out z-50 ${showSidebar ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        <div className="flex flex-col h-full ">
+          <div className="flex flex-col items-center mb-6">
+            <Link to='profile'>
+                <img src={currentUser?.profilePicture} alt="Profile" className="w-16 h-16 rounded-full mb-2 object-cover " />
+            </Link>
+            {/* <div className='flex gap-4 items-center'> */}
+            <span className="text-sm font-semibold">{currentUser.name}</span>
+            {/* <FaUserEdit size={20}/> */}
+            {/* </div> */}
+            <span className="text-xs italic text-gray-600">{currentUser.email}</span>
+          </div>
+          <h2 className="text-xl font-bold mb-4 text-center">Dashboard</h2>
+          <hr/>
+          <ul className="flex-1 space-y-2">
+            <li className={`text-sm hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'my-complaints' ? 'bg-gray-50' : ''}`} onClick={() => setSelectedMenu('my-complaints')}>
               <NavLink to={`my-complaints/${id}`} className={({ isActive }) =>
-                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-700 hover:text-gray-900'}`
+                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800 hover:bg-gray-100'}`
               }>
                 <FaUser className="mr-2" />
                 <span className="font-inter">My Complaints</span>
               </NavLink>
             </li>
-            <li className={`hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'all-complaints' ? 'border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('all-complaints')}>
+            <li className={`text-sm hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'all-complaints' ? 'bg-gray-50' : ''}`} onClick={() => setSelectedMenu('all-complaints')}>
               <NavLink to="all-complaints" className={({ isActive }) =>
-                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-700 hover:text-gray-900'}`
+                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
               }>
                 <FaClipboardList className="mr-2" />
                 <span className="font-inter">All Complaints</span>
               </NavLink>
             </li>
-            <li className={`hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'monthly-bills' ? 'border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('monthly-bills')}>
+            <li className={`text-sm hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'monthly-bills' ? 'bg-gray-50' : ''}`} onClick={() => setSelectedMenu('monthly-bills')}>
               <NavLink to="monthly-bills" className={({ isActive }) =>
-                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-700 hover:text-gray-900'}`
+                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800 '}`
               }>
                 <FaFileInvoiceDollar className="mr-2" />
                 <span className="font-inter">Monthly Bills</span>
               </NavLink>
             </li>
-            <li className={`hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'mess-menu' ? 'border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('mess-menu')}>
+            <li className={`text-sm hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'mess-menu' ? 'bg-gray-50' : ''}`} onClick={() => setSelectedMenu('mess-menu')}>
               <NavLink to="mess-menu" className={({ isActive }) =>
-                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-700 hover:text-gray-900'}`
+                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
               }>
                 <FaUtensils className="mr-2" />
                 <span className="font-inter">Mess Menu</span>
               </NavLink>
             </li>
             {currentUser.studentRep && (
-              <li className={`hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'add-menu' ? 'border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('add-menu')}>
+              <li className={`text-sm hover:bg-gray-100 p-2 rounded-md transition duration-200 ${selectedMenu === 'add-menu' ? 'bg-gray-50' : ''}`} onClick={() => setSelectedMenu('add-menu')}>
                 <NavLink to="add-menu" className={({ isActive }) =>
-                  `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-700 hover:text-gray-900'}`
+                  `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-300'}`
                 }>
                   <MdOutlineFoodBank size={20} className="mr-2" />
                   <span className="font-inter">Add Menu</span>
                 </NavLink>
               </li>
             )}
+            <hr/>
           </ul>
+          <div className="mt-56">
+            <div className=" p-2 flex flex-col gap-4 rounded-md transition duration-200 cursor-pointer">
+              <hr/>
+              <Link to={'profile'} className="flex text-sm items-center text-gray-700 ">
+                <FaUserEdit className="mr-2" />
+                <span className="font-inter">Edit your Profile</span>
+              </Link>
+              <div onClick={handleLogout} className="text-sm flex items-center text-gray-700">
+                <FaSignOutAlt className="mr-2" />
+                <span className="font-inter">Logout</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       {showSidebar ? (
-        <FaChevronLeft size={28} className="absolute top-9 left-9 cursor-pointer text-gray-800" onClick={toggleSidebar} />
+        <div className='bg-gray-300 border-blue-500 border-2 p-1 rounded-lg absolute -top-12 right-6 cursor-pointer z-50'>
+        <IoCloseSharp size={22} className="" onClick={toggleSidebar} />
+        </div>
       ) : (
-        <>
-          <FaChevronRight size={30} className='absolute top-10 left-12 cursor-pointer text-gray-800' onClick={toggleSidebar}/>
-        </>
+        <FaChevronRight size={30} className="fixed top-20 right-16 cursor-pointer text-gray-800 z-50" onClick={toggleSidebar} />
       )}
     </div>
   );

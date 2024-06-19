@@ -23,10 +23,11 @@ const complaintSchema = new mongoose.Schema(
       {
         user: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
+          ref: 'User',
         },
         text: {
           type: String,
+          required:true,
         },
         createdAt: { 
           type: Date, 
@@ -52,7 +53,7 @@ const complaintSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required:true,
     },
   },

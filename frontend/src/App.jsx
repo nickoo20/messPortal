@@ -8,8 +8,8 @@ import VerifyUser from "./pages/verify/VerifyUser.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginStudent from "./pages/auth/Student/LoginStudent.jsx" ;
 import RegisterStudent from "./pages/auth/Student/RegisterStudent.jsx" ;
-import LoginWarden from "./pages/auth/Warden/LoginWarden.jsx" ;
-import RegisterWarden from './pages/auth/Warden/RegisterWarden.jsx' ; 
+import LoginAdmin from "./pages/auth/Admin/LoginAdmin.jsx" ;
+import RegisterAdmin from './pages/auth/Admin/RegisterAdmin.jsx' ; 
 import RegisterAccountant from "./pages/auth/Accountant/RegisterAccountant.jsx";
 import LoginAccountant from "./pages/auth/Accountant/LoginAccountant.jsx";
 
@@ -54,14 +54,14 @@ const App = () => {
 
           <Route path="/verify-email" element={<VerifyEmailStudent />} />
           <Route path="/verify-warden" element={<VerifyWardenStudent />} />
-          <Route path="/warden/verify-email" element={<VerifyEmailWarden/>} />
-          <Route path="/warden/verify-dsw" element={<VerifyWardenDsw />} />
+          <Route path="/admin/verify-email" element={<VerifyEmailWarden/>} />
+          <Route path="/admin/verify-dsw" element={<VerifyWardenDsw />} />
           <Route path="/verify-admin" element={<VerifyUser />} />
 
           <Route path="/*" element={<NotFound />} />
 
-          <Route path="/register-warden" element={<RegisterWarden />} />
-          <Route path="/login-warden" element={<LoginWarden />} />
+          <Route path="/register-admin" element={<RegisterAdmin />} />
+          <Route path="/login-admin" element={<LoginAdmin />} />
           <Route path="/admin-landing" element={<AdminPage />}>
             <Route path="allcomplaints" element={<Allcomplaints />} />
             <Route path="mark-leave" element={<MarkLeave />} />

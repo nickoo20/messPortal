@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import nodemailer from "nodemailer";
 import jwt, { decode } from "jsonwebtoken";
 import Warden from '../models/warden.model.js' ;
+import Accountant from "../models/accountant.model.js";
 
 export const verifySelfUserEmail = async (req, res) => {
   try {
@@ -127,21 +128,29 @@ export const verifyUserByWarden = async (req, res) => {
   }
 };
 
-export const verifySelfWardenEmail = async (req, res) => {
+export const verifySelfAdminEmail = async (req, res) => {
   const { token } = req.query;
 
   try {
+    let admin ;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const warden = await Warden.findOne({ email: decoded.email });
-
-    if (!warden) {
+    const accountant = await Accountant.findOne({ email : decoded.email}) ;
+    if (!warden && !accountant) {
       return res.status(400).json({ message: 'Invalid token!' });
     }
+    if(warden){
+      warden.isSelfVerified = true;
+      admin=warden ;
+      await warden.save();
+    }
+    else{
+      accountant.isSelfVerified=true;
+      admin=accountant ;
+      await accountant.save(); 
+    }
 
-    warden.isSelfVerified = true;
-    await warden.save();
-
-    const newToken = jwt.sign({ email: warden.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const newToken = jwt.sign({ email: admin.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -150,14 +159,62 @@ export const verifySelfWardenEmail = async (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
+    const roleType = admin.hostelName ? "Warden" : "Accountant";
+    const adminDetails = admin.hostelName ? `<p>Hostel: ${admin.hostelName}</p>` : '';
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: process.env.DSW_EMAIL,
       subject: 'DSW Verification Required',
       html: `
-        <h1>DSW Verification Required</h1>
-        <p>A new warden has registered and requires your verification. Click the link below to verify the warden:</p>
-        <a href="${process.env.BASE_URL}/warden/verify-dsw?token=${newToken}">Verify Warden</a>
+        <html>
+        <head>
+          <style>
+            .email-container {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #333;
+              padding: 20px;
+            }
+            .email-header, .email-footer {
+              padding: 20px;
+              text-align: center;
+              background-color: #f7f7f7;
+            }
+            .email-body {
+              padding: 20px;
+            }
+            .verification-link {
+              display: inline-block;
+              padding: 10px 20px;
+              margin: 20px 0;
+              background-color: #007bff;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 5px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="email-header">
+              <h1>DSW Verification Required</h1>
+            </div>
+            <div class="email-body">
+              <p>A new admin has registered and requires your verification. Here are the details:</p>
+              <p>Name: ${admin.name}</p>
+              <p>Email: ${admin.email}</p>
+              <p>Role: ${roleType}</p>
+              ${adminDetails}
+              <p>Click the link below to verify the admin:</p>
+              <a href="${process.env.BASE_URL}/admin/verify-dsw?token=${newToken}" class="verification-link">Verify Admin</a>
+            </div>
+            <div class="email-footer">
+              <p>&copy; ${new Date().getFullYear()} Mess Complaint Portal. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
       `,
     };
     transporter.sendMail(mailOptions, (error, info) => {
@@ -174,19 +231,28 @@ export const verifySelfWardenEmail = async (req, res) => {
   }
 };
 
-export const verifyWardenByDsw = async (req, res) => {
+export const verifyAdminByDsw = async (req, res) => {
   const { token } = req.query;
 
   try {
+    let admin ;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const warden = await Warden.findOne({ email: decoded.email });
+    const accountant = await Accountant.findOne( { email : decoded.email }) ;
 
-    if (!warden) {
+    if (!warden && !accountant) {
       return res.status(400).json({ message: 'Invalid token!' });
     }
-
-    warden.isDSWVerified = true ;
-    await warden.save();
+    if(warden){
+      warden.isDSWVerified = true ;
+      admin = warden ;
+      await warden.save();
+    }
+    else{
+      accountant.isDSWVerified=true;
+      admin=accountant; 
+      await accountant.save() ;
+    }
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -195,15 +261,59 @@ export const verifyWardenByDsw = async (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
-
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: warden.email,
+      to: admin.email,
       subject: 'Verification Successful',
       html: `
-        <h1>Verification Successful</h1>
-        <p>Dear ${warden.name},</p>
-        <p>Your account has been successfully verified by the DSW. You can now log in to the mess portal.</p>
+        <html>
+        <head>
+          <style>
+            .email-container {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #333;
+              padding: 20px;
+              background-color: #f9f9f9;
+            }
+            .email-header, .email-footer {
+              padding: 20px;
+              text-align: center;
+              color: #fff;
+            }
+            .email-body {
+              padding: 20px;
+            }
+            .email-body p {
+              margin: 10px 0;
+            }
+            .login-link {
+              display: inline-block;
+              padding: 10px 20px;
+              margin: 20px 0;
+              color: #fff;
+              text-decoration: none;
+              border-radius: 5px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="email-container">
+            <div class="email-header">
+              <h1>Verification Successful</h1>
+            </div>
+            <div class="email-body">
+              <p>Dear ${admin.name},</p>
+              <p>Congratulations! Your account has been successfully verified by the DSW.</p>
+              <p>You can now log in to the mess portal to manage your duties.</p>
+              <a href="${process.env.BASE_URL}/login-admin" class="login-link">Log in to Mess Portal</a>
+            </div>
+            <div class="email-footer">
+              <p>&copy; ${new Date().getFullYear()} Mess Complaint Portal. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
       `,
     };
 

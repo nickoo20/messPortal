@@ -2,7 +2,6 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
-import { useAuth } from "../../../context/userContext";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -12,15 +11,16 @@ import {
   signInStart,
   signInSuccess,
 } from "../../../redux/admin/adminSlice";
+import backgroundImage from "../../../assets/background.jpg"; // Adjust the path to your background image
 
 const LoginAdmin = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    role: "warden",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { auth, setAuth } = useAuth();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const LoginAdmin = () => {
     try {
       dispatch(signInStart());
       const res = await axios.post(
-        "http://localhost:8080/api/auth/login-admin",
+        "http://localhost:8080/api/admin/login-admin",
         formData,
         {
           headers: {
@@ -52,13 +52,8 @@ const LoginAdmin = () => {
         dispatch(signInFailure());
         return;
       }
-      dispatch(signInSuccess(res?.data.user));
-      // setAuth({
-      //   ...auth,
-      //   user: res.data.user,
-      //   token: res.data.token,
-      // });
-      // localStorage.setItem("auth", JSON.stringify(res.data));
+      dispatch(signInSuccess(res?.data.admin));
+
       toast({
         title: "Login Success!",
         description: "You have successfully logged in.",
@@ -66,11 +61,7 @@ const LoginAdmin = () => {
         duration: 3000,
         isClosable: true,
       });
-      if (res?.data.user.role === "warden") {
-        navigate("/admin-landing");
-      } else if (res.data.user.role === "accountant") {
-        navigate("/accountant-landing");
-      }
+      navigate("/admin-landing/allcomplaints");
     } catch (error) {
       setErrorMessage("An error occurred during login. Please try again.");
       dispatch(signInFailure());
@@ -85,10 +76,14 @@ const LoginAdmin = () => {
   return (
     <div className="flex flex-col bg-gradient-to-r from-gray-300 to-gray-600 min-h-screen">
       <Header />
-      <div className="flex justify-center items-center grow flex-1">
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-          <h1 className="text-xl font-semibold mb-4 text-blue-700 font-montserrat">
-            Login now (<span className="text-red-800">For Admins only*</span>)
+      <div
+        className="relative flex justify-center items-center grow flex-1 bg-cover bg-center"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="relative bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+          <h1 className="text-center text-xl font-semibold mb-4 text-blue-700 font-montserrat">
+            Login now
           </h1>
           <div className="flex flex-col items-center justify-center gap-2">
             {errorMessage && (
@@ -123,6 +118,21 @@ const LoginAdmin = () => {
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <label htmlFor="role" className="text-sm">
+                  Login as:
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
+                >
+                  <option value="warden">Warden</option>
+                  <option value="accountant">Accountant</option>
+                </select>
               </div>
               <button
                 type="submit"

@@ -23,6 +23,7 @@ const AllComplaints = () => {
         const response = await axios.get("http://localhost:8080/api/complaints", {
           withCredentials: true,
         });
+        console.log(complaints) ;
         setComplaints(response.data.comp1);
       } catch (error) {
         console.error("Error fetching complaints", error);
@@ -89,7 +90,6 @@ const AllComplaints = () => {
     }
   };
 
-<<<<<<< HEAD
   const fetchComments = async (id) => {
     try {
       const res = await axios.get(`http://localhost:8080/api/complaints/comment/${id}`);
@@ -114,8 +114,6 @@ const AllComplaints = () => {
     }
   };
 
-=======
->>>>>>> d4c00c63ad2c7ea03a890bc72c397b4e0343011d
   if (!user) {
     return <h1>Please Login first!!</h1>;
   }
@@ -160,7 +158,6 @@ const AllComplaints = () => {
                     <span>{complaint.downvotes.length}</span>
                   </div>
                 </div>
-<<<<<<< HEAD
                 <button
                   onClick={() => toggleComments(complaint._id)}
                   className="text-blue-500 hover:underline"
@@ -171,7 +168,7 @@ const AllComplaints = () => {
               <div className="mt-4 flex flex-col md:flex-row justify-evenly items-center">
                 <button
                   onClick={() => handleStatusChange(complaint._id, "resolved")}
-                  className="bg-[#627254] text-[#DDDDDD] font-mono hover:bg-[#76885B] hover:opacity-85 rounded-full px-4 py-1 mr-2 text-sm"
+                  className=" font-mono rounded-full px-4 py-1 mr-2 text-sm bg-green-500 text-white"
                 >
                   {resolving && resolvingComplaintId === complaint._id ? (
                     <LoadingSpinner />
@@ -181,49 +178,20 @@ const AllComplaints = () => {
                 </button>
                 <button
                   onClick={() => handleForwardClick(complaint._id)}
-                  className="bg-[#32012F] text-[#E2DFD0] font-mono hover:bg-[#524C42] hover:opacity-85 rounded-full px-4 py-1 text-sm"
+                  className="bg-red-500 text-white font-mono hover:opacity-85 rounded-full px-4 py-1 text-sm"
                 >
                   Forward
                 </button>
-=======
-                <div className="mt-4 flex flex-col md:flex-row justify-evenly items-center">
-                  <button
-                    onClick={() => handleStatusChange(complaint._id, "resolved")}
-                    className="bg-[#627254] text-[#DDDDDD] font-mono hover:bg-[#76885B] hover:opacity-85 rounded-full px-4 py-1 mr-2 text-sm"
-                  >
-                    {resolving && resolvingComplaintId === complaint._id ? (
-                      <LoadingSpinner />
-                    ) : (
-                      <span>Resolve</span>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => handleForwardClick(complaint._id)}
-                    className="bg-[#32012F] text-[#E2DFD0] font-mono hover:bg-[#524C42] hover:opacity-85 rounded-full px-4 py-1 text-sm"
-                  >
-                    Forward
-                  </button>
-                </div>
->>>>>>> d4c00c63ad2c7ea03a890bc72c397b4e0343011d
               </div>
               <div className="flex items-center gap-4 mt-2 ">
                 <div className="font-semibold text-gray-800 mt-2 text-sm">Status: </div>
                 <div
-<<<<<<< HEAD
-                  className={`hover:text-white border focus:outline-none focus:ring-4 font-medium rounded-full text-sm px-4 py-1 text-center me-2 mb-2 ${
+                  className={` border rounded-full px-2 text-sm font-mono ${
                     complaint.status === "pending"
-                      ? "text-yellow-400 border-yellow-400 hover:bg-yellow-500 focus:ring-yellow-300"
+                      ? "text-yellow-700 border-yellow-500"
                       : complaint.status === "resolved"
-                      ? "text-green-400 border-green-400 hover:bg-green-500 focus:ring-green-300"
-                      : "text-purple-500 hover:border-purple-400 hover:bg-purple-500 focus:ring-purple-300 font-extrabold"
-=======
-                  className={` hover:text-white border focus:outline-none  focus:ring-4 font-medium rounded-full text-sm px-4 py-1 text-center me-2 mb-2  ${
-                    complaint.status === "pending"
-                      ? "text-yellow-400 border-yellow-400 hover:bg-yellow-500 focus:ring-yellow-300 "
-                      : complaint.status === "resolved"
-                      ? "text-green-400 border-green-400 hover:bg-green-500 focus:ring-green-300"
-                      : "text-purple-500  hover:border-purple-400 hover:bg-purple-500 focus:ring-purple-300 font-extrabold"
->>>>>>> d4c00c63ad2c7ea03a890bc72c397b4e0343011d
+                      ? "text-green-600 border-green-500"
+                      : "text-red-600 font-semibold border-red-500"
                   }`}
                 >
                   {complaint.status}
@@ -259,7 +227,6 @@ const AllComplaints = () => {
                   </div>
                 </div>
               )}
-<<<<<<< HEAD
               {complaintComments[complaint._id] && (
                 <div className="mt-4">
                   {complaintComments[complaint._id].map((comment) => (
@@ -269,8 +236,6 @@ const AllComplaints = () => {
                   ))}
                 </div>
               )}
-=======
->>>>>>> d4c00c63ad2c7ea03a890bc72c397b4e0343011d
             </div>
           ))
         ) : (

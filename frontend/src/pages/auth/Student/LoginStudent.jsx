@@ -7,13 +7,14 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { signInFailure, signInStart, signInSuccess } from "../../../redux/user/userSlice";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import backgroundImage from "../../../assets/background.jpg"; // Adjust the path to your background image
 
 const LoginStudent = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const {loading, error} = useSelector((state) => state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const [formErrors, setFormErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
@@ -58,7 +59,7 @@ const LoginStudent = () => {
         }
       );
       console.log(res);
-      if(res?.data?.success === false){
+      if (res?.data?.success === false) {
         setFormErrors({ apiError: res?.data.message });
         dispatch(signInFailure(res?.data?.message));
         return;
@@ -81,10 +82,12 @@ const LoginStudent = () => {
   return (
     <div className="flex flex-col bg-gradient-to-r from-gray-300 to-gray-600 min-h-screen">
       <Header />
-      <div className="flex justify-center items-center grow flex-1">
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+      <div className="relative flex justify-center items-center flex-1 bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="relative bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
           <h2 className="text-xl font-semibold mb-4 text-blue-700 ">
-            Login now <span className="text-red-700"> (Hostellers only*)</span>
+            Login now 
           </h2>
           <div className="flex flex-col items-center justify-center gap-2">
             <form
@@ -102,7 +105,7 @@ const LoginStudent = () => {
                 className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
               {formErrors.email && <p className="text-red-500 text-xs italic">{formErrors.email}</p>}
-              
+
               <div className="relative w-full">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -113,7 +116,7 @@ const LoginStudent = () => {
                   required
                   className="border p-2 w-full rounded-xl focus:outline-none text-sm"
                 />
-                <span 
+                <span
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                   onClick={toggleShowPassword}
                 >
@@ -121,7 +124,7 @@ const LoginStudent = () => {
                 </span>
               </div>
               {formErrors.password && <p className="text-red-500 text-xs italic">{formErrors.password}</p>}
-              
+
               <button
                 type="submit"
                 className="bg-blue-500 text-white p-10 py-2 hover:bg-blue-600 rounded-2xl"

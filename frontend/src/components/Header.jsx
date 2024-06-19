@@ -96,7 +96,7 @@ const Header = () => {
                   ) : (
                     <>
                       <li><Link to="/login-student">For Students</Link></li>
-                      <li><Link to="/login-warden">For Admins</Link></li>
+                      <li><Link to="/login-admin">For Admins</Link></li>
                     </>
                   )}
                 </ul>

@@ -5,12 +5,12 @@ import axios from "axios";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 
-const RegisterWarden = () => {
+const RegisterAdmin = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    hostelName: "Girls Hostel", // Ensure consistent naming here
+    HostelName: "Girls Hostel",
     role: "warden",
   });
   const [errors, setErrors] = useState({});
@@ -23,9 +23,14 @@ const RegisterWarden = () => {
   };
 
   const validateForm = () => {
+    // const emailRegex = /^[a-z]+_[0-9]{4}[a-z]{4}[0-9]{3}@nitsri\.ac\.in$/;
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
 
     let formErrors = {};
+
+    // if (!emailRegex.test(formData.email)) {
+    //   formErrors.email = "Invalid email format!";
+    // }
 
     if (!passwordRegex.test(formData.password)) {
       formErrors.password =
@@ -44,13 +49,12 @@ const RegisterWarden = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/warden/register-warden",
+        "http://localhost:8080/api/auth/register-admin",
         formData,
         {
           withCredentials: true,
         }
       );
-      console.log(res);
       if (res?.data?.success) {
         toast({
           title: "Registration Successful",
@@ -59,6 +63,7 @@ const RegisterWarden = () => {
           duration: 5000,
           isClosable: true,
         });
+        navigate("/login-admin");
       }
     } catch (error) {
       setErrors({ apiError: error.response?.data?.message || "Error in signup" });
@@ -113,38 +118,43 @@ const RegisterWarden = () => {
                 <p className="text-red-500 text-xs italic">{errors.password}</p>
               )}
               <div className="flex items-center gap-4">
-                <label htmlFor="hostelName" className="text-sm">
-                  Select your Hostel:
-                </label>
-                <select
-                  id="hostelName"
-                  name="hostelName"
-                  value={formData.hostelName} // Use the correct state variable
-                  onChange={handleChange}
-                  className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
+              <label
+                htmlFor="HostelName"
+                className="text-sm"
                 >
-                  <option value="Girls Hostel">Girls Hostel</option>
-                  <option value="Jhelum Boys Hostel">Jhelum Boys Hostel</option>
-                  <option value="Manasbal Boys Hostel">Manasbal Boys Hostel</option>
-                  <option value="Mansar Boys Hostel">Mansar Boys Hostel</option>
-                  <option value="Chenab Boys Hostel">Chenab Boys Hostel</option>
-                  <option value="Indus Boys Hostel">Indus Boys Hostel</option>
-                </select>
+                Select your Hostel :
+              </label>
+              <select
+                id="HostelName"
+                name="HostelName"
+                value={formData.HostelName}
+                onChange={handleChange}
+                className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
+                >
+                <option value="Girls Hostel">Girls Hostel</option>
+                <option value="Jhelum Boys Hostel">Jhelum Boys Hostel</option>
+                <option value="Manasbal Boys Hostel">Manasbal Boys Hostel</option>
+                <option value="Mansar Boys Hostel">Mansar Boys Hostel</option>
+                <option value="Chenab Boys Hostel">Chenab Boys Hostel</option>
+              </select>
               </div>
               <div className="flex items-center gap-4">
-                <label htmlFor="role" className="text-sm">
-                  Register as a?
-                </label>
-                <select
-                  id="role"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
+              <label
+                htmlFor="role"
+                className="text-sm"
                 >
-                  <option value="warden">Warden</option>
-                  <option value="accountant">Accountant</option>
-                </select>
+                Register as a ? 
+              </label>
+              <select
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
+                >
+                <option value="warden">Warden</option>
+                <option value="accountant">Accountant</option>
+              </select>
               </div>
               <div className="flex items-center justify-center">
                 <button
@@ -162,7 +172,7 @@ const RegisterWarden = () => {
             )}
             <div className="font-roboto text-center mt-2 mb-0">
               Already registered? Login{" "}
-              <Link to="/login-warden" className="text-blue-700 underline">
+              <Link to="/login-admin" className="text-blue-700 underline">
                 here
               </Link>
             </div>
@@ -174,4 +184,4 @@ const RegisterWarden = () => {
   );
 };
 
-export default RegisterWarden;
+export default RegisterAdmin;

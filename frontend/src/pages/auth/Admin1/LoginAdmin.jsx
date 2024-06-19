@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
+import { useAuth } from "../../../context/userContext";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -12,13 +13,14 @@ import {
   signInSuccess,
 } from "../../../redux/admin/adminSlice";
 
-const LoginWarden = () => {
+const LoginAdmin = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { auth, setAuth } = useAuth();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -35,7 +37,7 @@ const LoginWarden = () => {
     try {
       dispatch(signInStart());
       const res = await axios.post(
-        "http://localhost:8080/api/warden/login-warden",
+        "http://localhost:8080/api/auth/login-admin",
         formData,
         {
           headers: {
@@ -51,7 +53,12 @@ const LoginWarden = () => {
         return;
       }
       dispatch(signInSuccess(res?.data.user));
-
+      // setAuth({
+      //   ...auth,
+      //   user: res.data.user,
+      //   token: res.data.token,
+      // });
+      // localStorage.setItem("auth", JSON.stringify(res.data));
       toast({
         title: "Login Success!",
         description: "You have successfully logged in.",
@@ -126,7 +133,7 @@ const LoginWarden = () => {
             </form>
             <div className="font-roboto mt-4">
               Not verified? Register Now{" "}
-              <NavLink className="text-blue-700 underline" to="/register-warden">
+              <NavLink className="text-blue-700 underline" to="/register-admin">
                 here
               </NavLink>
             </div>
@@ -138,4 +145,4 @@ const LoginWarden = () => {
   );
 };
 
-export default LoginWarden ;
+export default LoginAdmin;

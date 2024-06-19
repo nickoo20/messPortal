@@ -22,11 +22,11 @@ const AdminLanding = () => {
       </>
     );
   }
-    if(user.role !== "warden"){
-      return (
-        <p>You don't have access to this page.</p>
-      )
-    }
+    // if(user.role !== "warden"){
+    //   return (
+    //     <p>You don't have access to this page.</p>
+    //   )
+    // }
   return (
     
       <div className="min-h-screen bg-gray-100 flex flex-col items-center">

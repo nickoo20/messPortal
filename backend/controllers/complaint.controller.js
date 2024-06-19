@@ -154,20 +154,9 @@ export const getMyComplaints = async (req, res, next) => {
     const complaints = await Complaint.find({ createdBy: req.params.id })
       .populate({
         path: "createdBy",
-        select: "name email",
+        select: "name email hostelName",
       })
       .sort({ createdAt: -1 });
-    // Sort the complaints first by createdAt (latest first) and then by status (escalated first)
-    // complaints.sort((a, b) => {
-    //   if (a.status === "escalated" && b.status !== "escalated") {
-    //     return -1;
-    //   }
-    //   if (a.status !== "escalated" && b.status === "escalated") {
-    //     return 1;
-    //   }
-    //   // If both have the same status, sort by createdAt (latest first)
-    //   return new Date(b.createdAt) - new Date(a.createdAt);
-    // });
 
     return res.status(200).json(complaints);
   } catch (error) {
@@ -175,51 +164,55 @@ export const getMyComplaints = async (req, res, next) => {
   }
 };
 
-
 // Get All complaints
 export const getAllComplaints = async (req, res) => {
   try {
-    // Fetch all complaints sorted by createdAt in descending order
-    const comp = await Complaint.find({})
+    // Ensure req.user is defined
+    if (!req.user) {
+      return res.status(403).json({
+        success: false,
+        message: "User information is missing in the request.",
+      });
+    }
+
+    // Fetch all complaints sorted by createdAt in descending order and populate createdBy and comments.user fields
+    const complaints = await Complaint.find({})
       .sort({ createdAt: -1 })
       .populate({
-        path: "createdBy",
-        select: "name email",
+        path: 'createdBy',
+        select: 'name email hostelName', // select the fields you want from User
       })
       .populate({
-        path: "comments.user",
-        select: "name email",
+        path: 'comments.user',
+        select: 'name email', // select the fields you want from User
       });
 
-    // Filter complaints with status "pending" or "escalated"
-    const comp1 = comp.filter((c) => {
-      return c.status === "pending" || c.status === "escalated";
-    });
+    // Log complaints to verify if `createdBy` is populated correctly
+    console.log(complaints);
 
-    // Sort the filtered complaints to prioritize "escalated" status
-    // comp1.sort((a, b) => {
-    //   if (a.status === "escalated" && b.status !== "escalated") {
-    //     return -1;
-    //   }
-    //   if (a.status !== "escalated" && b.status === "escalated") {
-    //     return 1;
-    //   }
-    //   return 0;
-    // });
+    // Filter complaints with status "pending" or "escalated" and match hostelName with req.user.hostelName
+    const filteredComplaints = complaints.filter(
+      (complaint) =>
+        (complaint.status === 'pending' || complaint.status === 'escalated') 
+      &&
+        complaint.createdBy?.hostelName === req.user.hostelName
+    );
 
-    // Send the filtered and sorted complaints
     res.status(200).json({
       success: true,
-      comp1,
+      complaints: filteredComplaints,
       message: "Fetched Successfully!",
     });
   } catch (err) {
-    console.log(err);
-    return res
-      .status(500)
-      .json("Error in All complaints controller ", err.message);
+    console.error("Error in All complaints controller", err.message);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching complaints",
+      error: err.message,
+    });
   }
 };
+
 
 
 // Resolve or escalate a complaint (warden only)
@@ -261,9 +254,15 @@ export const resolveComplaint = async (req, res) => {
 }
 export const getAllComplaintsAdmin=async(req,res)=>{
          try{
-        const comp = await Complaint.find({}).sort({createdAt:-1});
+        const comp = await Complaint.find({})
+        .sort({createdAt:-1})
+        .populate({
+          path:'createdBy',
+          select: 'hostelName' ,
+        });
         const comp1=comp.filter((c)=>{
-            return c.status==='pending'||c.status==='escalated'
+            return (c.status==='pending'||c.status==='escalated') 
+            // (c.createdBy?.hostelName === req.user?.hostelName);
         });
         //console.log(comp1);
         res.status(200).json({

@@ -240,17 +240,6 @@ const Complaint = ({ complaint }) => {
             </div>
           </div>
         </div>
-        {/* <div className="flex items-center gap-4 mt-2">
-          {/* <div className="font-semibold text-gray-800 text-sm">Created By:</div> */}
-          {/* <div> */}
-            {/* <div className="text-gray-500 text-sm">
-              {complaint?.createdBy?.name}
-            </div> */}
-            {/* <div className="text-gray-500 text-xs">
-              ({complaint?.createdBy?.email})
-            </div> */}
-          {/* </div> */}
-        {/* </div> */}
         <div className="flex items-center gap-4 mt-3">
           <div className="font-semibold text-gray-800 text-sm">Status: </div>
           <div
@@ -267,10 +256,13 @@ const Complaint = ({ complaint }) => {
             {complaint.status}
           </div>
         </div>
-        <div className="flex items-center gap-4 mt-2">
+        <div className="flex items-center gap-4 mt-3">
           <div className="font-semibold text-gray-800 text-sm">Created By:</div>
+          <div className="flex flex-col">
         <div className="text-gray-500 italic text-xs">
               ({complaint?.createdBy?.email})
+        </div>
+        <div className="italic text-gray-500 text-xs ">{complaint.createdBy?.hostelName}</div>
         </div>
         </div>
         </div>

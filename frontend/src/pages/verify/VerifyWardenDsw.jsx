@@ -16,7 +16,7 @@ const VerifyWardenDsw = () => {
 
     const verifyWarden = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/warden/verify-dsw`, {
+        const res = await axios.get(`http://localhost:8080/api/admin/verify-dsw`, {
           params: { token }
         });
         console.log(res);
