@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import Settings from "../models/setting.model.js";
 
 export const updateUser = async (req, res) => {
   try {
@@ -25,8 +26,9 @@ export const updateUser = async (req, res) => {
     // }
 
     // Only validate and update the password if it is provided
+   
     if (password) {
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+      const passwordRegex = /^(?=.[a-z])(?=.[A-Z])(?=.\d)(?=.[@$!%?&#])[A-Za-z\d@$!%?&#]{8,}$/;
       if (!passwordRegex.test(password)) {
         return res.status(400).json({
           error: "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character",
@@ -45,6 +47,12 @@ export const updateUser = async (req, res) => {
     // Update hostel name if provided
     if (hostelName) {
       user.hostelName = hostelName;
+      const setting=await Settings.findOne({});
+      if(setting.enableHostelChange===true)
+      user.hostelName = hostelName;
+      else{
+        return res.status(400).json({message:"You are not allowed to Change Hostel at this moment"});
+      }
     }
 
     await user.save();
@@ -68,7 +76,7 @@ export const getUserProfile = async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (error) {
-    console.log(`Error in getUserProfile Controller, ${error.message}`);
+    console.log(`Error in getUserProfile Controller ${error.message}`);
     return res.status(500).json({
       error: error.message,
     });

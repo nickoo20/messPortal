@@ -35,6 +35,13 @@ const Billcomp = () => {
       setError('An error occurred. Please try again later.');
     }
   };
+  const formatRegistrationNumber = (registrationNumber) => {
+    const registrationStr = registrationNumber.toString();
+    if (registrationStr.length > 4) {
+      return registrationStr.slice(0, 4) + 'NITSGR' + registrationStr.slice(4);
+    }
+    return registrationStr;
+  };
 
   const downloadCSV = () => {
     const headers = ['Student ID', 'Student Name', 'Total Bill', 'Service Charge', 'Festival', 'Festival Charge'];
@@ -61,11 +68,6 @@ const Billcomp = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
-
-  const formatRegistrationNumber = (number) => {
-    const str = number.toString();
-    return `${str.substring(0, 4)}NITSGR${str.substring(4)}`;
   };
 
   return (

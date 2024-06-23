@@ -15,6 +15,8 @@ import { fileURLToPath } from 'url';
 import cors from 'cors' ;
 import path from 'path';
 import noticeRoutes from './routes/notice.route.js';
+import studentsRoutes from './routes/allStudents.route.js';
+import hostelchangeRoutes from './routes/ToggleHostelChange.model.js'
 // Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,7 +62,14 @@ app.use("/api/bills",billsRoutes);
 app.use("/api/mark-leave",leaveRoutes);
 app.use("/api/expense",expenseRoutes);
 app.use("/api/notice",noticeRoutes);
-app.use('/api/mr',studentRepresentativeRoutes);
+app.use('/api/mr/',studentRepresentativeRoutes);
+app.use('/api/students',studentsRoutes);
+app.use('/api/toggle-hostel-change',hostelchangeRoutes)
+app.get("/", (req, res) => {
+    res.send({
+      message: "welcome to mess portal app",
+    });
+  });
 
 app.listen(PORT, () => {
     console.log(`Server running on localhost:${PORT}`) ;
