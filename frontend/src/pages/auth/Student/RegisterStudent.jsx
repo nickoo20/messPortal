@@ -140,7 +140,7 @@ const RegisterStudent = () => {
                   name="registrationNumber"
                   value={formData.registrationNumber}
                   onChange={handleChange}
-                  placeholder="Enter your Registration Number"
+                  placeholder="Registration No. as 20200832 from 2020NITSGR0832"
                   required
                   className="border p-2 w-full rounded-xl focus:outline-none text-sm"
                 />

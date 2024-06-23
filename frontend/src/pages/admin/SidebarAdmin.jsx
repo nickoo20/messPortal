@@ -115,6 +115,22 @@ const SidebarAdmin = () => {
                 <span className="font-inter">Mess Menu</span>
               </NavLink>
             </li>
+            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'all-students' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('all-students')}>
+              <NavLink to="all-students" className={({ isActive }) =>
+                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
+              }>
+                <FaUtensils className="mr-2" />
+                <span className="font-inter">Students List</span>
+              </NavLink>
+            </li>
+            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'toggle-hostelChange' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('toggle-hostelChange')}>
+              <NavLink to="toggle-hostelChange" className={({ isActive }) =>
+                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
+              }>
+                <FaUtensils className="mr-2" />
+                <span className="font-inter">Hostel Enable </span>
+              </NavLink>
+            </li>
           </ul>
           <div className="mt-8 border-t pt-4">
             <div className="text-sm flex flex-col gap-4">

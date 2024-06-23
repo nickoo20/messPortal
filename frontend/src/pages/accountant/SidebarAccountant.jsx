@@ -91,22 +91,6 @@ const SidebarAccountant = () => {
                 <span className="font-inter">Single Bill</span>
               </NavLink>
             </li>
-            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'generate-bill' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('generate-bill')}>
-              <NavLink to="generate-bill" className={({ isActive }) =>
-                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500 ' : 'text-gray-800'}`
-              }>
-                <FaClipboardList className="mr-2" />
-                <span className="font-inter">Generate Bill</span>
-              </NavLink>
-            </li>
-            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'update-cost' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('update-cost')}>
-              <NavLink to="update-cost" className={({ isActive }) =>
-                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
-              }>
-                <FaFileInvoiceDollar className="mr-2" />
-                <span className="font-inter">Update cost</span>
-              </NavLink>
-            </li>
             <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'allbills' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('allbills')}>
               <NavLink to="allbills" className={({ isActive }) =>
                 `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`

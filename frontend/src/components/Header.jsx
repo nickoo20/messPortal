@@ -44,7 +44,7 @@ const Header = () => {
       }
       toast.success(res?.data.message);
       dispatch(deleteAdminSuccess(res?.data));
-      navigate('/login-admin') ;
+      navigate('/login-admin');
     } catch (error) {
       dispatch(deleteAdminFailure(error.message));
       console.log(error.message);
@@ -78,29 +78,17 @@ const Header = () => {
                   </li>
                 </Link>
               </ul>
-              <div className="dropdown dropdown-end">
-                <div tabIndex={0} role="button" className="m-1 text-[#003C43] font-semibold text-sm sm:text-md">
-                  {currentUser?._id || user?._id ? <GiHamburgerMenu size={24} /> : 'Register/Login'}
+              {!currentUser?._id && !user?._id && (
+                <div className="dropdown dropdown-end">
+                  <div tabIndex={0} role="button" className="m-1 text-[#003C43] font-semibold text-sm sm:text-md">
+                    <GiHamburgerMenu size={24} />
+                  </div>
+                  <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box md:w-52 w-28">
+                    <li><Link to="/login-student">For Students</Link></li>
+                    <li><Link to="/login-admin">For Admins</Link></li>
+                  </ul>
                 </div>
-                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box md:w-52 w-28">
-                  {currentUser?._id ? (
-                    <>
-                      <li><Link to="profile">Profile</Link></li>
-                      <li onClick={handleLogoutStudent}><a href="#">Logout</a></li>
-                    </>
-                  ) : user?._id ? (
-                    <>
-                      <li><Link to="profile">Profile</Link></li>
-                      <li onClick={handleLogoutAdmin}><a href="#">Logout</a></li>
-                    </>
-                  ) : (
-                    <>
-                      <li><Link to="/login-student">For Students</Link></li>
-                      <li><Link to="/login-admin">For Admins</Link></li>
-                    </>
-                  )}
-                </ul>
-              </div>
+              )}
             </div>
           </div>
         </div>

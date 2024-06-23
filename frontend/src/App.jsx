@@ -36,14 +36,11 @@ import ExpenseManager from "./pages/accountant/Expenses.jsx";
 import FestCharge from "./pages/accountant/Festival.jsx"
 import NoticeForm from "./pages/Notice/AddNotice.jsx";
 import SeeNotice from "./pages/Notice/SeeNotice.jsx";
-<<<<<<< HEAD
 import ProfilePage from "./pages/admin/ProfilePage.jsx";
 import AccountantPage from "./components/AccountantPage.jsx";
-=======
 import StudentList from "./pages/admin/AllStudents.jsx";
 import ToggleHostelChange from "./pages/admin/HostelChange.jsx";
 
->>>>>>> 3b10531ba58c7ea212087a3f8b3165ba18c234d0
 const App = () => {
   return (
     <BrowserRouter>
@@ -78,12 +75,9 @@ const App = () => {
             <Route path="mark-leave" element={<MarkLeave />} />
             <Route path="manage-mr" element={<ManageMr />} />
             <Route path="mess-menu" element={<LatestMenu />} />
-<<<<<<< HEAD
             <Route path="profile" element={<ProfilePage />} />
-=======
             <Route path="all-students" element={<StudentList />} />
             <Route path="toggle-hostelChange" element={<ToggleHostelChange />} />
->>>>>>> 3b10531ba58c7ea212087a3f8b3165ba18c234d0
           </Route>
 
           <Route path="/register-accountant" element={<RegisterAccountant />} />
