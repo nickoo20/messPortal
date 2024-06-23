@@ -97,18 +97,18 @@ const Complaint = ({ complaint }) => {
         return ;
       }
     // toast.success(res?.data.message) ;
-    setComments(res?.data.comments);
     dispatch(getRefresh());
+    setComments(res?.data.comments);
     } catch (err) {
       toast.error("Error deleting comment");
     }
   };
 
   return (
-    <div className="p-2 rounded-lg mb-4 ">
-      <div className="shadow-md rounded-lg cursor-pointer p-5 border-b-4 border-blue-300 hover:shadow-sm bg-white">
-        <div className="flex items-end justify-between">
-          <div className="text-gray-500 text-xs mt-4">{formattedDate}</div>
+    <div className="p-2 rounded-lg mb-4 max-w-xs w-full mx-auto min-h-[200px]">
+      <div className="flex flex-col gap-2 shadow-sm rounded-lg p-5 border-b-4 border-blue-300 hover:shadow-sm bg-white">
+        <div className="flex items-end justify-between ">
+          <div className="text-gray-500 text-xs mt-4 ">{formattedDate}</div>
           {currentUser?._id === complaint?.createdBy?._id && (
             <div
               onClick={() => deleteComplaint(complaint?._id)}
@@ -120,9 +120,9 @@ const Complaint = ({ complaint }) => {
             </div>
           )}
         </div>
-        <h2 className="text-lg font-bold text-gray-600">{complaint?.title}</h2>
-        <p className="text-gray-700 rounded-lg">{complaint?.description}</p>
-        <div className="text-sm text-gray-600 mt-4">
+        <h2 className="text-md font-bold text-gray-600">{complaint?.title}</h2>
+        <p className="text-gray-700 rounded-lg text-sm">{complaint?.description}</p>
+        <div className="text-sm text-gray-600">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-8">
             <button
@@ -240,7 +240,7 @@ const Complaint = ({ complaint }) => {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-4 mt-3">
+        <div className="flex items-center gap-4">
           <div className="font-semibold text-gray-800 text-sm">Status: </div>
           <div
             className={` border rounded-full px-2 text-sm font-mono
@@ -256,8 +256,8 @@ const Complaint = ({ complaint }) => {
             {complaint.status}
           </div>
         </div>
-        <div className="flex items-center gap-4 mt-3">
-          <div className="font-semibold text-gray-800 text-sm">Created By:</div>
+        <div className="flex items-center gap-4">
+          <div className="font-semibold text-gray-700 text-sm">Created By:</div>
           <div className="flex flex-col">
         <div className="text-gray-500 italic text-xs">
               ({complaint?.createdBy?.email})

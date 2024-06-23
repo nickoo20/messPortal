@@ -8,7 +8,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { FaUserEdit } from "react-icons/fa";
 import { deleteAdminFailure, deleteAdminSuccess, signOutAdminStart } from '../../redux/admin/adminSlice';
 
-const SidebarAdmin = () => {
+const SidebarAccountant = () => {
   const { user } = useSelector((state) => state.admin);
   const [showSidebar, setShowSidebar] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState("/");
@@ -83,42 +83,66 @@ const SidebarAdmin = () => {
           </div>
           <h2 className="text-xl font-bold mb-2 text-center">Dashboard</h2>
           <ul className="text-sm">
-            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'all-complaints' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('all-complaints')}>
-              <NavLink to="allcomplaints" className={({ isActive }) =>
+            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'singlebill' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('singlebill')}>
+              <NavLink to="singlebill" className={({ isActive }) =>
                 `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
               }>
                 <FaUser className="mr-2" />
-                <span className="font-inter">All Complaints</span>
+                <span className="font-inter">Single Bill</span>
               </NavLink>
             </li>
-            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'mark-leave' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('mark-leave')}>
-              <NavLink to="mark-leave" className={({ isActive }) =>
+            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'generate-bill' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('generate-bill')}>
+              <NavLink to="generate-bill" className={({ isActive }) =>
                 `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500 ' : 'text-gray-800'}`
               }>
                 <FaClipboardList className="mr-2" />
-                <span className="font-inter">Register Student Leave</span>
+                <span className="font-inter">Generate Bill</span>
               </NavLink>
             </li>
-            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'manage-mr' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('manage-mr')}>
-              <NavLink to="manage-mr" className={({ isActive }) =>
+            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'update-cost' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('update-cost')}>
+              <NavLink to="update-cost" className={({ isActive }) =>
                 `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
               }>
                 <FaFileInvoiceDollar className="mr-2" />
-                <span className="font-inter">Manage MR</span>
+                <span className="font-inter">Update cost</span>
               </NavLink>
             </li>
-            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'mess-menu' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('mess-menu')}>
-              <NavLink to="mess-menu" className={({ isActive }) =>
+            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'allbills' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('allbills')}>
+              <NavLink to="allbills" className={({ isActive }) =>
                 `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
               }>
                 <FaUtensils className="mr-2" />
-                <span className="font-inter">Mess Menu</span>
+                <span className="font-inter">All Bills</span>
+              </NavLink>
+            </li>
+            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'updateBill' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('updateBill')}>
+              <NavLink to="updateBill" className={({ isActive }) =>
+                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
+              }>
+                <FaUtensils className="mr-2" />
+                <span className="font-inter">Update Bill</span>
+              </NavLink>
+            </li>
+            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'expense' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('expense')}>
+              <NavLink to="expense" className={({ isActive }) =>
+                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
+              }>
+                <FaUtensils className="mr-2" />
+                <span className="font-inter">Expense</span>
+              </NavLink>
+            </li>
+            <li className={`hover:bg-gray-100 p-3 rounded-lg transition duration-200 ${selectedMenu === 'fest-charge' ? 'bg-gray-50 border-l-4 border-blue-500' : ''}`} onClick={() => setSelectedMenu('fest-charge')}>
+              <NavLink to="fest-charge" className={({ isActive }) =>
+                `flex items-center transition-colors duration-200 ${isActive ? 'text-blue-500' : 'text-gray-800'}`
+              }>
+                <FaUtensils className="mr-2" />
+                <span className="font-inter">Fest Charge</span>
               </NavLink>
             </li>
           </ul>
           <div className="mt-8 border-t pt-4">
             <div className="text-sm flex flex-col gap-4">
-              <Link to="/admin-landing/profile" className="flex items-center text-gray-800 hover:text-blue-500">
+              <Link to="/accountant-landing/profile" className="flex items-center text-gray-800 hover:text-blue-500">
                 <FaUserEdit className="mr-2" />
                 <span className="font-inter">Edit your Profile</span>
               </Link>
@@ -139,4 +163,4 @@ const SidebarAdmin = () => {
   );
 };
 
-export default SidebarAdmin;
+export default SidebarAccountant;

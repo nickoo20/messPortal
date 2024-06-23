@@ -14,8 +14,7 @@ import studentRepresentativeRoutes from './routes/studentRepresentative.route.js
 import { fileURLToPath } from 'url';
 import cors from 'cors' ;
 import path from 'path';
-import { v2 as cloudinary } from "cloudinary";
-
+import noticeRoutes from './routes/notice.route.js';
 // Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,40 +45,12 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()) ;
 
-// app.use(cors({
-//   origin:'http://localhost:3000',
-//   credentials: true,
-//   preflightContinue: false,
-//      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//     allowedHeaders: "Content-Type,Authorization",
-//     optionsSuccessStatus: 204
 
-// }));
-
-// }));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()) ;
 
-// app.use(cors({
-//   origin:'http://localhost:3000',
-//   credentials: true,
-//   preflightContinue: false,
-//      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//     allowedHeaders: "Content-Type,Authorization",
-//     optionsSuccessStatus: 204
 
-// }));
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000/");
-//   res.header("Access-Control-Allow-Credentials", true);
-//   if (req.method === "OPTIONS") {
-//     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-//     return res.status(200).json({});
-//   }
-//   next();
-// });
-// Routes
 app.use("/api/auth", authRoutes) ; 
 app.use('/api/admin', adminRoutes) ;
 app.use("/api/complaints", complaintRoutes) ;
@@ -88,20 +59,8 @@ app.use('/api/menu', menuRoutes) ;
 app.use("/api/bills",billsRoutes);
 app.use("/api/mark-leave",leaveRoutes);
 app.use("/api/expense",expenseRoutes);
-//app.use(cors());
-//app.use(express.json()) ;
-
-//app.use(express.urlencoded({ extended: true }));
-//app.use(cookieParser());
-//app.use("/api/auth", authRoutes) ; 
-//app.use('/api', verificationRoutes);
-//app.use('/api/',complaintRoutes);
-app.use('/api/mr/',studentRepresentativeRoutes);
-app.get("/", (req, res) => {
-    res.send({
-      message: "welcome to mess portal app",
-    });
-  });
+app.use("/api/notice",noticeRoutes);
+app.use('/api/mr',studentRepresentativeRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on localhost:${PORT}`) ;

@@ -23,7 +23,7 @@ router.post('/comment/:complaintId',authMiddleWare, commentOnComplaint) ;
 // Delete comment on complaint
 router.delete('/comment/:complaintId/:commentId',authMiddleWare,deleteComment) ;
 // See comments
-router.get('/comment/:complaintId',authMiddleWare,seeComments) ;
+router.get('/comment/:complaintId',AdminauthMiddleWare,seeComments) ;
 
 // Delete a complaint
 router.delete("/delete/:complaintId", authMiddleWare, deleteComplaint) ;

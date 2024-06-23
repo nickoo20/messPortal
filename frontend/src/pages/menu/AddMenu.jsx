@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const AddMenu = () => {
   const [month, setMonth] = useState("");
@@ -10,6 +12,7 @@ const AddMenu = () => {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const { currentUser } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate() ;
 
   const handleFileChange = (e) => {
@@ -51,8 +54,10 @@ const AddMenu = () => {
 
   return (
     <div className="min-h-screen">
+      <button className="txet-xl flex items-center" onClick={()=>navigate(-1)}>
+        <IoMdArrowRoundBack size={30}/>
+        <span className="italic text-blue-700">Go Back to Menu</span></button>
     <div className="flex flex-col items-center bg-gray-100 px-4 h-screen">
-      <button onClick={()=>navigate(-1)}>Go Back</button>
       <div className="bg-white p-6 rounded-lg w-full max-w-lg mt-20 border-r-4 border-green-300 shadow-md">
         <h1 className="text-md sm:text-2xl mb-6 mt-0 font-roboto text-right text-blue-700">Add New Menu </h1>
         <form onSubmit={handleSubmit} className="space-y-2">

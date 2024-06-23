@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { getRefresh } from "../redux/complaints/complaintSlice";
 import { useDispatch } from "react-redux";
 import Modal from '../components/Modal' // Import the Modal component
+import { GiClick } from "react-icons/gi";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -45,12 +46,13 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg max-w-md mx-auto mb-5 border-blue-300 border-b-4">
+    <div className="p-4 bg-white rounded-lg max-w-xs mx-auto mb-5 border-blue-300 border-b-4">
       <h1
-        className="text-md font-bold mb-2 italic text-center font-jakarta text-blue-700 cursor-pointer"
+        className="text-md font-bold mb-2 italic font-jakarta text-blue-700 cursor-pointer flex items-center justify-center"
         onClick={toggleModalVisibility}
       >
-        Write a Complaint... Click!
+        <span>Write a Complaint... </span>
+        <GiClick/>
       </h1>
       <Modal show={showModal} onClose={toggleModalVisibility}>
         <form onSubmit={handleSubmit}>

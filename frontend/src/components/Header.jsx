@@ -44,7 +44,7 @@ const Header = () => {
       }
       toast.success(res?.data.message);
       dispatch(deleteAdminSuccess(res?.data));
-      navigate('/login-warden');
+      navigate('/login-admin') ;
     } catch (error) {
       dispatch(deleteAdminFailure(error.message));
       console.log(error.message);

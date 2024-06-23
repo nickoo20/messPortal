@@ -10,18 +10,15 @@ const ExpenseSchema = new mongoose.Schema({
     type: String,
     required: [true, "Title is required"],
   },
-
   amount: {
     type: Number,
     required: [true, "Amount is required"],
     default: 0,
   },
-
   category: {
     type: String,
     required: [true, "Category is required"],
   },
-
   description: {
     type: String,
     required: [true, "Description is required"],
@@ -30,7 +27,6 @@ const ExpenseSchema = new mongoose.Schema({
 //     type: String,
 //     required: [true, "Transaction Type is required"],
 //   },
-
   date: {
     type: Date,
     required: [true, "Date is required"],

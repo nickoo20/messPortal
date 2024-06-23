@@ -5,7 +5,7 @@ import { useToast } from "@chakra-ui/react";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   signInFailure,
   signInStart,
@@ -14,6 +14,7 @@ import {
 import backgroundImage from "../../../assets/background.jpg"; // Adjust the path to your background image
 
 const LoginAdmin = () => {
+  const { user } = useSelector(state=>state.admin) ;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -61,7 +62,12 @@ const LoginAdmin = () => {
         duration: 3000,
         isClosable: true,
       });
-      navigate("/admin-landing/allcomplaints");
+      if(user.role === 'warden'){
+        navigate("/admin-landing/allcomplaints");
+      }
+      else{
+        navigate("/accountant-landing"); 
+      }
     } catch (error) {
       setErrorMessage("An error occurred during login. Please try again.");
       dispatch(signInFailure());
@@ -82,7 +88,7 @@ const LoginAdmin = () => {
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
         <div className="relative bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-          <h1 className="text-center text-xl font-semibold mb-4 text-blue-700 font-montserrat">
+          <h1 className="text-center text-xl font-semibold mb-2 text-blue-700 font-montserrat">
             Login now
           </h1>
           <div className="flex flex-col items-center justify-center gap-2">

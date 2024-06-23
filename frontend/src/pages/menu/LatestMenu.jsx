@@ -3,7 +3,7 @@ import axios from 'axios';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { MdOutlineFoodBank } from 'react-icons/md';
+import { IoAddCircle } from "react-icons/io5";
 
 const LatestMenu = () => {
     const [menu, setMenu] = useState(null);
@@ -46,9 +46,12 @@ const LatestMenu = () => {
                 {currentUser?.studentRep && (
             <Link
             to={'/student/dashboard/add-menu'}
-            className="block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full text-left"
+            className="block px-4 py-2 text-gray-800 bg-gray-100 w-full "
         >
-            Add New Menu
+            <div className='flex text-green-700 items-center justify-end gap-4'>
+            <span className='text-xl italic'>Add new Menu</span>
+            <IoAddCircle className='' size={42}/>
+            </div>
         </Link>
             )}
             </div>

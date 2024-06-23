@@ -35,6 +35,10 @@ const wardenSchema = new mongoose.Schema({
         enum: ['warden', 'accountant'],
         default: 'warden',
     },
+    // contactNumber: {
+    //     type:Number,
+    //     required:true,
+    // },
 }, {timeStamps:true}) ;
 
 const Warden = mongoose.model('Warden',wardenSchema); 

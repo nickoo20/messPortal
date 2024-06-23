@@ -71,9 +71,7 @@ const RegisterStudent = () => {
       });
       console.log(res);
       if (res?.data?.success) {
-        // Navigate to login page or show a success message
         toast.success(res?.data.message);
-        // navigate("/login-student");
       }
     } catch (error) {
       setErrors({ apiError: error.response?.data?.message || "Error in signup" });

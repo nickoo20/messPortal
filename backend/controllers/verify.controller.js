@@ -159,6 +159,7 @@ export const verifySelfAdminEmail = async (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
+    
     const roleType = admin.hostelName ? "Warden" : "Accountant";
     const adminDetails = admin.hostelName ? `<p>Hostel: ${admin.hostelName}</p>` : '';
 

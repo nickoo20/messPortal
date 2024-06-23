@@ -13,7 +13,7 @@ const Sidebar = ({ onSelectOption }) => {
         defaultValue=""
       >
         <option value="" disabled>
-          Select an option
+          Choose MR
         </option>
         <option value="remove">Remove MR</option>
         <option value="add">Add MR</option>

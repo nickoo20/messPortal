@@ -4,6 +4,51 @@ import { useSelector } from "react-redux";
 import { format } from "date-fns";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import LoadingSpinner from '../../components/LoadingSpinner'; 
+import { FaCommentDots } from "react-icons/fa";
+import { MdClose } from "react-icons/md";
+import { ImForward } from "react-icons/im";
+import { MdThumbUp } from "react-icons/md";
+import { BsFillSendFill } from "react-icons/bs";
+
+const Modal = ({ show, onClose, comments }) => {
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+      <div className="bg-white p-4 rounded-lg w-1/2">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Comments</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-800">
+            <MdClose size={25}/>
+          </button>
+        </div>
+        <div className="max-h-80 overflow-y-auto">
+          {comments?.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment._id} className="flex items-center justify-between bg-gray-50 mb-2 rounded-full border">
+                <div className="flex items-center">
+              <div  className="p-2 border-gray-400 text-xs ">
+                {comment.user.email}
+              </div>
+              <div className="p-2 text-sm border-gray-200">
+                {comment.text}
+              </div>
+              </div>
+              <div className="p-2 border-gray-200 text-xs">
+                {format(new Date(comment.createdAt), "PP p")}
+              </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-600">No comments found.</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const AllComplaints = () => {
   const { user } = useSelector((state) => state.admin);
@@ -15,7 +60,8 @@ const AllComplaints = () => {
   const [forwarding, setForwarding] = useState(false);
   const [resolving, setResolving] = useState(false);
   const [resolvingComplaintId, setResolvingComplaintId] = useState(null);
-  const [complaintComments, setComplaintComments] = useState({});
+  const [complaintComments, setComplaintComments] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -23,7 +69,6 @@ const AllComplaints = () => {
         const response = await axios.get("http://localhost:8080/api/complaints", {
           withCredentials: true,
         });
-        console.log(complaints) ;
         setComplaints(response.data.comp1);
       } catch (error) {
         console.error("Error fetching complaints", error);
@@ -37,7 +82,9 @@ const AllComplaints = () => {
     try {
       setResolving(true);
       setResolvingComplaintId(id);
-      await axios.patch(`http://localhost:8080/api/complaints/${id}`, { status });
+      await axios.patch(`http://localhost:8080/api/complaints/${id}`, { status }, {
+        withCredentials: true,
+      });
       setComplaints((prevComplaints) =>
         prevComplaints.map((complaint) =>
           complaint._id === id ? { ...complaint, status } : complaint
@@ -92,23 +139,20 @@ const AllComplaints = () => {
 
   const fetchComments = async (id) => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/complaints/comment/${id}`);
-      setComplaintComments((prevComments) => ({
-        ...prevComments,
-        [id]: res.data,
-      }));
-      console.log('fetchComments: ', res.data) ;
+      const res = await axios.get(`http://localhost:8080/api/complaints/comment/${id}`, {
+        withCredentials: true,
+      });
+      console.log('comments: ', res?.data) ;
+      setComplaintComments(res.data);
+      setShowModal(true);
     } catch (err) {
       console.log("Error fetching comments", err.message);
     }
   };
 
   const toggleComments = (id) => {
-    if (complaintComments[id]) {
-      setComplaintComments((prevComments) => ({
-        ...prevComments,
-        [id]: null,
-      }));
+    if (showModal) {
+      setShowModal(false);
     } else {
       fetchComments(id);
     }
@@ -122,8 +166,15 @@ const AllComplaints = () => {
     return <h1>You do not have permission to this page...</h1>;
   }
 
+  if (loading) {
+    return ( 
+    <div className='flex justify-center items-center min-h-screen'>
+        <LoadingSpinner />;
+    </div> 
+)}
+
   return (
-    <div className="min-h-screen p-4 pt-0">
+    <div className="min-h-screen p-4 pt-4 bg-gray-100">
       {notification.message && (
         <div
           className={`${
@@ -133,60 +184,104 @@ const AllComplaints = () => {
           {notification.message}
         </div>
       )}
-      <h1 className="text-2xl font-bold mb-6 text-red-800 font-jakarta">All Complaints</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mx-auto">
-        {complaints.length > 0 ? (
+      <h1 className="text-3xl font-bold mb-6 text-red-800 font-jakarta text-center">All Complaints</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mx-auto">
+        {complaints?.length > 0 ? (
           complaints.map((complaint) => (
-            <div key={complaint._id} className="bg-white hover:border-b-2 border-l-4 border-r-4 rounded-lg p-6 mb-4">
-              <div className="text-gray-500 text-sm my-1">
-                {format(new Date(complaint.createdAt), "PP p")}
-              </div>
-              <h2 className="text-md font-inter font-semibold text-gray-800 ">
+            <div key={complaint._id} 
+            className="max-w-sm min-h-[300px] border shadow-md hover:border-b-4 bg-white rounded-md p-6 flex flex-col cursor-pointer hover:opacity-95">
+              <div className="flex items-center justify-between">
+              <h2 className="text-lg font-inter font-semibold text-gray-800 ">
                 {complaint.title}
               </h2>
-              <p className="text-gray-700 p-2 rounded-lg">
-                {complaint.description}
-              </p>
-              <div className="flex justify-between items-center">
-                <div className="text-sm text-gray-600 mt-4 flex items-center">
+              <div className="text-gray-500  text-xs my-1">
+                {format(new Date(complaint.createdAt), "PP ")}
+              </div>
+              </div>
+              <div className="flex gap-4 items-center my-2">
+                <div className="text-sm text-gray-600  flex items-center">
                   <div className="flex items-center mr-4 text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                    <AiFillLike size={20} className="mr-1" />
+                    <AiFillLike size={18} className="mr-1" />
                     <span>{complaint.upvotes.length}</span>
                   </div>
                   <div className="flex items-center text-red-500 hover:text-red-700 transition-colors duration-200">
-                    <AiFillDislike size={20} className="mr-1" />
+                    <AiFillDislike size={18} className="mr-1" />
                     <span>{complaint.downvotes.length}</span>
                   </div>
                 </div>
+                <div className="flex items-center gap-1">
                 <button
                   onClick={() => toggleComments(complaint._id)}
-                  className="text-blue-500 hover:underline"
+                  className="text-gray-500 "
                 >
-                  {complaintComments[complaint._id] ? "Hide Comments" : "Show Comments"}
+                  <FaCommentDots size={18}/>
                 </button>
+                  <div className="text-xs">{complaint.comments.length}</div>
+                </div>
               </div>
-              <div className="mt-4 flex flex-col md:flex-row justify-evenly items-center">
+              <p className="text-gray-700 font-inter text-sm ">
+                {complaint.description}
+              </p>
+              <div className="mt-4 flex items-center">
                 <button
                   onClick={() => handleStatusChange(complaint._id, "resolved")}
-                  className=" font-mono rounded-full px-4 py-1 mr-2 text-sm bg-green-500 text-white"
+                  className="font-roboto text-xs rounded-full px-2 py-1 mr-2 border border-green-500 text-green-700"
                 >
                   {resolving && resolvingComplaintId === complaint._id ? (
                     <LoadingSpinner />
                   ) : (
-                    <span>Resolve</span>
+                    <div className="flex items-center gap-1">
+                    <span>Resolve now</span>
+                    <MdThumbUp size={15}/>
+                    </div>
                   )}
                 </button>
                 <button
                   onClick={() => handleForwardClick(complaint._id)}
-                  className="bg-red-500 text-white font-mono hover:opacity-85 rounded-full px-4 py-1 text-sm"
+                  className=" border-red-500 border flex items-center gap-2 text-xs text-red-700 font-roboto hover:opacity-85 rounded-full px-2 py-1"
                 >
-                  Forward
+                  <span>Forward </span>
+                  <ImForward size={15}/>
                 </button>
               </div>
-              <div className="flex items-center gap-4 mt-2 ">
-                <div className="font-semibold text-gray-800 mt-2 text-sm">Status: </div>
+              
+              {selectedComplaint === complaint._id && (
+                <div className="mt-2">
+                  <p>
+                    <label htmlFor="comments" className="text-gray-600 font-semibold text-sm italic">Write an attached message to DSW :</label>
+                  </p>
+                  <div className="flex items-center mr-10 justify-between mt-2">
+                    <textarea
+                      id="comments"
+                      name="comment"
+                      value={comment}
+                      onChange={handleCommentChange}
+                      rows="2"
+                      cols="20"
+                      className="border rounded-md p-2 focus:outline-none"
+                    ></textarea>
+                    <button
+                      onClick={() => handleSendClick(complaint._id)}
+                      className="bg-blue-500 text-white p-2 font-mono rounded-full mt-2 hover:bg-blue-600 hover:opacity-95"
+                    >
+                      {!forwarding ? (
+                        <div className="text-xs flex items-center gap-2">
+                          <span>Send</span>
+                          <BsFillSendFill size={10}/>
+                          </div>
+                      ) : (
+                        <div className="flex justify-center items-center">
+                          <LoadingSpinner />
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
+              <div className="flex items-center gap-4 mt-2">
+                <div className="font-semibold text-gray-600 text-sm">Status: </div>
                 <div
-                  className={` border rounded-full px-2 text-sm font-mono ${
+                  className={`border-r-4 border-b-2 rounded-full shadow-sm px-2 py-1 italic text-xs font-mono ${
                     complaint.status === "pending"
                       ? "text-yellow-700 border-yellow-500"
                       : complaint.status === "resolved"
@@ -197,51 +292,17 @@ const AllComplaints = () => {
                   {complaint.status}
                 </div>
               </div>
-              {selectedComplaint === complaint._id && (
-                <div className="mt-4">
-                  <p>
-                    <label htmlFor="comments" className="font-semibold text-sm">Your Comment:</label>
-                  </p>
-                  <div className="flex items-center justify-between my-1">
-                    <textarea
-                      id="comments"
-                      name="comment"
-                      value={comment}
-                      onChange={handleCommentChange}
-                      rows="2"
-                      cols="30"
-                      className="border rounded-xl p-2 focus:outline-none"
-                    ></textarea>
-                    <button
-                      onClick={() => handleSendClick(complaint._id)}
-                      className="bg-blue-500 w-1/4 text-white px-2 py-1 font-mono rounded-lg mt-2 hover:bg-blue-600 hover:opacity-95"
-                    >
-                      {!forwarding ? (
-                        <span className="text-sm">Send</span>
-                      ) : (
-                        <div className="flex justify-center items-center">
-                          <LoadingSpinner />
-                        </div>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )}
-              {complaintComments[complaint._id] && (
-                <div className="mt-4">
-                  {complaintComments[complaint._id].map((comment) => (
-                    <div key={comment._id} className="p-2 border-b border-gray-200">
-                      {comment.text}
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           ))
         ) : (
-          <p className="text-gray-600 text-lg">No complaints found.</p>
+          <p className="text-gray-600 text-lg italic text-center">No complaints found.</p>
         )}
       </div>
+      <Modal 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        comments={complaintComments} 
+      />
     </div>
   );
 };

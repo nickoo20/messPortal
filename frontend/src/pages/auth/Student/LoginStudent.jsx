@@ -86,7 +86,7 @@ const LoginStudent = () => {
         {/* Overlay */}
         <div className="absolute inset-0 bg-black opacity-50"></div>
         <div className="relative bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
-          <h2 className="text-xl font-semibold mb-4 text-blue-700 ">
+          <h2 className="text-xl font-semibold mb-2 text-blue-700 text-center">
             Login now 
           </h2>
           <div className="flex flex-col items-center justify-center gap-2">
