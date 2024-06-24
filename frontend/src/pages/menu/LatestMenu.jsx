@@ -2,15 +2,14 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { IoAddCircle } from "react-icons/io5";
+import { Link } from 'react-router-dom';
+import { IoAddCircle } from 'react-icons/io5';
 
 const LatestMenu = () => {
     const [menu, setMenu] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [showDropdown, setShowDropdown] = useState(false); // State to manage dropdown visibility
-    const { currentUser } = useSelector(state=>state.user) ;
+    const { currentUser } = useSelector(state => state.user);
 
     useEffect(() => {
         const fetchLatestMenu = async () => {
@@ -27,40 +26,38 @@ const LatestMenu = () => {
         fetchLatestMenu();
     }, []);
 
-    const toggleDropdown = () => {
-        setShowDropdown(!showDropdown);
-    };
-
     if (loading) {
-        return ( 
-        <div className='flex justify-center items-center min-h-screen'>
-            <LoadingSpinner />;
-        </div> 
-    )}
-    if (error) return <p className="text-center text-red-500">{error}</p>;
-    if (!menu) return <p className="text-center text-gray-500">No menu available</p>;
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <LoadingSpinner />
+            </div>
+        );
+    }
+
+    if (error) {
+        return <p className="text-center text-red-500">{error}</p>;
+    }
+
+    if (!menu) {
+        return <p className="text-center text-gray-500">No menu available</p>;
+    }
 
     return (
-        <div>
-            <div>
-                {currentUser?.studentRep && (
-            <Link
-            to={'/student/dashboard/add-menu'}
-            className="block px-4 py-2 text-gray-800 bg-gray-100 w-full "
-        >
-            <div className='flex text-green-700 items-center justify-end gap-4'>
-            <span className='text-xl italic'>Add new Menu</span>
-            <IoAddCircle className='' size={42}/>
-            </div>
-        </Link>
-            )}
-            </div>
-        <div className="flex flex-col items-center min-h-screen bg-gray-100 py-6 px-6">
-            <div className="max-w-lg w-full bg-white p-8 rounded-lg shadow-md border-r-4 border-yellow-300 mt-20">
-                <h1 className="text-2xl font-bold mb-6 text-blue-800">Latest Menu</h1>
+        <div className="min-h-screen bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-screen-lg mx-auto bg-white rounded-lg shadow-md border-r-4 border-yellow-300 p-6 md:p-8">
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl md:text-3xl font-bold text-blue-800">Latest Menu</h1>
+                    {currentUser?.studentRep && (
+                        <Link to={'/student/dashboard/add-menu'} className="p-2 hover:rounded-full hover:bg-gray-100 md:w-auto">
+                            <div className="flex items-center justify-end gap-2">
+                                <IoAddCircle size={40} className="text-green-700" />
+                            </div>
+                        </Link>
+                    )}
+                </div>
                 <div className="space-y-4">
-                    <h2 className="text-xl font-semibold text-gray-500">{`Menu for ${menu.month}/${menu.year}`}</h2>
-                    <p className="whitespace-pre-line text-red-700 font-semibold">{menu.menu}</p>
+                    <h2 className="text-xl md:text-2xl font-semibold text-gray-500">{`Menu for ${menu.month}/${menu.year}`}</h2>
+                    <p className="whitespace-pre-line text-red-700 font-semibold leading-normal">{menu.menu}</p>
                     {menu.pdfPath && (
                         <div className="mt-4 text-center">
                             <a
@@ -76,7 +73,6 @@ const LatestMenu = () => {
                     )}
                 </div>
             </div>
-        </div>
         </div>
     );
 };

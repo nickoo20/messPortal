@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useLocation,Link} from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import { IoCheckmarkCircleOutline } from "react-icons/io5";
 
-
-const VerifyEmailStudent = () => {
+const VerifyEmailWarden = () => {
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true); // State to manage loading
   const location = useLocation();
 
-  
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const token = query.get('token');
@@ -24,6 +25,8 @@ const VerifyEmailStudent = () => {
       } catch (error) {
         setMessage('Error verifying user.');
         console.error('Error verifying email:', error.message);
+      } finally {
+        setLoading(false); // Set loading to false after request is complete
       }
     };
 
@@ -31,29 +34,37 @@ const VerifyEmailStudent = () => {
       verifyEmail();
     } else {
       setMessage('Invalid verification link.');
+      setLoading(false); // Set loading to false if no token
     }
   }, [location]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-r from-gray-100 to-gray-300">
-    <Header />
-    <div className="flex justify-center items-center flex-1">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md text-center">
-        <h1 className="text-3xl font-bold mb-4 text-blue-800">self-email verified!</h1>
-        <p className={`text-lg ${message.includes('Error') || message.includes('Invalid') ? 'text-red-600' : 'text-green-600'}`}>
-          {message}
-        </p>
-        <p className="mt-4 text-gray-700">
-          Once the DSW verifies you as a warden, you will be able to log in.
-        </p>
-        <p className="mt-6">
-          <Link to='/' className='text-blue-600 underline'>Go to Home</Link>
-        </p>
+    <div className="flex flex-col min-h-screen bg-white">
+      <Header />
+      <div className="flex justify-center items-center flex-1">
+        {loading ? (
+          <LoadingSpinner /> // Show spinner while loading
+        ) : (
+          <div className="flex flex-col gap-2 items-center justify-center">
+            <div>
+              <IoCheckmarkCircleOutline size={40} className='text-green-400'/>
+            </div>
+            <h1 className="text-xl font-bold text-blue-800">self-email verified!</h1>
+            <p className={`text-md ${message.includes('Error') || message.includes('Invalid') ? 'text-red-600' : 'text-green-600'}`}>
+              {message}
+            </p>
+            <p className=" text-gray-700">
+              Once the DSW verifies you as a warden, you will be able to log in.
+            </p>
+            <p className="">
+              <Link to='/' className='text-blue-600 underline'>Go to Home</Link>
+            </p>
+          </div>
+        )}
       </div>
+      <Footer />
     </div>
-    <Footer />
-  </div>
   );
 };
 
-export default VerifyEmailStudent;
+export default VerifyEmailWarden;

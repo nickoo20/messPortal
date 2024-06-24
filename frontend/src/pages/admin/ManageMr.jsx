@@ -9,7 +9,7 @@ const ManageMr = () => {
   const [selectedOption, setSelectedOption] = useState('remove');
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [text, setText] = useState("Remove MR");
+  const [text, setText] = useState('Remove MR');
 
   useEffect(() => {
     fetchStudents();
@@ -21,7 +21,7 @@ const ManageMr = () => {
       const response = await axios.get('http://localhost:8080/api/mr/all');
       setStudents(response.data);
       setLoading(false);
-      if (response.data.length === 0) setText("No MR assigned");
+      if (response.data.length === 0) setText('No MR assigned');
     } catch (error) {
       console.error('Error fetching students:', error);
       setLoading(false);
@@ -64,9 +64,11 @@ const ManageMr = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-100 p-6">
-      <Sidebar onSelectOption={handleSelectOption} />
-      <div className="flex-grow ml-6">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100 p-6">
+      <div className="md:w-60">
+        <Sidebar onSelectOption={handleSelectOption} />
+      </div>
+      <div className="flex-grow ml-0 md:ml-6 mt-6 md:mt-0">
         <MainContentAdmin
           selectedOption={selectedOption}
           students={students}

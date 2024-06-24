@@ -34,7 +34,6 @@ const CreatePost = () => {
       );
       setLoading(false);
       dispatch(getRefresh());
-      toast.success("Complaint created successfully!");
       // Reset the form
       setTitle("");
       setDescription("");

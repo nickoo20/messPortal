@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
@@ -7,6 +7,7 @@ import Footer from "../../../components/Footer";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  loginAdmin,
   signInFailure,
   signInStart,
   signInSuccess,
@@ -14,7 +15,7 @@ import {
 import backgroundImage from "../../../assets/background.jpg"; // Adjust the path to your background image
 
 const LoginAdmin = () => {
-  const { user } = useSelector(state=>state.admin) ;
+  const { user } = useSelector((state) => state.admin);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -34,7 +35,7 @@ const LoginAdmin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       dispatch(signInStart());
       const res = await axios.post(
@@ -47,14 +48,17 @@ const LoginAdmin = () => {
           withCredentials: true,
         }
       );
+  
       console.log(res.data);
+  
       if (res.data.success === false) {
         setErrorMessage("Invalid credentials. Please try again.");
         dispatch(signInFailure());
         return;
       }
+  
       dispatch(signInSuccess(res?.data.admin));
-
+      // dispatch(loginAdmin()) ;
       toast({
         title: "Login Success!",
         description: "You have successfully logged in.",
@@ -62,22 +66,36 @@ const LoginAdmin = () => {
         duration: 3000,
         isClosable: true,
       });
-      if(user.role === 'warden'){
-        navigate("/admin-landing/allcomplaints");
-      }
-      else{
-        navigate("/accountant-landing"); 
-      }
+  
+      // Move navigation logic after state updates
+      setTimeout(() => {  // Use setTimeout to ensure state updates are processed
+        if (user.role === "warden") {
+          navigate("/admin-landing/allcomplaints");
+        } else {
+          navigate("/accountant-landing/allbills");
+        }
+      }, 0);
     } catch (error) {
-      setErrorMessage("An error occurred during login. Please try again.");
+      console.error("Error during login:", error);
+      setErrorMessage("Invalid Credentials!");
       dispatch(signInFailure());
-      console.log(error.message);
     }
   };
+  
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  useEffect(() => {
+    if (user) {
+      if (user.role === "warden") {
+        navigate("/admin-landing/allcomplaints");
+      } else {
+        navigate("/accountant-landing/allbills");
+      }
+    }
+  }, [user, navigate]);
 
   return (
     <div className="flex flex-col bg-gradient-to-r from-gray-300 to-gray-600 min-h-screen">
@@ -87,9 +105,9 @@ const LoginAdmin = () => {
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
         <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+        <div className="relative bg-gray-50 shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
           <h1 className="text-center text-xl font-semibold mb-2 text-blue-700 font-montserrat">
-            Login now
+            Admin Login
           </h1>
           <div className="flex flex-col items-center justify-center gap-2">
             {errorMessage && (
@@ -97,8 +115,9 @@ const LoginAdmin = () => {
             )}
             <form
               onSubmit={handleSubmit}
-              className="w-full flex flex-col gap-2 items-center justify-center font-jakarta"
+              className="w-full flex flex-col gap-2 text-sm justify-center font-jakarta"
             >
+              <div>Enter your account details: </div>
               <input
                 type="email"
                 name="email"
@@ -132,7 +151,7 @@ const LoginAdmin = () => {
                 <select
                   id="role"
                   name="role"
-                  value={formData.role}
+                  value={formData?.role}
                   onChange={handleChange}
                   className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
                 >

@@ -117,7 +117,6 @@ const billForALL=async (req, res) => {
       {billPerDay=bills.billPerDay;
        //serviceCharge=bills.serviceCharge;
       }
-      console.log("in the controller");
       let {registrationNumber}=req.user;
       console.log(registrationNumber)
       registrationNumber=parseInt(registrationNumber,10)

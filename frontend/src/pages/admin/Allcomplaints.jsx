@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { format } from "date-fns";
@@ -17,7 +17,7 @@ const Modal = ({ show, onClose, comments }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-4 rounded-lg w-1/2">
+      <div className="bg-white p-4 rounded-lg w-full sm:w-1/2 lg:w-2/5 xl:w-1/3">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Comments</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-800">
@@ -29,16 +29,16 @@ const Modal = ({ show, onClose, comments }) => {
             comments.map((comment) => (
               <div key={comment._id} className="flex items-center justify-between bg-gray-50 mb-2 rounded-full border">
                 <div className="flex items-center">
-              <div  className="p-2 border-gray-400 text-xs ">
-                {comment.user.email}
-              </div>
-              <div className="p-2 text-sm border-gray-200">
-                {comment.text}
-              </div>
-              </div>
-              <div className="p-2 border-gray-200 text-xs">
-                {format(new Date(comment.createdAt), "PP p")}
-              </div>
+                  <div className="p-2 border-gray-400 text-xs">
+                    {comment.user.email}
+                  </div>
+                  <div className="p-2 text-sm border-gray-200">
+                    {comment.text}
+                  </div>
+                </div>
+                <div className="p-2 border-gray-200 text-xs">
+                {format(new Date(comment.createdAt), "dd MMM")}
+                </div>
               </div>
             ))
           ) : (
@@ -56,8 +56,10 @@ const AllComplaints = () => {
   const [comment, setComment] = useState("");
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
-  const [loading, setLoading] = useState(false);
-  const [forwarding, setForwarding] = useState(false);
+  const [loadingComplaints, setLoadingComplaints] = useState(false);
+  const [loadingForwarding, setLoadingForwarding] = useState(false);
+  const [loadingSendingComment, setLoadingSendingComment] = useState(false);
+  const [loadingFetchingComments, setLoadingFetchingComments] = useState(false);
   const [resolving, setResolving] = useState(false);
   const [resolvingComplaintId, setResolvingComplaintId] = useState(null);
   const [complaintComments, setComplaintComments] = useState([]);
@@ -65,6 +67,7 @@ const AllComplaints = () => {
 
   useEffect(() => {
     const fetchComplaints = async () => {
+      setLoadingComplaints(true);
       try {
         const response = await axios.get("http://localhost:8080/api/complaints", {
           withCredentials: true,
@@ -72,6 +75,9 @@ const AllComplaints = () => {
         setComplaints(response.data.comp1);
       } catch (error) {
         console.error("Error fetching complaints", error);
+        setNotification({ message: "Failed to fetch complaints", type: "error" });
+      } finally {
+        setLoadingComplaints(false);
       }
     };
 
@@ -91,11 +97,10 @@ const AllComplaints = () => {
         )
       );
       setNotification({ message: "Status updated successfully!", type: "success" });
-      setResolving(false);
-      setResolvingComplaintId(null);
     } catch (error) {
       console.error("Error updating status", error);
       setNotification({ message: "Failed to update status", type: "error" });
+    } finally {
       setResolving(false);
       setResolvingComplaintId(null);
     }
@@ -111,8 +116,7 @@ const AllComplaints = () => {
 
   const handleSendClick = async (complaintId) => {
     try {
-      setForwarding(true);
-      setLoading(true);
+      setLoadingSendingComment(true);
       await axios.put(
         `http://localhost:8080/api/complaints/escalate/${complaintId}`,
         { comment },
@@ -126,27 +130,27 @@ const AllComplaints = () => {
       setNotification({ message: "Comment sent successfully!", type: "success" });
       setComment(""); // Clear the comment field
       handleStatusChange(complaintId, "escalated");
-      setLoading(false);
-      setForwarding(false);
-      setSelectedComplaint(null); // Reset after sending
     } catch (error) {
-      setLoading(false);
-      setForwarding(false);
       console.error("Error sending comment", error);
       setNotification({ message: "Failed to send comment", type: "error" });
+    } finally {
+      setLoadingSendingComment(false);
+      setSelectedComplaint(null); // Reset after sending
     }
   };
 
   const fetchComments = async (id) => {
+    setLoadingFetchingComments(true);
     try {
       const res = await axios.get(`http://localhost:8080/api/complaints/comment/${id}`, {
         withCredentials: true,
       });
-      console.log('comments: ', res?.data) ;
       setComplaintComments(res.data);
       setShowModal(true);
     } catch (err) {
       console.log("Error fetching comments", err.message);
+    } finally {
+      setLoadingFetchingComments(false);
     }
   };
 
@@ -166,12 +170,13 @@ const AllComplaints = () => {
     return <h1>You do not have permission to this page...</h1>;
   }
 
-  if (loading) {
-    return ( 
-    <div className='flex justify-center items-center min-h-screen'>
-        <LoadingSpinner />;
-    </div> 
-)}
+  if (loadingComplaints) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-4 pt-4 bg-gray-100">
@@ -184,19 +189,23 @@ const AllComplaints = () => {
           {notification.message}
         </div>
       )}
-      <h1 className="text-3xl font-bold mb-6 text-red-800 font-jakarta text-center">All Complaints</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-red-800 font-jakarta text-center">
+        All Complaints
+      </h1>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {complaints?.length > 0 ? (
           complaints.map((complaint) => (
-            <div key={complaint._id} 
-            className="max-w-sm min-h-[300px] border shadow-md hover:border-b-4 bg-white rounded-md p-6 flex flex-col cursor-pointer hover:opacity-95">
+            <div
+              key={complaint._id}
+              className="max-w-sm min-h-[300px] border shadow-md hover:border-b-4 bg-white rounded-md p-6 flex flex-col cursor-pointer hover:opacity-95"
+            >
               <div className="flex items-center justify-between">
-              <h2 className="text-lg font-inter font-semibold text-gray-800 ">
-                {complaint.title}
-              </h2>
-              <div className="text-gray-500  text-xs my-1">
-                {format(new Date(complaint.createdAt), "PP ")}
-              </div>
+                <h2 className="text-lg font-inter font-semibold text-gray-800">
+                  {complaint.title}
+                </h2>
+                <div className="text-gray-500  text-xs my-1">
+                  {format(new Date(complaint.createdAt), "dd MMM")}
+                </div>
               </div>
               <div className="flex gap-4 items-center my-2">
                 <div className="text-sm text-gray-600  flex items-center">
@@ -210,12 +219,12 @@ const AllComplaints = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
-                <button
-                  onClick={() => toggleComments(complaint._id)}
-                  className="text-gray-500 "
-                >
-                  <FaCommentDots size={18}/>
-                </button>
+                  <button
+                    onClick={() => toggleComments(complaint._id)}
+                    className="text-gray-500 "
+                  >
+                    <FaCommentDots size={18} />
+                  </button>
                   <div className="text-xs">{complaint.comments.length}</div>
                 </div>
               </div>
@@ -231,8 +240,8 @@ const AllComplaints = () => {
                     <LoadingSpinner />
                   ) : (
                     <div className="flex items-center gap-1">
-                    <span>Resolve now</span>
-                    <MdThumbUp size={15}/>
+                      <span>Resolve now</span>
+                      <MdThumbUp size={15} />
                     </div>
                   )}
                 </button>
@@ -241,14 +250,19 @@ const AllComplaints = () => {
                   className=" border-red-500 border flex items-center gap-2 text-xs text-red-700 font-roboto hover:opacity-85 rounded-full px-2 py-1"
                 >
                   <span>Forward </span>
-                  <ImForward size={15}/>
+                  <ImForward size={15} />
                 </button>
               </div>
-              
+
               {selectedComplaint === complaint._id && (
                 <div className="mt-2">
                   <p>
-                    <label htmlFor="comments" className="text-gray-600 font-semibold text-sm italic">Write an attached message to DSW :</label>
+                    <label
+                      htmlFor="comments"
+                      className="text-gray-600 font-semibold text-sm italic"
+                    >
+                      Write an attached message to DSW :
+                    </label>
                   </p>
                   <div className="flex items-center mr-10 justify-between mt-2">
                     <textarea
@@ -264,15 +278,13 @@ const AllComplaints = () => {
                       onClick={() => handleSendClick(complaint._id)}
                       className="bg-blue-500 text-white p-2 font-mono rounded-full mt-2 hover:bg-blue-600 hover:opacity-95"
                     >
-                      {!forwarding ? (
+                      {!loadingSendingComment ? (
                         <div className="text-xs flex items-center gap-2">
                           <span>Send</span>
-                          <BsFillSendFill size={10}/>
-                          </div>
-                      ) : (
-                        <div className="flex justify-center items-center">
-                          <LoadingSpinner />
+                          <BsFillSendFill size={10} />
                         </div>
+                      ) : (
+                        <LoadingSpinner />
                       )}
                     </button>
                   </div>
@@ -295,13 +307,15 @@ const AllComplaints = () => {
             </div>
           ))
         ) : (
-          <p className="text-gray-600 text-lg italic text-center">No complaints found.</p>
+          <p className="text-gray-600 text-lg italic text-center">
+            No complaints found.
+          </p>
         )}
       </div>
-      <Modal 
-        show={showModal} 
-        onClose={() => setShowModal(false)} 
-        comments={complaintComments} 
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        comments={complaintComments}
       />
     </div>
   );

@@ -3,27 +3,17 @@
 import User from '../models/user.model.js'
 
 export const makeStudentRepresentative = async (req, res) => {
-  console.log("in the cont")
-  console.log(req.params.registrationNumber)
     const registrationNumber = parseInt(req.params.registrationNumber,10);
-  
-  // const registrationNumber=;
-  console.log(registrationNumber) ;
   const user = await User.findOne( {registrationNumber} );
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
   }
-  console.log(user)
   try {
-    // const u1=await User.find({})
-    // console.log(u1);
     const user = await User.findOneAndUpdate(
        {registrationNumber},
       { studentRep: true },
       { new: true } // Return the updated document
     );
-    console.log(user);
-
     res.json({ message: 'User updated successfully', user });
   } catch (error) {
     console.error(error);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const ExpenseManager = () => {
   const [expenses, setExpenses] = useState([]);
@@ -15,8 +16,10 @@ const ExpenseManager = () => {
   });
   const [searchHostelName, setSearchHostelName] = useState(null);
   const [isAddExpenseFormVisible, setAddExpenseFormVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fetchExpenses = async (searchHostelName) => {
+    setLoading(true);
     try {
       if (searchHostelName) {
         const res = await axios.post('http://localhost:8080/api/expense/single-hostel-expense', {
@@ -31,6 +34,7 @@ const ExpenseManager = () => {
       console.error(error);
       toast.error('Failed to fetch expenses');
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -39,6 +43,7 @@ const ExpenseManager = () => {
 
   const handleAddExpense = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post('http://localhost:8080/api/expense', newExpense);
       toast.success('Expense added successfully!');
@@ -56,9 +61,11 @@ const ExpenseManager = () => {
       console.error(error);
       toast.error('Failed to add expense');
     }
+    setLoading(false);
   };
 
   const handleDeleteExpense = async (id) => {
+    setLoading(true);
     try {
       await axios.delete(`http://localhost:8080/api/expense/delete-expense/${id}`);
       toast.success('Expense deleted successfully!');
@@ -67,6 +74,7 @@ const ExpenseManager = () => {
       console.error(error);
       toast.error('Failed to delete expense');
     }
+    setLoading(false);
   };
 
   const handleSearch = (e) => {
@@ -151,7 +159,7 @@ const ExpenseManager = () => {
         </div>
       )}
 
-      <div className="bg-white p-8 rounded-lg shadow-md mb-4">
+      <div className="bg-white p-8 rounded-lg shadow-md mb-4 w-full max-w-4xl">
         <form onSubmit={handleSearch} className="mb-4 flex items-center">
           <select
             id="searchHostelName"
@@ -173,39 +181,45 @@ const ExpenseManager = () => {
             Search
           </button>
         </form>
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Title</th>
-              <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Hostel</th>
-              <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Amount</th>
-              <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Category</th>
-              <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Description</th>
-              <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Date</th>
-              <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {expenses.map((expense) => (
-              <tr key={expense._id}>
-                <td className="py-2 px-4 border-b border-gray-300">{expense.title}</td>
-                <td className="py-2 px-4 border-b border-gray-300">{expense.HostelName}</td>
-                <td className="py-2 px-4 border-b border-gray-300">Rs. {expense.amount}</td>
-                <td className="py-2 px-4 border-b border-gray-300">{expense.category}</td>
-                <td className="py-2 px-4 border-b border-gray-300">{expense.description}</td>
-                <td className="py-2 px-4 border-b border-gray-300">{new Date(expense.date).toLocaleDateString()}</td>
-                <td className="py-2 px-4 border-b border-gray-300">
-                  <button
-                    onClick={() => handleDeleteExpense(expense._id)}
-                    className="text-red-500 hover:text-red-700 transition duration-300"
-                  >
-                    <RiDeleteBin6Fill size={24} />
-                  </button>
-                </td>
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <LoadingSpinner />
+          </div>
+        ) : (
+          <table className="min-w-full bg-white">
+            <thead>
+              <tr>
+                <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Title</th>
+                <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Hostel</th>
+                <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Amount</th>
+                <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Category</th>
+                <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Description</th>
+                <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Date</th>
+                <th className="py-2 px-4 border-b-2 border-gray-300 text-left leading-tight text-gray-600">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {expenses.map((expense) => (
+                <tr key={expense._id}>
+                  <td className="py-2 px-4 border-b border-gray-300">{expense.title}</td>
+                  <td className="py-2 px-4 border-b border-gray-300">{expense.HostelName}</td>
+                  <td className="py-2 px-4 border-b border-gray-300">Rs. {expense.amount}</td>
+                  <td className="py-2 px-4 border-b border-gray-300">{expense.category}</td>
+                  <td className="py-2 px-4 border-b border-gray-300">{expense.description}</td>
+                  <td className="py-2 px-4 border-b border-gray-300">{new Date(expense.date).toLocaleDateString()}</td>
+                  <td className="py-2 px-4 border-b border-gray-300">
+                    <button
+                      onClick={() => handleDeleteExpense(expense._id)}
+                      className="text-red-500 hover:text-red-700 transition duration-300"
+                    >
+                      <RiDeleteBin6Fill size={24} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

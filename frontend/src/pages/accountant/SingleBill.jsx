@@ -68,92 +68,103 @@ const StudentBill = () => {
     : null;
 
   return (
-    <div className="mt-20 p-4 max-w-3xl mx-auto shadow-md rounded-lg min-h-screen">
-      <h1 className="text-2xl font-bold mb-6 text-center">Calculate Student Bill</h1>
-      <form onSubmit={handleFetchBill} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Registration Number:
-            <div className="relative flex items-center w-full group mt-2">
-              <input
-                type="text"
-                value={registrationNumber}
-                onChange={(e) => setRegistrationNumber(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                required
-              />
-              <div className="ml-2 flex items-center">
-                <FaInfoCircle className="text-gray-500 cursor-pointer" />
-                <div className="absolute bottom-8 left-0 w-64 p-2 bg-white border border-gray-300 rounded-md shadow-md text-xs text-gray-700 hidden group-hover:flex flex-col">
-                  <div>(e.g., Write in format <span className="text-green-700">20200832</span> from <span className="text-green-700">2020</span>NITSGR<span className="text-green-700">0832</span>)</div>
+    <div className='min-h-screen bg-gray-50 py-6 flex flex-col justify-center sm:py-12'>
+      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-10">
+          <div className="max-w-xl mx-auto">
+            <h1 className="text-2xl font-bold mb-6 text-center">Calculate Student Bill</h1>
+            <form onSubmit={handleFetchBill} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="registrationNumber"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Registration Number in format: <span className="text-blue-700 font-medium">20200832</span> from <span className="text-blue-700 font-medium"> 2020</span>-NITSGR-<span className="text-blue-700 font-medium">0832</span>
+                </label>
+                <div className="relative flex items-center w-full group mt-2">
+                  <input
+                    type="text"
+                    value={registrationNumber}
+                    onChange={(e) => setRegistrationNumber(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required
+                  />
+                  <div className="ml-2 flex items-center">
+                    <FaInfoCircle className="text-gray-500 cursor-pointer" />
+                    <div className="absolute bottom-8 left-0 w-64 p-2 bg-white border border-gray-300 rounded-md shadow-md text-xs text-gray-700 hidden group-hover:flex flex-col">
+                      <div>(e.g., Write in format <span className="text-green-700">20200832</span> from <span className="text-green-700">2020</span>NITSGR<span className="text-green-700">0832</span>)</div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </label>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Month:
-            <input
-              type="text"
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Year:
-            <input
-              type="text"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              required
-            />
-          </label>
-        </div>
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300">
-          Get Bill
-        </button>
-      </form>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Month:
+                  <input
+                    type="text"
+                    value={month}
+                    onChange={(e) => setMonth(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required
+                  />
+                </label>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Year:
+                  <input
+                    type="text"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required
+                  />
+                </label>
+              </div>
+              <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                Get Bill
+              </button>
+            </form>
 
-      {error && <p className="mt-4 text-red-600 text-center">{error}</p>}
+            {error && <p className="mt-4 text-red-600 text-center">{error}</p>}
 
-      {billData && (
-        <div className="mt-6">
-          <table className="w-full border-collapse border border-gray-300 mb-6">
-            <thead>
-              <tr>
-                <th className="border border-gray-300 px-4 py-2">Student ID</th>
-                <th className="border border-gray-300 px-4 py-2">Student Name</th>
-                <th className="border border-gray-300 px-4 py-2">Total Bill</th>
-                <th className="border border-gray-300 px-4 py-2">Bill Per Day</th>
-                <th className="border border-gray-300 px-4 py-2">Service Charge</th>
-                <th className="border border-gray-300 px-4 py-2">Extra Charge For</th>
-                <th className="border border-gray-300 px-4 py-2">Extra Charge</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="bg-white hover:bg-gray-100">
-                <td className="border border-gray-300 px-4 py-2">{billData.registrationNumber}</td>
-                <td className="border border-gray-300 px-4 py-2">{billData.studentName}</td>
-                <td className="border border-gray-300 px-4 py-2">Rs. {billData.totalbill}</td>
-                <td className="border border-gray-300 px-4 py-2">Rs. {billData.billPerDay}</td>
-                <td className="border border-gray-300 px-4 py-2">Rs. {billData.serviceCharge}</td>
-                <td className="border border-gray-300 px-4 py-2">{billData.festival}</td>
-                <td className="border border-gray-300 px-4 py-2">Rs. {billData.festivalcharges}</td>
-              </tr>
-            </tbody>
-          </table>
+            {billData && (
+              <div className="mt-6">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border-collapse border border-gray-300 mb-6">
+                    <thead>
+                      <tr>
+                        <th className="border border-gray-300 px-4 py-2">Student ID</th>
+                        <th className="border border-gray-300 px-4 py-2">Student Name</th>
+                        <th className="border border-gray-300 px-4 py-2">Total Bill</th>
+                        <th className="border border-gray-300 px-4 py-2">Bill Per Day</th>
+                        <th className="border border-gray-300 px-4 py-2">Service Charge</th>
+                        <th className="border border-gray-300 px-4 py-2">Extra Charge For</th>
+                        <th className="border border-gray-300 px-4 py-2">Extra Charge</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-white hover:bg-gray-100">
+                        <td className="border border-gray-300 px-4 py-2">{billData.registrationNumber}</td>
+                        <td className="border border-gray-300 px-4 py-2">{billData.studentName}</td>
+                        <td className="border border-gray-300 px-4 py-2">Rs. {billData.totalbill}</td>
+                        <td className="border border-gray-300 px-4 py-2">Rs. {billData.billPerDay}</td>
+                        <td className="border border-gray-300 px-4 py-2">Rs. {billData.serviceCharge}</td>
+                        <td className="border border-gray-300 px-4 py-2">{billData.festival}</td>
+                        <td className="border border-gray-300 px-4 py-2">Rs. {billData.festivalcharges}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
 
-          <div className="w-full max-w-lg mx-auto">
-            {chartData && <Pie data={chartData} />}
+                <div className="w-full max-w-lg mx-auto">
+                  {chartData && <Pie data={chartData} />}
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

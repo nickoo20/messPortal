@@ -11,7 +11,7 @@ const RegisterAdmin = () => {
     name: "",
     email: "",
     password: "",
-    hostelName: "Girls Hostel", // Ensure consistent naming here
+    hostelName: "Girls Hostel",
     role: "warden",
   });
   const [errors, setErrors] = useState({});
@@ -24,7 +24,8 @@ const RegisterAdmin = () => {
   };
 
   const validateForm = () => {
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    const passwordRegex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
 
     let formErrors = {};
 
@@ -54,7 +55,7 @@ const RegisterAdmin = () => {
       console.log(res);
       if (res?.data?.success) {
         toast({
-          title: "Registration Successful ! Verify on your email address !",
+          title: "Registration Successful! Verify on your email address!",
           description: res?.data.message,
           status: "success",
           duration: 5000,
@@ -64,63 +65,89 @@ const RegisterAdmin = () => {
         // navigate("/login-admin");
       }
     } catch (error) {
-      setErrors({ apiError: error.response?.data?.message || "Error in signup" });
-      console.error("Error in signup:", error.response ? error.response.data : error.message);
+      setErrors({
+        apiError: error.response?.data?.message || "Error in signup",
+      });
+      console.error(
+        "Error in signup:",
+        error.response ? error.response.data : error.message
+      );
       // Add error handling logic here, e.g., show an error message to the user
     }
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-r from-gray-300 to-gray-600 min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gradient-to-r from-gray-300 to-gray-600">
       <Header />
-      <div className="relative flex justify-center items-center flex-1 bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
+      <div
+        className="relative flex justify-center items-center flex-1 bg-cover bg-center"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      >
         {/* Overlay */}
         <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-xl">
+        <div className="relative bg-gray-50 shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full mx-auto max-w-xl ">
           <h2 className="text-xl font-semibold text-center font-montserrat mb-4 text-blue-700">
             Register as an Admin!
           </h2>
-          <div className="flex flex-col gap-2 items-center justify-center">
+          <div className="flex flex-col gap-4 items-center justify-center">
             <form
               onSubmit={handleSubmit}
-              className="w-full flex flex-col gap-2 font-jakarta"
+              className="w-full max-w-lg md:max-w-xl space-y-2"
             >
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter your Full Name..."
-                required
-                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
-              />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your Email..."
-                required
-                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-xs italic">{errors.email}</p>
-              )}
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your Password..."
-                required
-                className="border p-2 w-full rounded-xl focus:outline-none text-sm"
-              />
-              {errors.password && (
-                <p className="text-red-500 text-xs italic">{errors.password}</p>
-              )}
+              <div className="flex flex-col gap-2">
+                <label htmlFor="name" className="text-sm">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter your Full Name..."
+                  required
+                  className="border p-2 rounded-xl focus:outline-none text-sm"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="email" className="text-sm">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter your Email..."
+                  required
+                  className="border p-2 rounded-xl focus:outline-none text-sm"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-xs italic">{errors.email}</p>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="password" className="text-sm">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your Password..."
+                  required
+                  className="border p-2 rounded-xl focus:outline-none text-sm"
+                />
+                {errors.password && (
+                  <p className="text-red-500 text-xs italic">{errors.password}</p>
+                )}
+              </div>
               <div className="flex items-center gap-4">
                 <label htmlFor="role" className="text-sm">
-                  Register as a?
+                  Register as a
                 </label>
                 <select
                   id="role"
@@ -136,12 +163,12 @@ const RegisterAdmin = () => {
               {formData.role === "warden" && (
                 <div className="flex items-center gap-4">
                   <label htmlFor="hostelName" className="text-sm">
-                    Select your Hostel:
+                    Select your Hostel
                   </label>
                   <select
                     id="hostelName"
                     name="hostelName"
-                    value={formData.hostelName} // Use the correct state variable
+                    value={formData.hostelName}
                     onChange={handleChange}
                     className="p-2 border border-gray-300 mb-1 rounded text-sm focus:outline-none"
                   >
@@ -157,7 +184,7 @@ const RegisterAdmin = () => {
               <div className="flex items-center justify-center">
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white p-10 py-2 hover:opacity-90 hover:bg-blue-600 rounded-xl"
+                  className="bg-blue-500 text-white p-2 px-6 hover:opacity-90 hover:bg-blue-600 rounded-xl"
                 >
                   Register
                 </button>
