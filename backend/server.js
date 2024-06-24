@@ -17,6 +17,7 @@ import path from 'path';
 import noticeRoutes from './routes/notice.route.js';
 import studentsRoutes from './routes/allStudents.route.js';
 import hostelchangeRoutes from './routes/ToggleHostelChange.model.js'
+
 // Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -65,11 +66,14 @@ app.use("/api/notice",noticeRoutes);
 app.use('/api/mr/',studentRepresentativeRoutes);
 app.use('/api/students',studentsRoutes);
 app.use('/api/toggle-hostel-change',hostelchangeRoutes)
-app.get("/", (req, res) => {
-    res.send({
-      message: "welcome to mess portal app",
-    });
-  });
+
+if(process.env.NODE_ENV === "prooduction"){
+  app.use (express.static(path.join(__dirname, "/frontend/dist"))) ;
+  app.get("*",(req, res)=>{
+    res.sendFile(path.resolve(__dirname, "frontend", "dist","index.html")) ;
+  })
+}
+
 
 app.listen(PORT, () => {
     console.log(`Server running on localhost:${PORT}`) ;
