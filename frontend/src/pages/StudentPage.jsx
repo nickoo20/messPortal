@@ -13,15 +13,12 @@ const StudentPage = () => {
   return (
     <div className="flex flex-col bg-gradient-to-r from-gray-200 to-gray-500 min-h-screen">
       <Header />
-      <div className="flex from-gray-400 to-gray-700">
-          {/* <MainContent/> */}
-        <div className="flex-1 p-6 bg-gray-50 shadow-lg m-4 ">
-          {/* <h1 className="text-2xl my-4">Welcome to your Mess Portal ,   */}
-            {/* <span className="text-green-700 italic font-semibold text-2xl"> {currentUser.name.toUpperCase()}</span> */}
-          {/* </h1> */}
+      <div className="flex m-4 from-gray-400 to-gray-700 gap-4">
+          <Sidebar />
+        <div className="flex-1 rounded-lg bg-gray-50">
           <Outlet />
         </div>
-        <Sidebar />
+        
       </div>
       <Footer />
     </div>

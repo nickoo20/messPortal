@@ -23,14 +23,28 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (id && currentUser?._id !== id) {
-      // Optionally fetch user data based on id
-      // if not already in the state
+      // Fetch user data based on id if not already in state
+      // Example of how to fetch data:
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8080/api/user/${id}`, {
+            withCredentials: true,
+          });
+          setFormData({
+            contactNumber: response.data.contactNumber || '',
+            hostelName: response.data.hostelName || '',
+          });
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      fetchUserData();
     } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
+      setFormData({
         contactNumber: currentUser?.contactNumber || '',
         hostelName: currentUser?.hostelName || '',
-      }));
+      });
     }
   }, [id, currentUser]);
 
@@ -74,39 +88,44 @@ const ProfilePage = () => {
         ...(hostelName && { hostelName }),
       };
 
-      console.log("Updating with data: ", updateData);
-      const res = await axios.post(`http://localhost:8080/api/user/update/${currentUser?._id}`, updateData, {
+      const response = await axios.post(`http://localhost:8080/api/user/update/${currentUser?._id}`, updateData, {
         withCredentials: true,
       });
+      console.log(response) ;
 
-      console.log(res?.data);
-      toast.success('Profile updated successfully!');
-      setFormData({
-        password: '',
-        confirmPassword: '',
-        contactNumber: '',
-        hostelName: '',
-      });
-      setErrorMessage('');
-      dispatch(updateUserSuccess(res?.data));
+      if (response.data.success) {
+        toast.success('Profile updated successfully!');
+        setFormData({
+          password: '',
+          confirmPassword: '',
+          contactNumber: '',
+          hostelName: '',
+        });
+        setErrorMessage('');
+        dispatch(updateUserSuccess(response.data));
 
-      // Redirect to login page after a short delay if password was updated
-      if (password) {
-        setTimeout(() => {
-          navigate('/login-student');
-        }, 2000);
+        // Redirect to login page after a short delay if password was updated
+        if (password) {
+          setTimeout(() => {
+            navigate('/login-student');
+          }, 2000);
+        }
+      } else {
+        setErrorMessage(response.data.message || 'Failed to update profile.');
+        dispatch(updateUserFailure(response.data.message || 'Failed to update profile.'));
       }
     } catch (err) {
-      console.error("Error updating profile: ", err); // Debug: log the error
-      dispatch(updateUserFailure(err.message)) ;
-      toast.error('Enter valid credentials!');
+      console.error("Error updating profile: ", err);
+      setErrorMessage('Failed to update profile. Please try again.');
+      dispatch(updateUserFailure(err.message));
+      toast.error('Failed to update profile. Please try again.');
     }
   };
 
   return (
     <div className="flex flex-col bg-gray-50 min-h-screen">
       <main className="flex flex-col items-center p-6">
-        <section className="max-w-xl mx-auto bg-white shadow-md border-r-4 border-blue-300 rounded-lg p-8 my-8">
+        <section className="max-w-xl mx-auto bg-white shadow-md border-r-4 border-blue-300 rounded-lg p-8 my-8 w-full md:w-3/4 lg:w-1/2">
           <h1 className="text-3xl font-bold text-gray-600 mb-4 text-center font-jakarta">Profile</h1>
           <div className="mb-6">
             <h2 className="text-md font-semibold text-gray-700 mb-2 font-jakarta">Student Info</h2>
@@ -119,9 +138,10 @@ const ProfilePage = () => {
           <form onSubmit={handleUpdate} className="p-2">
             <h2 className="text-md font-semibold text-gray-700 mb-2 font-jakarta">Update Profile</h2>
             <div className="relative flex items-center justify-between p-2 gap-2">
-              {/* <label className="block text-gray-700 text-sm font-bold mb-2">New Password</label> */}
+              <label htmlFor="password" className="block text-gray-700 text-sm font-medium mb-2">New Password</label>
               <input
                 type={showPassword ? 'text' : 'password'}
+                id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
@@ -136,9 +156,10 @@ const ProfilePage = () => {
               </div>
             </div>
             <div className="mb-4 relative flex gap-2 items-center justify-between p-2">
-              {/* <label className="block text-gray-700 text-sm font-bold mb-2">Confirm New Password</label> */}
+              <label htmlFor="confirmPassword" className="block text-gray-700 text-sm font-medium mb-2">Confirm New Password</label>
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
+                id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -153,22 +174,25 @@ const ProfilePage = () => {
               </div>
             </div>
             <div className="flex gap-2 items-center justify-between p-2">
-              <label className="block text-gray-700 text-sm font-semibold mb-2">Contact Number</label>
+              <label htmlFor="contactNumber" className="block text-gray-700 text-sm font-medium mb-2">Contact Number</label>
               <input
                 type="text"
+                id="contactNumber"
                 name="contactNumber"
                 value={formData.contactNumber}
                 onChange={handleChange}
-                className="shadow appearance-none border rounded text-sm w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder='Enter Contact Number...'
+                className="shadow appearance-none border rounded text-sm w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
             <div className="flex gap-2 items-center justify-between p-2">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Hostel Name</label>
+              <label htmlFor="hostelName" className="block text-gray-700 text-sm font-medium mb-2">Hostel Name</label>
               <select
+                id="hostelName"
                 name="hostelName"
                 value={formData.hostelName}
                 onChange={handleChange}
-                className="shadow appearance-none border rounded text-sm w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded text-sm w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               >
                 <option value="">Select a Hostel</option>
                 <option value="Girls Hostel">Girls Hostel</option>
@@ -189,7 +213,7 @@ const ProfilePage = () => {
             <div className='flex justify-end mt-3'>
               <button
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white rounded-2xl font-bold py-2 px-6 focus:outline-none focus:shadow-outline"
+                className="bg-blue-500 hover:bg-blue-600 text-white rounded-2xl font-bold py-2 px-6 focus:outline-none focus:shadow-outline w-full md:w-auto"
               >
                 Update
               </button>

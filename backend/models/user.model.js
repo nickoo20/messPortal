@@ -60,7 +60,6 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         default:false,
     },
-    
 },{timestamps:true}) ;
 
 const User = mongoose.model("User", userSchema) ;

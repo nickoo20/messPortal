@@ -4,6 +4,7 @@ const initialState = {
     user : null ,
     error: null,
     loading: false,
+    isLoggedIn:false,
 } ; 
 
 const adminSlice = createSlice({
@@ -58,6 +59,14 @@ const adminSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
           },
+          loginAdmin(state, action) {
+            state.user = action.payload;
+            state.isLoggedIn = true;
+          },
+          logoutAdmin(state) {
+            state.user = null;
+            state.isLoggedIn = false;
+          },
     }
 }) ;
 export const {
@@ -73,5 +82,7 @@ export const {
     updateAdminFailure,
     updateAdminStart,
     updateAdminSuccess,
+    loginAdmin,
+    logoutAdmin,
 } = adminSlice.actions; 
 export default adminSlice.reducer;  

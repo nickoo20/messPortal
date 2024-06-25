@@ -87,9 +87,10 @@ const LoginStudent = () => {
         <div className="absolute inset-0 bg-black opacity-50"></div>
         <div className="relative bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
           <h2 className="text-xl font-semibold mb-2 text-blue-700 text-center">
-            Login now 
+            Student Login 
           </h2>
-          <div className="flex flex-col items-center justify-center gap-2">
+          <div className="flex flex-col gap-2">
+          <p className="text-sm text-gray-700">Enter your account details: </p>
             <form
               onSubmit={handleSubmit}
               className="w-full flex flex-col gap-2 items-center justify-center font-jakarta"
@@ -100,7 +101,7 @@ const LoginStudent = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter your Email"
+                placeholder="Email"
                 required
                 className="border p-2 w-full rounded-xl focus:outline-none text-sm"
               />
@@ -112,7 +113,7 @@ const LoginStudent = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your Password"
+                  placeholder="Password"
                   required
                   className="border p-2 w-full rounded-xl focus:outline-none text-sm"
                 />

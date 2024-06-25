@@ -6,7 +6,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { IoCloseSharp } from "react-icons/io5";
 import { FaUserEdit } from "react-icons/fa";
-import { deleteAdminFailure, deleteAdminSuccess, signOutAdminStart } from '../../redux/admin/adminSlice';
+import { deleteAdminFailure, deleteAdminSuccess, logoutAdmin, signOutAdminStart } from '../../redux/admin/adminSlice';
 
 const SidebarAdmin = () => {
   const { user } = useSelector((state) => state.admin);
@@ -58,6 +58,7 @@ const SidebarAdmin = () => {
         return;
       }
       toast.success(res?.data.message);
+      dispatch(logoutAdmin()) ;
       dispatch(deleteAdminSuccess(res?.data));
       navigate('/login-admin');
     } catch (error) {

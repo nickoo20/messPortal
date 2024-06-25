@@ -5,7 +5,7 @@ import SidebarAdmin from '../../pages/admin/SidebarAdmin' ;
 
 const AdminPage = () => {
   return(
-    <div className="flex flex-col bg-gradient-to-r from-gray-100 to-gray-700 min-h-screen">
+    <div className="w-full flex flex-col bg-gradient-to-r from-gray-100 to-gray-700 min-h-screen">
       <Header />
       <div className="flex ">
           <SidebarAdmin />

@@ -11,7 +11,7 @@ const Hero = () => {
         showStatus={false}
         infiniteLoop
         autoPlay
-        interval={5000}
+        interval={3000}
         transitionTime={500}
         className="text-center"
       >
