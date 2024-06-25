@@ -60,11 +60,7 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         default:false,
     },
-    // Hostel:{
-    //     type:String,
-    //     enum:['Girls Hostel', 'Jhelum Boys Hostel', 'Manasbal Boys Hostel', 'Mansar Boys Hostel', 'Chenab Boys Hostel'],
-    //     required:true
-    // },
+    
 },{timestamps:true}) ;
 
 const User = mongoose.model("User", userSchema) ;

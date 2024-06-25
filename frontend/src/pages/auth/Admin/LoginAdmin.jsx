@@ -62,6 +62,7 @@ const LoginAdmin = () => {
         duration: 3000,
         isClosable: true,
       });
+      console.log(user.role);
       if(user.role === 'warden'){
         navigate("/admin-landing/allcomplaints");
       }

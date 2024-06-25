@@ -28,9 +28,9 @@ export const createNotice=async(req,res)=>{
 };
 export const getAllNotice=async(req,res)=>{
     try{
-    const {HostelName}=req.user;
-    const hostelName=HostelName;
-    console.log(req.user.HostelName);
+    const {hostelName}=req.user;
+    //const hostelName=HostelName;
+    console.log(req.user.hostelName);
     const notices=await Notice.find({hostelName})
     .sort({ date: -1 , _id: -1 })
     .limit(10)
