@@ -326,7 +326,8 @@ export const RegisterAdmin = async (req, res, next) => {
 };
 
 export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
-  const { email, password, role } = req.body ;
+  try {
+    const { email, password, role } = req.body ;
 
   if (!email || !password) {
     return res.status(401).json({
@@ -352,7 +353,7 @@ export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
   }
   const isMatch = await bcrypt.compare(password, admin.password);
   if (!isMatch) {
-    return res.status(404).json({
+    return res.status(401).json({
       message: "Invalid credentials!",
     });
   }
@@ -371,4 +372,8 @@ export const LoginAdmin = AsyncErrorHandler(async (req, res, next) => {
       token,
       admin,
     });
+  } catch (error) {
+    res.status(500).json({error:error.message});
+  }
+  
 });

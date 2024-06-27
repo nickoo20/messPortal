@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import VerifyEmailStudent from "./pages/verify/VerifyEmailStudent.jsx";
 import VerifyWardenStudent from "./pages/verify/VerifyWardenStudent.jsx";
@@ -26,7 +27,6 @@ import AddMenu from "./pages/menu/AddMenu.jsx";
 import LatestMenu from "./pages/menu/LatestMenu.jsx";
 import AdminPage from "./pages/admin/AdminPage.jsx";
 import Allcomplaints from "./pages/admin/Allcomplaints.jsx";
-import NavigationButtons from "./pages/accountant/SidebarAccountant.jsx";
 import MarkLeave from "./pages/admin/Mark-leave.jsx";
 import StudentBill from "./pages/accountant/SingleBill.jsx";
 import Billcomp from "./pages/accountant/Allbills.jsx";
@@ -41,6 +41,9 @@ import AccountantPage from "./components/AccountantPage.jsx";
 import StudentList from "./pages/admin/AllStudents.jsx";
 import ToggleHostelChange from "./pages/admin/HostelChange.jsx";
 
+import ProtectedRouteStudent from './components/ProtectedRouteStudent.jsx'; // Import the ProtectedRoute compone
+import ProtectedRouteAdmin from './components/ProtectedRouteAdmin.jsx'; // Import the ProtectedRoute compone
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -50,7 +53,26 @@ const App = () => {
           <Route path="/about-us" element={<AboutUsPage />} />
           <Route path="/login-student" element={<LoginStudent />} />
           <Route path="/register-student" element={<RegisterStudent />} />
-          <Route exact path="/student/dashboard" element={<StudentPage />}>
+          <Route path="/verify-email" element={<VerifyEmailStudent />} />
+          <Route path="/verify-warden" element={<VerifyWardenStudent />} />
+          <Route path="/admin/verify-email" element={<VerifyEmailWarden />} />
+          <Route path="/admin/verify-dsw" element={<VerifyWardenDsw />} />
+          <Route path="/verify-admin" element={<VerifyUser />} />
+          <Route path="/register-admin" element={<RegisterAdmin />} />
+          <Route path="/login-admin" element={<LoginAdmin />} />
+          <Route path="/register-accountant" element={<RegisterAccountant />} />
+          <Route path="/login-accountant" element={<LoginAccountant />} />
+          <Route path="/*" element={<NotFound />} />
+
+          {/* Protected Routes */}
+          <Route
+            path="/student/dashboard/*"
+            element={
+              <ProtectedRouteStudent >
+                <StudentPage />
+              </ProtectedRouteStudent>
+            }
+          >
             <Route path="all-complaints" element={<AllComplaints />} />
             <Route path="my-complaints/:id" element={<MyComplaints />} />
             <Route path="monthly-bills" element={<MonthlyBills />} />
@@ -60,17 +82,15 @@ const App = () => {
             <Route path="add-notice" element={<NoticeForm />} />
             <Route path="see-notice" element={<SeeNotice />} />
           </Route>
-          <Route path="/verify-email" element={<VerifyEmailStudent />} />
-          <Route path="/verify-warden" element={<VerifyWardenStudent />} />
-          <Route path="/admin/verify-email" element={<VerifyEmailWarden />} />
-          <Route path="/admin/verify-dsw" element={<VerifyWardenDsw />} />
-          <Route path="/verify-admin" element={<VerifyUser />} />
 
-          <Route path="/*" element={<NotFound />} />
-
-          <Route path="/register-admin" element={<RegisterAdmin />} />
-          <Route path="/login-admin" element={<LoginAdmin />} />
-          <Route path="/admin-landing" element={<AdminPage />}>
+          <Route
+            path="/admin-landing/*"
+            element={
+              <ProtectedRouteAdmin>
+                <AdminPage />
+              </ProtectedRouteAdmin>
+            }
+          >
             <Route path="allcomplaints" element={<Allcomplaints />} />
             <Route path="mark-leave" element={<MarkLeave />} />
             <Route path="manage-mr" element={<ManageMr />} />
@@ -80,10 +100,14 @@ const App = () => {
             <Route path="toggle-hostelChange" element={<ToggleHostelChange />} />
           </Route>
 
-          <Route path="/register-accountant" element={<RegisterAccountant />} />
-          <Route path="/login-accountant" element={<LoginAccountant />} />
-
-          <Route path="/accountant-landing" element={<AccountantPage />} >
+          <Route
+            path="/accountant-landing/*"
+            element={
+              <ProtectedRouteAdmin >
+                <AccountantPage />
+              </ProtectedRouteAdmin>
+            }
+          >
             <Route path="singlebill" element={<StudentBill />} />
             <Route path="generate-bill" element={<GenerateBill />} />
             <Route path="update-cost" element={<UpdateCostPerDay />} />

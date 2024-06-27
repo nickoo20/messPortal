@@ -23,24 +23,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = 8080 || process.env.PORT ;
 
-// import { v2 as cloudinary } from "cloudinary";
-// cloudinary.config({
-//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//     api_key: process.env.CLOUDINARY_API_KEY,
-//     api_secret: process.env.CLOUDINARY_API_SECRET,
-  // });
+
 dotenv.config() ;
 const app= express() ;
-// Middleware to serve static files from the "public" directory
+
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-// const corsOptions = {
-//   origin: 'http://localhost:3000',
-//   credentials: true, // Allow credentials (cookies, authorization headers, TLS client certificates)
-// };
+
 app.use(cors({
-  origin: 'http://localhost:3000', // your frontend's URL
-  credentials: true, // if you need to include cookies in the requests
+  origin: 'http://localhost:3000', 
+  credentials: true, 
 }));
 
 
