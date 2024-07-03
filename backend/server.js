@@ -3,7 +3,7 @@ import { connectToMongoose } from './db/connectToMongoose.js';
 import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import path from 'path';
+import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 import authRoutes from './routes/auth.route.js';
@@ -24,6 +24,9 @@ dotenv.config();
 // Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+console.log('__dirname', __dirname) ;
+const dirPath = path.resolve() ;
+console.log('dirPath', dirPath) ;
 const PORT = process.env.PORT || 8080;
 
 const app = express();
@@ -57,13 +60,10 @@ app.use('/api/students', studentsRoutes);
 app.use('/api/toggle-hostel-change', hostelchangeRoutes);
 
 // Serve frontend in production
-if (process.env.NODE_ENV==="production") {
-  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+  app.use(express.static(path.join(dirPath, "/frontend/dist")));
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "frontend/dist",  "index.html"));
+    res.sendFile(path.resolve(dirPath, "frontend/dist",  "index.html"));
   });
-}
-
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
