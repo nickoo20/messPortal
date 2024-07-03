@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import { LeaveModel as Leave } from "../models/Leave.model.js";
+import { LeaveModel as Leave } from "../models/leave.model.js";
 
 const markleave = async (req, res) => {
   try{

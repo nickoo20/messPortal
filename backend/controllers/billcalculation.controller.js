@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-import {LeaveModel} from '../models/Leave.model.js';
+import {LeaveModel} from '../models/leave.model.js';
 import {StudentBill} from '../models/studentBill.model.js';
 import Decimal from 'decimal.js';
 import FestCharge from '../models/FestivalCharge.model.js';
