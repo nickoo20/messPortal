@@ -58,7 +58,7 @@ const Header = () => {
           <Link to="/" className="flex gap-2 items-center">
             <div className="hidden sm:block border-2 rounded-full"><NitPhoto /></div>
             <div className="flex flex-col items-center ">
-              <h1 className="text-sm sm:text-sm font-jakarta flex border-none rounded-full tracking-wide mb-0 ">
+              <h1 className="text-sm sm:text-sm font-medium font-jakarta flex border-none rounded-full tracking-wide mb-0 ">
                 MESS COMPLAINT PORTAL
               </h1>
               <div className="text-xs font-bold text-blue-500">(NIT Srinagar)</div>
