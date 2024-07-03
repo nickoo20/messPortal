@@ -75,7 +75,8 @@ const MainContentAdmin = ({
                     <span className="text-sm font-medium">{student.name}</span>
                     <span className="text-xs text-gray-600 hover:bg-gray-600 hover:text-white font-medium border px-2 rounded-full">
                       {formatRegistrationNumber(student.registrationNumber)}
-                    </span>
+                    </span> |
+                    <span className="text-xs">{student.hostelName}</span>
                   </div>
                 </div>
                 <button
@@ -93,4 +94,4 @@ const MainContentAdmin = ({
   );
 };
 
-export default MainContentAdmin;
+export default MainContentAdmin ;

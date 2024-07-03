@@ -269,7 +269,7 @@ export const getAllComplaintsAdmin=async(req,res)=>{
         });
         const comp1=comp.filter((c)=>{
             return (c.status==='pending'||c.status==='escalated') 
-            // (c.createdBy?.hostelName === req.user?.hostelName);
+            && (c.createdBy?.hostelName === req.user?.hostelName);
         });
         //console.log(comp1);
         res.status(200).json({

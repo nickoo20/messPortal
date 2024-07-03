@@ -22,7 +22,7 @@ export const makeStudentRepresentative = async (req, res) => {
 };
 export const removeStudentRepresentative = async (req, res) => {
   //const { registrationNumber } = req.params;
-  const   registrationNumber = parseInt(req.params.registrationNumber, 10);
+  const  registrationNumber = parseInt(req.params.registrationNumber, 10);
   if(registrationNumber)
    console.log(registrationNumber)
    else

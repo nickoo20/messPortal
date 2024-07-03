@@ -43,18 +43,18 @@ const VerifyWardenStudent = () => {
   }, [location]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-r from-gray-300 to-gray-600">
+    <div className="flex flex-col min-h-screen bg-gary-50">
       <Header />
       <div className="flex justify-center items-center flex-1">
         {loading ? (
           <LoadingSpinner /> // Show spinner while loading
         ) : (
-          <div className="flex flex-col items-center justify-center gap-2">
+          <div className="flex flex-col items-center justify-center gap-1">
             <div>
               <IoCheckmarkCircleOutline size={40} className='text-green-400'/>
               </div>
-            <h1 className="text-2xl font-bold mb-4">Warden Verification Successfull</h1>
-            <p className={`text-xl ${isError ? 'text-red-600' : 'text-green-600'}`}>
+            <h1 className="text-xl font-bold mb-4">Warden Verification Successfull</h1>
+            <p className={`text-md ${isError ? 'text-red-600' : 'text-green-600'}`}>
               {message}
             </p>
           </div>
