@@ -2,6 +2,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllNotices } from "../redux/notice/noticeSlice";
 import { useEffect } from "react";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const useGetAllNotices = () => {
     const dispatch = useDispatch();
@@ -9,7 +10,7 @@ export const useGetAllNotices = () => {
 
     const fetchAllNotices = async () => {
         try {
-            const res = await axios.get("http://localhost:8080/api/notice", {
+            const res = await axios.get(`${BACKEND_URL}/api/notice`, {
                 withCredentials: true,
             });
             console.log(res?.data);

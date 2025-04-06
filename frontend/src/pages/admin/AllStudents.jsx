@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaSearch, FaDownload } from 'react-icons/fa';
 import LoadingSpinner from '../../components/LoadingSpinner' ;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -12,7 +13,7 @@ const StudentList = () => {
   const fetchStudents = async () => {
     setLoading(true); // Start loading spinner
     try {
-      const response = await axios.get('http://localhost:8080/api/students', {
+      const response = await axios.get(`${BACKEND_URL}/api/students`, {
         withCredentials: true,
         params: { search },
       });

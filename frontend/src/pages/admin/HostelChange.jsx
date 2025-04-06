@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode } from "jwt-decode";
 import toast from 'react-hot-toast';
 import LoadingSpinner from '../../components/LoadingSpinner';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const ToggleHostelChange = () => {
   const [enableHostelChange, setEnableHostelChange] = useState(false); // State to hold enableHostelChange status
@@ -19,7 +20,7 @@ const ToggleHostelChange = () => {
     try {
       const token = Cookies.get("access_token");
       const response = await axios.get(
-        `http://localhost:8080/api/toggle-hostel-change`,
+        `${BACKEND_URL}/api/toggle-hostel-change`,
         {
           withCredentials: true,
         }
@@ -41,7 +42,7 @@ const ToggleHostelChange = () => {
       const decoded = jwtDecode(token);
 
       const response = await axios.put(
-        `http://localhost:8080/api/toggle-hostel-change`,{
+        `${BACKEND_URL}/api/toggle-hostel-change`,{
           enableHostelChange: !enableHostelChange
         },
         {

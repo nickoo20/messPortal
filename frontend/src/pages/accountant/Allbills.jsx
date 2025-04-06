@@ -4,6 +4,7 @@ import { useAuth } from '../../context/userContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { setBills } from '../../redux/bill/billSlice';
 import { IoMdDownload } from 'react-icons/io';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Billcomp = () => {
   const [auth, setAuth] = useAuth();
@@ -16,7 +17,7 @@ const Billcomp = () => {
 
   const fetchBills = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/bills`, {
+      const response = await axios.get(`${BACKEND_URL}/api/bills`, {
         withCredentials: true,
         params: { month, year, HostelName },
       });

@@ -8,6 +8,7 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { getRefresh } from "../redux/complaints/complaintSlice";
 import LoadingSpinner from "./LoadingSpinner";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Complaint = ({ complaint }) => {
   const { currentUser } = useSelector((state) => state.user);
@@ -28,7 +29,7 @@ const Complaint = ({ complaint }) => {
   const handleUpvote = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/complaints/upvote/${complaint?._id}`,
+        `${BACKEND_URL}/api/complaints/upvote/${complaint?._id}`,
         {},
         { withCredentials: true }
       );
@@ -45,11 +46,13 @@ const Complaint = ({ complaint }) => {
     try {
       axios.defaults.withCredentials = true;
       const res = await axios.post(
-        `http://localhost:8080/api/complaints/downvote/${complaint?._id}`,
+        // `http://localhost:8080/api/complaints/downvote/${complaint?._id}`,
+        `${BACKEND_URL}/api/complaints/downvote/${complaint?._id}`,
         {},
         { withCredentials: true }
       );
       dispatch(getRefresh());
+      console.log("Backend_url:",BACKEND_URL);
       // toast.error(res?.data.message);
       setDownvotes(res?.data?.downvotes || []);
     } catch (err) {
@@ -61,7 +64,7 @@ const Complaint = ({ complaint }) => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/complaints/comment/${complaint?._id}`,
+        `${BACKEND_URL}/api/complaints/comment/${complaint?._id}`,
         { text: commentText },
         { withCredentials: true }
       );
@@ -77,7 +80,7 @@ const Complaint = ({ complaint }) => {
     try {
       axios.defaults.withCredentials = true;
       const res = await axios.delete(
-        `http://localhost:8080/api/complaints/delete/${id}`
+        `${BACKEND_URL}/api/complaints/delete/${id}`
       );
       dispatch(getRefresh());
       toast.success(res?.data.message);
@@ -90,7 +93,7 @@ const Complaint = ({ complaint }) => {
     try {
       axios.defaults.withCredentials = true;
       const res = await axios.delete(
-        `http://localhost:8080/api/complaints/comment/${complaint._id}/${commentId}`
+        `${BACKEND_URL}/api/complaints/comment/${complaint._id}/${commentId}`
       );
       console.log('deleteComment: ',res);
       if (res?.data.success === false) {

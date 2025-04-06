@@ -4,6 +4,7 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { IoAddCircle } from 'react-icons/io5';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const LatestMenu = () => {
     const [menu, setMenu] = useState(null);
@@ -15,7 +16,7 @@ const LatestMenu = () => {
         const fetchLatestMenu = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get('http://localhost:8080/api/menu/latest');
+                const response = await axios.get(`${BACKEND_URL}/api/menu/latest`);
                 setMenu(response.data);
                 setLoading(false);
             } catch (error) {
@@ -61,7 +62,7 @@ const LatestMenu = () => {
                     {menu.pdfPath && (
                         <div className="mt-4 text-center">
                             <a
-                                href={`http://localhost:8080/public/menus/${menu.pdfPath}`}
+                                href={`${BACKEND_URL}/public/menus/${menu.pdfPath}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 download={`menu_${menu.month}_${menu.year}.pdf`}

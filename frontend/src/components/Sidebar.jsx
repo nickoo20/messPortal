@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { deleteUserFailure, deleteUserSuccess, signOutUserStart } from '../redux/user/userSlice';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Sidebar = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -52,7 +53,7 @@ const Sidebar = () => {
   const handleLogout = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await axios.post('http://localhost:8080/api/auth/logout', {}, {
+      const res = await axios.post(`${BACKEND_URL}/api/auth/logout`, {}, {
         withCredentials: true,
       });
       if (res?.data.success === false) {

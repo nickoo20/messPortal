@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useTab, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import Header from "../../components/Header";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -22,7 +23,7 @@ const Register = () => {
     try {
       
       const res = await axios.post(
-        `http://localhost:8080/api/auth/register-admin`,
+        `${BACKEND_URL}/api/auth/register-admin`,
         { name, email, password, role }
       );
       console.log(res);

@@ -4,6 +4,7 @@ import Sidebar from '../../components/MR_SideBar';
 import MainContentAdmin from '../../components/MainContentAdmin';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { toast } from 'react-hot-toast';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const ManageMr = () => {
   const [selectedOption, setSelectedOption] = useState('remove');
@@ -18,7 +19,7 @@ const ManageMr = () => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/api/mr/all');
+      const response = await axios.get(`${BACKEND_URL}/api/mr/all`);
       setStudents(response.data);
       setLoading(false);
       if (response.data.length === 0) setText('No MR assigned');
@@ -34,7 +35,7 @@ const ManageMr = () => {
 
   const handleRemoveMr = async (registrationNumber) => {
     try {
-      await axios.patch(`http://localhost:8080/api/mr/remove/${registrationNumber}`);
+      await axios.patch(`${BACKEND_URL}/api/mr/remove/${registrationNumber}`);
       fetchStudents();
       toast.success('MR removed successfully');
     } catch (error) {
@@ -45,7 +46,7 @@ const ManageMr = () => {
 
   const handleAddMr = async (registrationNumber) => {
     try {
-      await axios.patch(`http://localhost:8080/api/mr/add/${registrationNumber}`);
+      await axios.patch(`${BACKEND_URL}/api/mr/add/${registrationNumber}`);
       fetchStudents();
       setSelectedOption('remove');
       toast.success('MR added successfully');

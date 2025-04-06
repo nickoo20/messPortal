@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signInFailure, signInStart, signInSuccess } from "../../../redux/user/userSlice";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import backgroundImage from "../../../assets/background.jpg"; // Adjust the path to your background image
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const LoginStudent = () => {
   const [formData, setFormData] = useState({
@@ -49,7 +50,7 @@ const LoginStudent = () => {
     try {
       dispatch(signInStart());
       const res = await axios.post(
-        "http://localhost:8080/api/auth/login-student",
+        `${BACKEND_URL}/api/auth/login-student`,
         formData,
         {
           headers: {

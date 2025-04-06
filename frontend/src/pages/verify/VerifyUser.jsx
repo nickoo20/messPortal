@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, Link } from "react-router-dom";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const VerifyUser = () => {
   const [message, setMessage] = useState("");
@@ -13,7 +14,7 @@ const VerifyUser = () => {
     const verifyEmail = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8080/api/auth/verify-admin`,
+          `${BACKEND_URL}/api/auth/verify-admin`,
           {
             params: { token },
           },

@@ -5,6 +5,7 @@ import { getRefresh } from "../redux/complaints/complaintSlice";
 import { useDispatch } from "react-redux";
 import Modal from '../components/Modal' // Import the Modal component
 import { GiClick } from "react-icons/gi";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -23,7 +24,7 @@ const CreatePost = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/complaints/create",
+        `${BACKEND_URL}/api/complaints/create`,
         {
           title,
           description,

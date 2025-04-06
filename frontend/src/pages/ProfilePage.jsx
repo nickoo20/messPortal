@@ -5,6 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const ProfilePage = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const ProfilePage = () => {
     if (id && currentUser?._id !== id) {
       const fetchUserData = async () => {
         try {
-          const response = await axios.get(`http://localhost:8080/api/user/${id}`, {
+          const response = await axios.get(`${BACKEND_URL}/api/user/${id}`, {
             withCredentials: true,
           });
           setFormData({
@@ -86,7 +87,7 @@ const ProfilePage = () => {
         ...(hostelName && { hostelName }),
       };
 
-      const response = await axios.post(`http://localhost:8080/api/user/update/${currentUser?._id}`, updateData, {
+      const response = await axios.post(`${BACKEND_URL}api/user/update/${currentUser?._id}`, updateData, {
         withCredentials: true,
       });
       console.log(response)

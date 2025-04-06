@@ -5,6 +5,7 @@ import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { getRefresh } from '../../redux/notice/noticeSlice';
 import { useDispatch } from 'react-redux';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const NoticeForm = () => {
   const [Title, setTitle] = useState('');
@@ -16,7 +17,7 @@ const NoticeForm = () => {
     event.preventDefault();
 
     try {
-      await axios.post('http://localhost:8080/api/notice', {
+      await axios.post(`${BACKEND_URL}/api/notice`, {
         Title,
         Description
       }, {

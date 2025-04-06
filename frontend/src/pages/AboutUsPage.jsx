@@ -31,11 +31,11 @@ const AboutUsPage = () => {
             <h3 className="text-xl font-semibold text-green-700">Richa Shrivastava</h3>
             <p className="text-gray-600">Backend Developer</p>
           </div>
-          <div className="flex flex-col items-center text-center bg-gray-50 p-8 rounded-lg shadow-md">
+          {/* <div className="flex flex-col items-center text-center bg-gray-50 p-8 rounded-lg shadow-md">
             <img src="https://via.placeholder.com/150" alt="Team Member" className="w-24 h-24 rounded-full mb-4 shadow-md" />
             <h3 className="text-xl font-semibold text-orange-700">Muskan Chaudhary</h3>
             <p className="text-gray-600">UI/UX Designer</p>
-          </div>
+          </div> */}
           {/* Add more team members as needed */}
         </div>
         <h2 className="text-3xl font-poetsen text-gray-800 mt-12 mb-6">Contact Us</h2>

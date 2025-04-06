@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyComplaints } from "../redux/complaints/complaintSlice";
 import axios from "axios";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const useGetMyComplaints = (id) => {
     const dispatch = useDispatch() ;
@@ -9,7 +10,7 @@ const useGetMyComplaints = (id) => {
     const fetchComplaints = async () => {
         try {
         //   console.log(`Fetching complaints for ID: ${id}`);
-            const response = await axios.get(`http://localhost:8080/api/complaints/my/${id}`,{
+            const response = await axios.get(`${BACKEND_URL}/api/complaints/my/${id}`,{
               withCredentials:true,
             });
              // Debugging: Log the response

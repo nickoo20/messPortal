@@ -9,6 +9,7 @@ import { IoAddCircle } from "react-icons/io5";
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useGetAllNotices } from '../../hooks/useGetAllNotices';
 import { getRefresh } from '../../redux/notice/noticeSlice';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const SeeNotice = () => {
     const { currentUser } = useSelector((state) => state.user);
@@ -20,7 +21,7 @@ const SeeNotice = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/api/notice/delete/${id}`, {
+            await axios.delete(`${BACKEND_URL}/api/notice/delete/${id}`, {
                 withCredentials: true,
             });
             dispatch(getRefresh());

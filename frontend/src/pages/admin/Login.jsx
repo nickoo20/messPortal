@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useTab, useToast } from "@chakra-ui/react";
-
 import { useAuth } from "../../context/userContext";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +20,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/api/auth/login-admin`,
+        `${BACKEND_URL}/api/auth/login-admin`,
         { email, password },{
           withCredentials:true
         }

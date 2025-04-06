@@ -3,6 +3,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import LoadingSpinner from '../../components/LoadingSpinner';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const ExpenseManager = () => {
   const [expenses, setExpenses] = useState([]);
@@ -22,12 +23,12 @@ const ExpenseManager = () => {
     setLoading(true);
     try {
       if (searchHostelName) {
-        const res = await axios.post('http://localhost:8080/api/expense/single-hostel-expense', {
+        const res = await axios.post(`${BACKEND_URL}/api/expense/single-hostel-expense`, {
           searchHostelName
         });
         setExpenses(res.data.exp);
       } else {
-        const res = await axios.get('http://localhost:8080/api/expense');
+        const res = await axios.get(`${BACKEND_URL}/api/expense`);
         setExpenses(res.data.exp);
       }
     } catch (error) {
@@ -45,7 +46,7 @@ const ExpenseManager = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post('http://localhost:8080/api/expense', newExpense);
+      await axios.post(`${BACKEND_URL}/api/expense`, newExpense);
       toast.success('Expense added successfully!');
       fetchExpenses();
       setNewExpense({
@@ -67,7 +68,7 @@ const ExpenseManager = () => {
   const handleDeleteExpense = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:8080/api/expense/delete-expense/${id}`);
+      await axios.delete(`${BACKEND_URL}/api/expense/delete-expense/${id}`);
       toast.success('Expense deleted successfully!');
       fetchExpenses();
     } catch (error) {

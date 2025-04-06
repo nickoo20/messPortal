@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import Modal from 'react-modal';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -16,7 +17,7 @@ const UpdateBill = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/api/bills/check-entry", {
+      const res = await axios.post(`${BACKEND_URL}/api/bills/check-entry`, {
         month,
         year,
         billPerDay,
@@ -29,7 +30,7 @@ const UpdateBill = () => {
         setEntryData({ month, year, billPerDay, serviceCharge });
         setModalIsOpen(true);
       } else {
-        await axios.post('http://localhost:8080/api/bills/update-billPerDay', { month, year, billPerDay, serviceCharge }, {
+        await axios.post(`${BACKEND_URL}/api/bills/update-billPerDay`, { month, year, billPerDay, serviceCharge }, {
           withCredentials: true
         });
         toast.success('Entry created successfully.');
@@ -42,7 +43,7 @@ const UpdateBill = () => {
 
   const handleReplaceEntry = async () => {
     try {
-      await axios.post('http://localhost:8080/api/bills/update-billPerDay', entryData, {
+      await axios.post(`${BACKEND_URL}/api/bills/update-billPerDay`, entryData, {
         withCredentials: true
       });
       toast.success('Entry replaced successfully.');

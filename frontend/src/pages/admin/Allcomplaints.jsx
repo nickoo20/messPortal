@@ -9,6 +9,7 @@ import { MdClose } from "react-icons/md";
 import { ImForward } from "react-icons/im";
 import { MdThumbUp } from "react-icons/md";
 import { BsFillSendFill } from "react-icons/bs";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Modal = ({ show, onClose, comments }) => {
   if (!show) {
@@ -69,7 +70,7 @@ const AllComplaints = () => {
     const fetchComplaints = async () => {
       setLoadingComplaints(true);
       try {
-        const response = await axios.get("http://localhost:8080/api/complaints", {
+        const response = await axios.get(`${BACKEND_URL}/api/complaints`, {
           withCredentials: true,
         });
         setComplaints(response.data.comp1);
@@ -88,7 +89,7 @@ const AllComplaints = () => {
     try {
       setResolving(true);
       setResolvingComplaintId(id);
-      await axios.patch(`http://localhost:8080/api/complaints/${id}`, { status }, {
+      await axios.patch(`${BACKEND_URL}/api/complaints/${id}`, { status }, {
         withCredentials: true,
       });
       setComplaints((prevComplaints) =>
@@ -118,7 +119,7 @@ const AllComplaints = () => {
     try {
       setLoadingSendingComment(true);
       await axios.put(
-        `http://localhost:8080/api/complaints/escalate/${complaintId}`,
+        `${BACKEND_URL}/api/complaints/escalate/${complaintId}`,
         { comment },
         {
           headers: {
@@ -142,7 +143,7 @@ const AllComplaints = () => {
   const fetchComments = async (id) => {
     setLoadingFetchingComments(true);
     try {
-      const res = await axios.get(`http://localhost:8080/api/complaints/comment/${id}`, {
+      const res = await axios.get(`${BACKEND_URL}/api/complaints/comment/${id}`, {
         withCredentials: true,
       });
       setComplaintComments(res.data);

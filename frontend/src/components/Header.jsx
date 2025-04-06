@@ -6,6 +6,7 @@ import axios from 'axios';
 import { signOutUserStart, deleteUserFailure, deleteUserSuccess } from '../redux/user/userSlice';
 import { deleteAdminFailure, deleteAdminSuccess, signOutAdminStart } from "../redux/admin/adminSlice";
 import toast from "react-hot-toast";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const Header = () => {
   const { currentUser } = useSelector(state => state.user);
@@ -16,7 +17,7 @@ const Header = () => {
   const handleLogoutStudent = async () => {
     try {
       dispatch(signOutUserStart());
-      const res = await axios.post('http://localhost:8080/api/auth/logout-student', {}, {
+      const res = await axios.post(`${BACKEND_URL}/api/auth/logout-student`, {}, {
         withCredentials: true,
       });
       if (res?.data.success === false) {
@@ -35,7 +36,7 @@ const Header = () => {
   const handleLogoutAdmin = async () => {
     try {
       dispatch(signOutAdminStart());
-      const res = await axios.post('http://localhost:8080/api/auth/logout', {}, {
+      const res = await axios.post(`${BACKEND_URL}/api/auth/logout`, {}, {
         withCredentials: true,
       });
       if (res?.data.success === false) {

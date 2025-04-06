@@ -5,6 +5,7 @@ import axios from "axios";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import backgroundImage from "../../../assets/background.jpg"; // Adjust the path to your background image
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const RegisterAdmin = () => {
   const [formData, setFormData] = useState({
@@ -46,7 +47,7 @@ const RegisterAdmin = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/admin/register-admin",
+        `${BACKEND_URL}/api/admin/register-admin`,
         formData,
         {
           withCredentials: true,

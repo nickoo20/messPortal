@@ -5,6 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { updateAdminFailure, updateAdminStart, updateAdminSuccess } from '../../redux/admin/adminSlice'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const ProfilePage = () => {
   const [formData, setFormData] = useState({
@@ -75,7 +76,7 @@ const ProfilePage = () => {
       };
 
       console.log("Updating with data: ", updateData);
-      const res = await axios.post(`http://localhost:8080/api/admin/update/${user?._id}`, updateData, {
+      const res = await axios.post(`${BACKEND_URL}/api/admin/update/${user?._id}`, updateData, {
         withCredentials: true,
       });
 

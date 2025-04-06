@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import LoadingSpinner from '../../components/LoadingSpinner'; // Import LoadingSpinner component
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const VerifyWardenDsw = () => {
   const [message, setMessage] = useState('');
@@ -18,7 +19,7 @@ const VerifyWardenDsw = () => {
 
     const verifyWarden = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/admin/verify-dsw`, {
+        const res = await axios.get(`${BACKEND_URL}/api/admin/verify-dsw`, {
           params: { token }
         });
         console.log(res);

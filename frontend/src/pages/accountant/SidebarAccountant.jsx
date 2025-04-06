@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { IoCloseSharp } from "react-icons/io5";
 import { FaUserEdit } from "react-icons/fa";
 import { deleteAdminFailure, deleteAdminSuccess, signOutAdminStart } from '../../redux/admin/adminSlice';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const SidebarAccountant = () => {
   const { user } = useSelector((state) => state.admin);
@@ -50,7 +51,7 @@ const SidebarAccountant = () => {
   const handleLogout = async () => {
     try {
       dispatch(signOutAdminStart());
-      const res = await axios.post('http://localhost:8080/api/auth/logout', {}, {
+      const res = await axios.post(`${BACKEND_URL}/api/auth/logout`, {}, {
         withCredentials: true,
       });
       if (res?.data.success === false) {

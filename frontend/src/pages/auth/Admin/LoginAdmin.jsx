@@ -13,6 +13,7 @@ import {
   signInSuccess,
 } from "../../../redux/admin/adminSlice";
 import backgroundImage from "../../../assets/background.jpg"; // Adjust the path to your background image
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const LoginAdmin = () => {
   const { user } = useSelector((state) => state.admin);
@@ -39,7 +40,7 @@ const LoginAdmin = () => {
     try {
       dispatch(signInStart());
       const res = await axios.post(
-        "http://localhost:8080/api/admin/login-admin",
+        `${BACKEND_URL}/api/admin/login-admin`,
         formData,
         {
           headers: {

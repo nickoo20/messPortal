@@ -6,6 +6,7 @@ import { Pie } from 'react-chartjs-2';
 import { FaInfoCircle } from "react-icons/fa";
 import 'chart.js/auto';
 import toast from 'react-hot-toast';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const StudentBill = () => {
   const [registrationNumber, setRegistrationNumber] = useState('');
@@ -22,7 +23,7 @@ const StudentBill = () => {
     setError(null);
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/bills/${registrationNumber}`, {
+      const response = await axios.get(`${BACKEND_URL}/api/bills/${registrationNumber}`, {
         withCredentials: true,
         params: { month, year },
       });

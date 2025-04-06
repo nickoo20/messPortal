@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import LoadingSpinner from "../../components/LoadingSpinner";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const AddMenu = () => {
   const [month, setMonth] = useState("");
@@ -31,7 +32,7 @@ const AddMenu = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:8080/api/menu/add",
+        `${BACKEND_URL}/api/menu/add`,
         formData,
         {
           headers: {

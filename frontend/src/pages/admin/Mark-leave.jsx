@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { FaInfoCircle } from "react-icons/fa";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const MarkLeave = () => {
   const initialData = {
@@ -22,7 +23,7 @@ const MarkLeave = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/api/mark-leave', inputData, {
+      const response = await axios.post(`${BACKEND_URL}/api/mark-leave`, inputData, {
         withCredentials: true,
       });
 

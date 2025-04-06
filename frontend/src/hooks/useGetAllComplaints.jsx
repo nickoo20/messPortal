@@ -2,6 +2,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllComplaints } from "../redux/complaints/complaintSlice";
 import { useEffect } from "react";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const useGetAllComplaints = () => {
     const dispatch = useDispatch() ;
@@ -9,7 +10,7 @@ const useGetAllComplaints = () => {
 
     const fetchAllComplaints = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/complaints/all",{
+        const res = await axios.get(`${BACKEND_URL}/api/complaints/all`,{
           withCredentials:true,
         });
         console.log(res) ;

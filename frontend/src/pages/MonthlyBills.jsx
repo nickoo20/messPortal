@@ -4,6 +4,7 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import LoadingSpinner from '../components/LoadingSpinner' ;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -29,7 +30,7 @@ const MonthlyBills = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/bills/studentbill",
+        `${BACKEND_URL}/api/bills/studentbill`,
         { month, year },
         { withCredentials: true }
       );

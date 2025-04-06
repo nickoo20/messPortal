@@ -6,6 +6,7 @@ import Footer from "../../../components/Footer";
 import toast from "react-hot-toast";
 import { FaInfoCircle } from "react-icons/fa";
 import backgroundImage from "../../../assets/background.jpg";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const RegisterStudent = () => {
   const [formData, setFormData] = useState({
@@ -61,7 +62,7 @@ const RegisterStudent = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/auth/register-student",
+        `${BACKEND_URL}/api/auth/register-student`,
         formData,
         {
           withCredentials: true,

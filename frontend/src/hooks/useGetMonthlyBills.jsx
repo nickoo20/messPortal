@@ -2,6 +2,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getMonthlyBills } from "../redux/bill/billSlice";
 import { useEffect } from "react";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const useGetMonthlyBills = () => {
     const dispatch = useDispatch() ;
@@ -11,7 +12,7 @@ export const useGetMonthlyBills = () => {
     const fetchMonthlyBills = async () => {
         try {
             const res = await axios.post(
-              `http://localhost:8080/api/bills/${currentUser.registrationNumber}`,
+              `${BACKEND_URL}/api/bills/${currentUser.registrationNumber}`,
               { month, year },
               { withCredentials: true }
             ); 

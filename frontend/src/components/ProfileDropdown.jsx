@@ -7,7 +7,7 @@ import { useAuth } from "../context/userContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTab, useToast } from "@chakra-ui/react";
 //import Cookies from 'js-cookie';
-
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const ProfileDropdown = () => {
   //const history = useHistory();
@@ -23,7 +23,7 @@ const ProfileDropdown = () => {
       token: "",
     });
     try {
-     const response= await axios.post("http://localhost:8080/api/auth/logout-student");
+     const response= await axios.post(`${BACKEND_URL}/api/auth/logout-student`);
     // Cookies.remove('access_token');
     } catch (error) {
       const msg = error.message;
