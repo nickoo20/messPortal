@@ -36,8 +36,8 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Enable CORS for requests from the frontend development server
 app.use(cors({
-  // origin: 'http://localhost:3000',
-  origin: "https://frontend-mess-portal.vercel.app",
+  origin: 'http://localhost:3000',
+  // origin: "https://frontend-mess-portal.vercel.app",
   credentials: true,
 }));
 
