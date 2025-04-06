@@ -3,7 +3,10 @@ import mongoose from 'mongoose';
 const LeaveSchema = new mongoose.Schema({
     registrationNumber: {
         type: Number,
+        
+        
         required: true,
+        
       },
   startDate: {
     type: Date,
