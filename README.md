@@ -1,4 +1,4 @@
-# Mess Complaint Portal
+# Hostel Mess Complaint Portal
 
 A web-based portal for submitting and managing complaints related to mess services.
 
